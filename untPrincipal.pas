@@ -34,6 +34,7 @@ type
     btnCadAnimal: TBitBtn;
     btnCadCria: TBitBtn;
     btnInseminacao: TBitBtn;
+    btnVeterinario: TBitBtn;
     procedure Sair1Click(Sender: TObject);
     procedure CadastrodeVeterinarioClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -51,6 +52,7 @@ type
     procedure btnCadProdutorClick(Sender: TObject);
     procedure btnSairClick(Sender: TObject);
     procedure btnCadCriaClick(Sender: TObject);
+    procedure btnVeterinarioClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -108,6 +110,16 @@ begin
     frmLogin.Close;
     close;
   END;
+end;
+
+procedure TfrmPrincipal.btnVeterinarioClick(Sender: TObject);
+begin
+  frmCadastroVeterinario := TfrmCadastroVeterinario.Create(Self);
+  try
+    frmCadastroVeterinario.ShowModal;
+  finally
+    frmCadastroVeterinario.Release;
+  end;
 end;
 
 procedure TfrmPrincipal.CadastrodeAnimalClick(Sender: TObject);
