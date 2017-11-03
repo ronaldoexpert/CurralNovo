@@ -53,6 +53,7 @@ type
     procedure btnSairClick(Sender: TObject);
     procedure btnCadCriaClick(Sender: TObject);
     procedure btnVeterinarioClick(Sender: TObject);
+    procedure btnInseminacaoClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -103,6 +104,16 @@ begin
   end;
 end;
 
+procedure TfrmPrincipal.btnInseminacaoClick(Sender: TObject);
+begin
+  frmInseminacao := TfrmInseminacao.Create(Self);
+  try
+    frmInseminacao.ShowModal;
+  finally
+    frmInseminacao.Release;
+  end;
+end;
+
 procedure TfrmPrincipal.btnSairClick(Sender: TObject);
 begin
   if Application.MessageBox('Deseja realmente sair do sistema?', 'Curral Novo', MB_YESNO) = mrYes then
@@ -116,6 +127,7 @@ procedure TfrmPrincipal.btnVeterinarioClick(Sender: TObject);
 begin
   frmCadastroVeterinario := TfrmCadastroVeterinario.Create(Self);
   try
+    frmCadastroVeterinario.vTipoCadastro := 'Veterinario';
     frmCadastroVeterinario.ShowModal;
   finally
     frmCadastroVeterinario.Release;

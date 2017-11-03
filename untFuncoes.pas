@@ -22,6 +22,7 @@ type
     function AutoIncre(vTabela : string; vStatus : string) : Integer;
     procedure Botoes(vBotao : string; vSQL : TFDQuery);
     function VersaoExe: String;
+    function FormataNumero(vNumero : string) : string;
   end;
 
 var
@@ -84,6 +85,39 @@ begin
       ExecSQL;
   end;
 end;
+function TfrmFuncoes.FormataNumero(vNumero: string): string;
+var
+  vRetorno : string;
+begin
+  if Length(vNumero) = 1 then
+  begin
+    vRetorno := '00000' + vNumero;
+  end
+  else if Length(vNumero) = 2 then
+  begin
+    vRetorno := '0000' + vNumero;
+  end
+  else if Length(vNumero) = 3 then
+  begin
+    vRetorno := '000' + vNumero;
+  end
+  else if Length(vNumero) = 4 then
+  begin
+    vRetorno := '00' + vNumero;
+  end
+  else if Length(vNumero) = 5 then
+  begin
+    vRetorno := '0' + vNumero;
+  end
+  else if Length(vNumero) = 6 then
+  begin
+    vRetorno := vNumero;
+  end;
+
+  Result := vRetorno;
+
+end;
+
 function TfrmFuncoes.VersaoExe: String;
 type
   PFFI = ^vs_FixedFileInfo;

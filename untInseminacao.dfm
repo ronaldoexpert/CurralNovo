@@ -10,9 +10,11 @@ object frmInseminacao: TfrmInseminacao
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  KeyPreview = True
   OldCreateOrder = False
   Position = poScreenCenter
   OnActivate = FormActivate
+  OnKeyPress = FormKeyPress
   PixelsPerInch = 96
   TextHeight = 13
   object pnlCentro: TPanel
@@ -24,8 +26,6 @@ object frmInseminacao: TfrmInseminacao
     Color = clBtnHighlight
     ParentBackground = False
     TabOrder = 0
-    ExplicitWidth = 522
-    ExplicitHeight = 418
     object pnlTop: TPanel
       Left = 1
       Top = 1
@@ -33,7 +33,6 @@ object frmInseminacao: TfrmInseminacao
       Height = 112
       Align = alTop
       TabOrder = 0
-      ExplicitWidth = 520
       object lblCodigo: TLabel
         Left = 8
         Top = 16
@@ -101,7 +100,8 @@ object frmInseminacao: TfrmInseminacao
           FFFFFFFFFFFFFFFFFFFFFFFFD5B4A4F4EECDFFFAE8FFF6CDFFEEBBFFF4C7F8D1
           A5BB928AFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD5
           B4A4D5B4A4CAA58EE1BBA3DAB39B8B8B8BFFFFFFFFFFFFFFFFFF}
-        TabOrder = 0
+        TabOrder = 11
+        TabStop = False
         OnClick = btnPesqProprietarioClick
       end
       object btnPesquisar: TBitBtn
@@ -136,7 +136,8 @@ object frmInseminacao: TfrmInseminacao
           FFFFFFFFFFFFFFFFFFFFFFFFD5B4A4F4EECDFFFAE8FFF6CDFFEEBBFFF4C7F8D1
           A5BB928AFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD5
           B4A4D5B4A4CAA58EE1BBA3DAB39B8B8B8BFFFFFFFFFFFFFFFFFF}
-        TabOrder = 1
+        TabOrder = 12
+        TabStop = False
         OnClick = btnPesquisarClick
       end
       object edtDescrProprietario: TEdit
@@ -145,14 +146,14 @@ object frmInseminacao: TfrmInseminacao
         Width = 228
         Height = 21
         Enabled = False
-        TabOrder = 2
+        TabOrder = 8
       end
       object edtNumero: TEdit
         Left = 8
         Top = 32
         Width = 81
         Height = 21
-        TabOrder = 3
+        TabOrder = 4
         OnExit = edtNumeroExit
       end
       object btnPesqTouro: TBitBtn
@@ -187,7 +188,8 @@ object frmInseminacao: TfrmInseminacao
           FFFFFFFFFFFFFFFFFFFFFFFFD5B4A4F4EECDFFFAE8FFF6CDFFEEBBFFF4C7F8D1
           A5BB928AFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD5
           B4A4D5B4A4CAA58EE1BBA3DAB39B8B8B8BFFFFFFFFFFFFFFFFFF}
-        TabOrder = 4
+        TabOrder = 10
+        TabStop = False
         OnClick = btnPesqTouroClick
       end
       object edtDescrTouro: TEdit
@@ -203,14 +205,16 @@ object frmInseminacao: TfrmInseminacao
         Top = 77
         Width = 52
         Height = 21
-        TabOrder = 6
+        TabOrder = 3
+        OnExit = edtCodTouroExit
       end
       object edtCodProprietario: TEdit
         Left = 206
         Top = 32
         Width = 52
         Height = 21
-        TabOrder = 7
+        TabOrder = 1
+        OnExit = edtCodProprietarioExit
       end
       object edtDtEmissao: TDateTimePicker
         Left = 124
@@ -219,14 +223,15 @@ object frmInseminacao: TfrmInseminacao
         Height = 21
         Date = 43039.814233217590000000
         Time = 43039.814233217590000000
-        TabOrder = 8
+        TabOrder = 0
       end
       object edtCodVet: TEdit
         Left = 8
         Top = 77
         Width = 52
         Height = 21
-        TabOrder = 9
+        TabOrder = 2
+        OnExit = edtCodVetExit
       end
       object btnPesqVet: TBitBtn
         Left = 66
@@ -260,7 +265,9 @@ object frmInseminacao: TfrmInseminacao
           FFFFFFFFFFFFFFFFFFFFFFFFD5B4A4F4EECDFFFAE8FFF6CDFFEEBBFFF4C7F8D1
           A5BB928AFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD5
           B4A4D5B4A4CAA58EE1BBA3DAB39B8B8B8BFFFFFFFFFFFFFFFFFF}
-        TabOrder = 10
+        TabOrder = 9
+        TabStop = False
+        OnClick = btnPesqVetClick
       end
       object edtDescrVeterinario: TEdit
         Left = 97
@@ -268,7 +275,15 @@ object frmInseminacao: TfrmInseminacao
         Width = 194
         Height = 21
         Enabled = False
-        TabOrder = 11
+        TabOrder = 6
+      end
+      object edtID: TEdit
+        Left = 51
+        Top = 5
+        Width = 67
+        Height = 21
+        TabOrder = 7
+        Visible = False
       end
     end
     object pnlDados: TPanel
@@ -278,8 +293,6 @@ object frmInseminacao: TfrmInseminacao
       Height = 132
       Align = alClient
       TabOrder = 1
-      ExplicitWidth = 520
-      ExplicitHeight = 103
       object Label1: TLabel
         Left = 8
         Top = 47
@@ -333,7 +346,8 @@ object frmInseminacao: TfrmInseminacao
           FFFFFFFFFFFFFFFFFFFFFFFFD5B4A4F4EECDFFFAE8FFF6CDFFEEBBFFF4C7F8D1
           A5BB928AFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD5
           B4A4D5B4A4CAA58EE1BBA3DAB39B8B8B8BFFFFFFFFFFFFFFFFFF}
-        TabOrder = 0
+        TabOrder = 8
+        TabStop = False
         OnClick = btnPesqAnimalClick
       end
       object edtDescrAnimal: TEdit
@@ -342,7 +356,7 @@ object frmInseminacao: TfrmInseminacao
         Width = 194
         Height = 21
         Enabled = False
-        TabOrder = 1
+        TabOrder = 4
       end
       object btnPesqServico: TBitBtn
         Left = 66
@@ -376,7 +390,8 @@ object frmInseminacao: TfrmInseminacao
           FFFFFFFFFFFFFFFFFFFFFFFFD5B4A4F4EECDFFFAE8FFF6CDFFEEBBFFF4C7F8D1
           A5BB928AFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD5
           B4A4D5B4A4CAA58EE1BBA3DAB39B8B8B8BFFFFFFFFFFFFFFFFFF}
-        TabOrder = 2
+        TabOrder = 6
+        TabStop = False
         OnClick = btnPesqServicoClick
       end
       object edtDescrServico: TEdit
@@ -385,14 +400,14 @@ object frmInseminacao: TfrmInseminacao
         Width = 194
         Height = 21
         Enabled = False
-        TabOrder = 3
+        TabOrder = 5
       end
       object edtVlrUnit: TEdit
         Left = 297
         Top = 20
         Width = 90
         Height = 21
-        TabOrder = 4
+        TabOrder = 1
         Text = '0,00'
       end
       object edtCodAnimal: TEdit
@@ -400,14 +415,16 @@ object frmInseminacao: TfrmInseminacao
         Top = 64
         Width = 52
         Height = 21
-        TabOrder = 5
+        TabOrder = 2
+        OnExit = edtCodAnimalExit
       end
       object edtCodServico: TEdit
         Left = 8
         Top = 20
         Width = 52
         Height = 21
-        TabOrder = 6
+        TabOrder = 0
+        OnExit = edtCodServicoExit
       end
       object btnAdd: TBitBtn
         Left = 8
@@ -442,7 +459,7 @@ object frmInseminacao: TfrmInseminacao
           FFFFFFFFFFFFE5F8E99EE2B054CA713ABF5B36BD5948C26A97DBAAE1F5E7FFFF
           FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
           FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
-        TabOrder = 7
+        TabOrder = 3
       end
       object btnDelete: TBitBtn
         Left = 99
@@ -477,7 +494,8 @@ object frmInseminacao: TfrmInseminacao
           FFFFFFFFFFFFEBEBFBB6B5F07C7EE2696ADE676ADC7378DEAEB2EBE8E9F9FFFF
           FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
           FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
-        TabOrder = 8
+        TabOrder = 7
+        TabStop = False
       end
     end
     object pgctrlDados: TPageControl
@@ -485,21 +503,18 @@ object frmInseminacao: TfrmInseminacao
       Top = 245
       Width = 536
       Height = 201
-      ActivePage = TabSheet1
+      ActivePage = TabSheet2
       Align = alBottom
       TabOrder = 2
-      ExplicitTop = 216
-      ExplicitWidth = 520
       object TabSheet1: TTabSheet
         Caption = 'Dados'
-        ExplicitWidth = 512
         object dbgDados: TDBGrid
           Left = 0
           Top = 0
           Width = 528
           Height = 173
           Align = alClient
-          DataSource = DM.dtsInseminacao
+          DataSource = DM.dtsCadInseminacao
           TabOrder = 0
           TitleFont.Charset = DEFAULT_CHARSET
           TitleFont.Color = clWindowText
@@ -511,7 +526,6 @@ object frmInseminacao: TfrmInseminacao
       object TabSheet2: TTabSheet
         Caption = 'Observa'#231#227'o'
         ImageIndex = 1
-        ExplicitWidth = 512
         object Label4: TLabel
           Left = 8
           Top = 11
@@ -539,8 +553,6 @@ object frmInseminacao: TfrmInseminacao
     Height = 48
     Align = alBottom
     TabOrder = 1
-    ExplicitTop = 418
-    ExplicitWidth = 522
     object btnNovo: TBitBtn
       Left = 8
       Top = 5
@@ -611,6 +623,7 @@ object frmInseminacao: TfrmInseminacao
         E9AB7851C9AE9BFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
       TabOrder = 1
+      OnClick = btnGravarClick
     end
     object btnCancelar: TBitBtn
       Left = 170

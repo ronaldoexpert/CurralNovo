@@ -169,6 +169,16 @@ begin
     BEGIN
       frmCadastroAnimal.edtCodigo.Text := dbgPesquisa.Fields[0].Value;
       frmCadastroAnimal.PesquisaAnimal(True);
+    END
+    else if vTela = 'INSEMINACAO_T' then
+    BEGIN
+      frmInseminacao.edtCodTouro.Text := dbgPesquisa.Fields[0].Value;
+      frmInseminacao.PesquisaTouro(True);
+    END
+    else if vTela = 'INSEMINACAO' then
+    BEGIN
+      frmInseminacao.edtCodAnimal.Text := dbgPesquisa.Fields[0].Value;
+      frmInseminacao.PesquisaAnimal(True);
     END;
   end
   ELSE
@@ -193,6 +203,11 @@ begin
     BEGIN
       frmConfirmaInseminacao.edtCodProprietario.Text := dbgPesquisa.Fields[0].Value;
       frmConfirmaInseminacao.PesquisaProdutor(True);
+    END
+    else if vTela = 'INSEMINACAO' then
+    BEGIN
+      frmInseminacao.edtCodProprietario.Text := dbgPesquisa.Fields[0].Value;
+      frmInseminacao.PesquisaProprietario(True);
     END;
   end
   else if vTabela = 'CRIA' then
@@ -214,6 +229,11 @@ begin
     BEGIN
       frmConfirmaInseminacao.edtCodVeterinario.Text := dbgPesquisa.Fields[0].Value;
       frmConfirmaInseminacao.PesquisaVeterinario(True);
+    END
+    else if vTela = 'INSEMINACAO' then
+    BEGIN
+      frmInseminacao.edtCodVet.Text := dbgPesquisa.Fields[0].Value;
+      frmInseminacao.PesquisaVeterinario(True);
     END;
 
   end;

@@ -42,7 +42,6 @@ object frmPesquisa: TfrmPesquisa
     Height = 101
     Align = alBottom
     TabOrder = 1
-    ExplicitTop = 288
     object btnFechar: TBitBtn
       Left = 512
       Top = 17
@@ -169,7 +168,7 @@ object frmPesquisa: TfrmPesquisa
         Left = 16
         Top = 41
         Width = 393
-        Height = 25
+        Height = 21
         TabOrder = 0
         OnChange = edtPesquisaChange
         OnKeyPress = edtPesquisaKeyPress

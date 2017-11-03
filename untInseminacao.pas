@@ -53,6 +53,7 @@ type
     Label5: TLabel;
     btnPesqVet: TBitBtn;
     edtDescrVeterinario: TEdit;
+    edtID: TEdit;
     procedure FormActivate(Sender: TObject);
     procedure btnPesqTouroClick(Sender: TObject);
     procedure btnPesqAnimalClick(Sender: TObject);
@@ -62,6 +63,14 @@ type
     procedure btnFecharClick(Sender: TObject);
     procedure edtNumeroExit(Sender: TObject);
     procedure btnNovoClick(Sender: TObject);
+    procedure btnGravarClick(Sender: TObject);
+    procedure btnPesqVetClick(Sender: TObject);
+    procedure FormKeyPress(Sender: TObject; var Key: Char);
+    procedure edtCodProprietarioExit(Sender: TObject);
+    procedure edtCodVetExit(Sender: TObject);
+    procedure edtCodTouroExit(Sender: TObject);
+    procedure edtCodServicoExit(Sender: TObject);
+    procedure edtCodAnimalExit(Sender: TObject);
   private
     { Private declarations }
   public
@@ -95,16 +104,26 @@ begin
   Close;
 end;
 
+procedure TfrmInseminacao.btnGravarClick(Sender: TObject);
+begin
+  edtNumero.Enabled := True;
+end;
+
 procedure TfrmInseminacao.btnNovoClick(Sender: TObject);
 begin
   fNovo := True;
+  CarregaGrid;
   dm.qryCadInseminacao.Insert;
 
   btnNovo.Enabled := False;
   btnGravar.Enabled := True;
   btnExcluir.Enabled := False;
   edtNumero.SetFocus;
-  edtNumero.Text := IntToStr(frmFuncoes.AutoIncre('INSEMINACAO', 'Novo'));
+  edtID.Text := IntToStr(frmFuncoes.AutoIncre('INSEMINACAO', 'Novo'));
+  edtNumero.Text := frmFuncoes.FormataNumero(edtID.Text);
+  edtNumero.Enabled := false;
+
+  edtDtEmissao.SetFocus;
 
   if dm.qryConfiguracao.FieldByName('VETERINARIO_PADRAO').AsString <> '' then
   BEGIN
@@ -145,20 +164,26 @@ begin
     PesquisaBD(False);
 end;
 
+procedure TfrmInseminacao.btnPesqVetClick(Sender: TObject);
+begin
+  PesquisaVeterinario(False);
+end;
+
 procedure TfrmInseminacao.CarregaGrid;
 begin
-  frmFuncoes.ExecutaSQL('select I.NUMERO, A.NOME, S.DESCRICAO, S.VALOR FROM INSEMINACAO I JOIN ANIMAL A ON (A.ID = I.ID_ANIMAL) JOIN SERVICO S ON (S.ID = I.ID_SERVICO) Where I.NUMERO = ' + vID, 'Abrir', dm.qryInseminacao);
+  frmFuncoes.ExecutaSQL('select I.*, A.NOME, S.DESCRICAO, S.VALOR FROM INSEMINACAO I JOIN ANIMAL A ON (A.ID = I.ID_ANIMAL) JOIN SERVICO S ON (S.ID = I.ID_SERVICO) Where I.NUMERO = ' + vID, 'Abrir', dm.qryCadInseminacao);
   btnGravar.Enabled := False;
   btnExcluir.Enabled := False;
   edtNumero.SetFocus;
-
-  
 end;
 
 procedure TfrmInseminacao.edtNumeroExit(Sender: TObject);
 begin
-  if Trim(edtNumero.Text) <> '' then
-    PesquisaBD(True);
+  if fNovo = false then
+  begin
+    if Trim(edtNumero.Text) <> '' then
+      PesquisaBD(True);
+  end;
 end;
 
 procedure TfrmInseminacao.FormActivate(Sender: TObject);
@@ -167,13 +192,22 @@ begin
   CarregaGrid;
 end;
 
+procedure TfrmInseminacao.FormKeyPress(Sender: TObject; var Key: Char);
+begin
+  If key = #13 then
+  Begin
+    Key:= #0;
+    Perform(Wm_NextDlgCtl,0,0);
+  end;
+end;
+
 procedure TfrmInseminacao.PesquisaAnimal(vStatus: boolean);
 begin
   if vStatus = True then
   begin
     if Trim(edtCodAnimal.Text) <> '' then
     begin
-      frmFuncoes.ExecutaSQL('Select * from ANIMAL where TIPO = ' + QuotedStr('V') + ' ID = ' + QuotedStr(edtCodAnimal.Text), 'Abrir', DM.qryAnimal);
+      frmFuncoes.ExecutaSQL('Select * from ANIMAL where TIPO = ' + QuotedStr('V') + ' and ID = ' + QuotedStr(edtCodAnimal.Text), 'Abrir', DM.qryAnimal);
       if DM.qryAnimal.RecordCount > 0 then
       begin
         edtDescrAnimal.Text := DM.qryAnimal.FieldByName('NOME').AsString;
@@ -182,6 +216,8 @@ begin
       begin
         Application.MessageBox('Registro não encontrado.', 'Curral Novo', MB_OK);
         edtCodAnimal.SetFocus;
+        edtCodAnimal.Clear;
+        edtDescrAnimal.Clear;
       end;
     end;
   end
@@ -215,6 +251,7 @@ begin
       begin
         Application.MessageBox('Registro não encontrado.', 'Curral Novo', MB_OK);
         edtNumero.SetFocus;
+        edtNumero.Clear;
       end;
     end;
   end
@@ -249,6 +286,8 @@ begin
       begin
         Application.MessageBox('Registro não encontrado.', 'Curral Novo', MB_OK);
         edtCodProprietario.SetFocus;
+        edtCodProprietario.Clear;
+        edtDescrProprietario.Clear;
       end;
     end;
   end
@@ -277,11 +316,14 @@ begin
       if DM.qryProprietario.RecordCount > 0 then
       begin
         edtDescrServico.Text := DM.qryProprietario.FieldByName('DESCRICAO').AsString;
+        edtVlrUnit.Text :=  DM.qryProprietario.FieldByName('valor').AsString;
       end
       else
       begin
         Application.MessageBox('Registro não encontrado.', 'Curral Novo', MB_OK);
         edtCodServico.SetFocus;
+        edtCodServico.Clear;
+        edtDescrServico.Clear;
       end;
     end;
   end
@@ -305,7 +347,7 @@ begin
   begin
     if Trim(edtCodTouro.Text) <> '' then
     begin
-      frmFuncoes.ExecutaSQL('Select * from ANIMAL where TIPO = ' + QuotedStr('T') + ' ID = ' + QuotedStr(edtCodTouro.Text), 'Abrir', DM.qryAnimal);
+      frmFuncoes.ExecutaSQL('Select * from ANIMAL where TIPO = ' + QuotedStr('T') + ' and ID = ' + QuotedStr(edtCodTouro.Text), 'Abrir', DM.qryAnimal);
       if DM.qryAnimal.RecordCount > 0 then
       begin
         edtDescrTouro.Text := DM.qryAnimal.FieldByName('NOME').AsString;
@@ -314,6 +356,8 @@ begin
       begin
         Application.MessageBox('Registro não encontrado.', 'Curral Novo', MB_OK);
         edtCodTouro.SetFocus;
+        edtCodTouro.Clear;
+        edtDescrTouro.Clear;
       end;
     end;
   end
@@ -345,6 +389,8 @@ begin
     begin
       Application.MessageBox('Registro não encontrado.', 'Curral Novo', MB_OK);
       edtCodVet.SetFocus;
+      edtCodVet.Clear;
+      edtDescrVeterinario.Clear;
     end;
   end
   else
@@ -352,12 +398,52 @@ begin
     frmPesquisa := TfrmPesquisa.Create(Self);
     try
       frmPesquisa.vTabela := 'VETERINARIO';
-      frmPesquisa.vTela := 'CONFIRMA_INS';
+      frmPesquisa.vTela := 'ISNEMINACAO';
       frmPesquisa.vComando := 'Select ID, NOME from VETERINARIO ORDER BY NOME';
       frmPesquisa.ShowModal;
     finally
       frmPesquisa.Release;
     end;
+  end;
+end;
+
+procedure TfrmInseminacao.edtCodAnimalExit(Sender: TObject);
+begin
+  if Trim(edtCodAnimal.Text) <> '' then
+  begin
+    PesquisaAnimal(True);
+  end;
+end;
+
+procedure TfrmInseminacao.edtCodProprietarioExit(Sender: TObject);
+begin
+  if Trim(edtCodProprietario.Text) <> '' then
+  begin
+    PesquisaProprietario(True);
+  end;
+end;
+
+procedure TfrmInseminacao.edtCodServicoExit(Sender: TObject);
+begin
+  if Trim(edtCodServico.Text) <> '' then
+  begin
+    PesquisaServico(True);
+  end;
+end;
+
+procedure TfrmInseminacao.edtCodTouroExit(Sender: TObject);
+begin
+  if Trim(edtCodTouro.Text) <> '' then
+  begin
+    PesquisaTouro(True);
+  end;
+end;
+
+procedure TfrmInseminacao.edtCodVetExit(Sender: TObject);
+begin
+  if Trim(edtCodVet.Text) <> '' then
+  begin
+    PesquisaVeterinario(True);
   end;
 end;
 
