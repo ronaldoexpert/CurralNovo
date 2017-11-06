@@ -694,6 +694,7 @@ object frmInseminacao: TfrmInseminacao
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
       TabOrder = 3
+      OnClick = btnExcluirClick
     end
     object btnFechar: TBitBtn
       Left = 438

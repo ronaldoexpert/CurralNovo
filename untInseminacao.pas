@@ -71,6 +71,7 @@ type
     procedure edtCodTouroExit(Sender: TObject);
     procedure edtCodServicoExit(Sender: TObject);
     procedure edtCodAnimalExit(Sender: TObject);
+    procedure btnExcluirClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -98,6 +99,18 @@ uses unstCadastroVeterinario, untCadastroAnimal, untCadastroProduto,
   untCadastroCria;
 
 { TfrmInseminacao }
+
+procedure TfrmInseminacao.btnExcluirClick(Sender: TObject);
+begin
+  if fNovo = False then
+  begin
+    if dm.qryCadInseminacao.RecordCount > 0 then
+    begin
+      frmFuncoes.Botoes('Excluir', dm.qryCadInseminacao);
+      close;
+    end;
+  end;
+end;
 
 procedure TfrmInseminacao.btnFecharClick(Sender: TObject);
 begin
