@@ -460,6 +460,7 @@ object frmInseminacao: TfrmInseminacao
           FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
           FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
         TabOrder = 3
+        OnClick = btnAddClick
       end
       object btnDelete: TBitBtn
         Left = 99
@@ -503,7 +504,7 @@ object frmInseminacao: TfrmInseminacao
       Top = 245
       Width = 536
       Height = 201
-      ActivePage = TabSheet2
+      ActivePage = TabSheet1
       Align = alBottom
       TabOrder = 2
       object TabSheet1: TTabSheet
@@ -514,13 +515,15 @@ object frmInseminacao: TfrmInseminacao
           Width = 528
           Height = 173
           Align = alClient
-          DataSource = DM.dtsCadInseminacao
+          DataSource = dtsCadInseminacao
+          Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
           TabOrder = 0
           TitleFont.Charset = DEFAULT_CHARSET
           TitleFont.Color = clWindowText
           TitleFont.Height = -11
           TitleFont.Name = 'Tahoma'
           TitleFont.Style = []
+          OnDrawColumnCell = dbgDadosDrawColumnCell
         end
       end
       object TabSheet2: TTabSheet
@@ -533,7 +536,7 @@ object frmInseminacao: TfrmInseminacao
           Height = 13
           Caption = 'Observa'#231#227'o'
         end
-        object edtMemo: TMemo
+        object edtObs: TMemo
           Left = 8
           Top = 30
           Width = 500
@@ -732,5 +735,16 @@ object frmInseminacao: TfrmInseminacao
       TabOrder = 4
       OnClick = btnFecharClick
     end
+  end
+  object qryCadInseminacao: TFDQuery
+    CachedUpdates = True
+    Connection = DM.FDConnection1
+    Left = 416
+    Top = 128
+  end
+  object dtsCadInseminacao: TDataSource
+    DataSet = qryCadInseminacao
+    Left = 472
+    Top = 128
   end
 end

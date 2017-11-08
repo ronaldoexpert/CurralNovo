@@ -5,7 +5,10 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.DBCtrls, Vcl.Mask, Vcl.StdCtrls,
-  Vcl.Buttons, Vcl.ExtCtrls, Data.DB, Vcl.Grids, Vcl.DBGrids, Vcl.ComCtrls;
+  Vcl.Buttons, Vcl.ExtCtrls, Data.DB, Vcl.Grids, Vcl.DBGrids, Vcl.ComCtrls,
+  FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
+  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet, FireDAC.Comp.Client;
 
 type
   TfrmInseminacao = class(TForm)
@@ -47,13 +50,15 @@ type
     edtCodProprietario: TEdit;
     btnAdd: TBitBtn;
     btnDelete: TBitBtn;
-    edtMemo: TMemo;
+    edtObs: TMemo;
     edtDtEmissao: TDateTimePicker;
     edtCodVet: TEdit;
     Label5: TLabel;
     btnPesqVet: TBitBtn;
     edtDescrVeterinario: TEdit;
     edtID: TEdit;
+    qryCadInseminacao: TFDQuery;
+    dtsCadInseminacao: TDataSource;
     procedure FormActivate(Sender: TObject);
     procedure btnPesqTouroClick(Sender: TObject);
     procedure btnPesqAnimalClick(Sender: TObject);
@@ -72,8 +77,13 @@ type
     procedure edtCodServicoExit(Sender: TObject);
     procedure edtCodAnimalExit(Sender: TObject);
     procedure btnExcluirClick(Sender: TObject);
+    procedure btnAddClick(Sender: TObject);
+    procedure dbgDadosDrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
   private
     { Private declarations }
+    function VerificaServico : Boolean;
+    function ValidaCampos : Boolean;
   public
     { Public declarations }
     vID : string;
@@ -96,9 +106,27 @@ implementation
 
 uses unstCadastroVeterinario, untCadastroAnimal, untCadastroProduto,
   untCadastroProdutor, untCadastroServico, untDM, untFuncoes, untPesquisa,
-  untCadastroCria;
+  untCadastroCria, untPrincipal;
 
 { TfrmInseminacao }
+
+procedure TfrmInseminacao.btnAddClick(Sender: TObject);
+begin
+  if VerificaServico then
+  begin
+    qryCadInseminacao.Append;
+    qryCadInseminacao.FieldByName('id_animal').AsString := edtCodAnimal.Text;
+    qryCadInseminacao.FieldByName('animal').AsString := edtDescrAnimal.Text;
+    qryCadInseminacao.FieldByName('id_servico').AsString := edtCodServico.Text;
+    qryCadInseminacao.FieldByName('servico').AsString := edtDescrServico.Text;
+    qryCadInseminacao.FieldByName('valor').AsString := edtVlrUnit.Text;
+    qryCadInseminacao.Post;
+
+    edtCodAnimal.Clear;
+    edtDescrAnimal.Clear;
+    edtCodAnimal.SetFocus;
+  end;
+end;
 
 procedure TfrmInseminacao.btnExcluirClick(Sender: TObject);
 begin
@@ -119,14 +147,49 @@ end;
 
 procedure TfrmInseminacao.btnGravarClick(Sender: TObject);
 begin
+  if ValidaCampos then
+  begin
+    qryCadInseminacao.First;
+    while not qryCadInseminacao.Eof do
+    begin
+      dm.qryCadInseminacao.Append;
+      if fNovo = True then
+      begin
+        vID := IntToStr(frmFuncoes.AutoIncre('INSEMINACAO', 'Novo'));
+        dm.qryCadInseminacao.FieldByName('id').AsString := vID;
+        dm.qryCadInseminacao.FieldByName('numero').AsString := edtNumero.Text;
+      end;
+      dm.qryCadInseminacao.FieldByName('data').AsDateTime := edtDtEmissao.Date;
+      dm.qryCadInseminacao.FieldByName('id_produtor').AsString := edtCodProprietario.Text;
+      dm.qryCadInseminacao.FieldByName('id_veterinario').AsString := edtCodVet.Text;
+      dm.qryCadInseminacao.FieldByName('id_touro').AsString := edtCodTouro.Text;
+      dm.qryCadInseminacao.FieldByName('id_animal').AsString := qryCadInseminacao.FieldByName('id_animal').AsString;
+      dm.qryCadInseminacao.FieldByName('vlr_unit').AsString := qryCadInseminacao.FieldByName('valor').AsString;
+      dm.qryCadInseminacao.FieldByName('id_servico').AsString := qryCadInseminacao.FieldByName('id_servico').AsString;
+      dm.qryCadInseminacao.FieldByName('observacao').AsString := edtObs.Text;
+      dm.qryCadInseminacao.FieldByName('confirmada').AsString := 'N';
+      dm.qryCadInseminacao.FieldByName('data_confirmacao').AsString := '01/01/1900';
+      dm.qryCadInseminacao.FieldByName('alteracao').AsDateTime := Date+Time;
+      dm.qryCadInseminacao.FieldByName('usuario').AsString := inttostr(frmPrincipal.vUsuario);
+
+      frmFuncoes.AutoIncre('INSEMINACAO', 'Gravar');
+      dm.qryCadInseminacao.Post;
+      dm.qryCadInseminacao.ApplyUpdates(-1);
+      qryCadInseminacao.Next;
+    end;
+  end;
+  btnNovo.Enabled := True;
+  btnExcluir.Enabled := True;
   edtNumero.Enabled := True;
+  ShowMessage('Gravação efetuada com sucesso!');
 end;
 
 procedure TfrmInseminacao.btnNovoClick(Sender: TObject);
 begin
   fNovo := True;
   CarregaGrid;
-  dm.qryCadInseminacao.Insert;
+  frmFuncoes.ExecutaSQL('Select * from INSEMINACAO WHERE ID IS NULL', 'Abrir', DM.qryCadInseminacao);
+  dm.qryCadInseminacao.Append;
 
   btnNovo.Enabled := False;
   btnGravar.Enabled := True;
@@ -184,10 +247,25 @@ end;
 
 procedure TfrmInseminacao.CarregaGrid;
 begin
-  frmFuncoes.ExecutaSQL('select I.*, A.NOME, S.DESCRICAO, S.VALOR FROM INSEMINACAO I JOIN ANIMAL A ON (A.ID = I.ID_ANIMAL) JOIN SERVICO S ON (S.ID = I.ID_SERVICO) Where I.NUMERO = ' + vID, 'Abrir', dm.qryCadInseminacao);
-  btnGravar.Enabled := False;
-  btnExcluir.Enabled := False;
-  edtNumero.SetFocus;
+  frmFuncoes.ExecutaSQL('select A.ID as id_animal, S.ID as id_servico, A.NOME as Animal, S.DESCRICAO as Servico, S.VALOR FROM INSEMINACAO I JOIN ANIMAL A ON (A.ID = I.ID_ANIMAL) JOIN SERVICO S ON (S.ID = I.ID_SERVICO) Where I.NUMERO = ' + vID, 'Abrir', qryCadInseminacao);
+  dbgDados.Columns.Items[0].Visible := False;
+  dbgDados.Columns.Items[1].Visible := False;
+  dbgDados.Columns.Items[2].Width := 150;
+  dbgDados.Columns.Items[3].Width := 150;
+  TFMTBCDField(qryCadInseminacao.FieldByName('valor')).DisplayFormat   := '###,####,###,##0.00';
+
+end;
+
+procedure TfrmInseminacao.dbgDadosDrawColumnCell(Sender: TObject;
+  const Rect: TRect; DataCol: Integer; Column: TColumn; State: TGridDrawState);
+begin
+  if gdSelected in State then
+  begin
+    dbgDados.Canvas.Brush.Color := clNavy;
+    dbgDados.Canvas.Font.Color := clWhite;
+  end;
+
+  dbgDados.DefaultDrawDataCell(Rect, Column.Field, State);
 end;
 
 procedure TfrmInseminacao.edtNumeroExit(Sender: TObject);
@@ -203,6 +281,8 @@ procedure TfrmInseminacao.FormActivate(Sender: TObject);
 begin
   vID := '0';
   CarregaGrid;
+  edtNumero.SetFocus;
+  edtDtEmissao.DateTime := Date;
 end;
 
 procedure TfrmInseminacao.FormKeyPress(Sender: TObject; var Key: Char);
@@ -240,7 +320,7 @@ begin
     try
       frmPesquisa.vTabela := 'ANIMAL';
       frmPesquisa.vTela := 'INSEMINACAO';
-      frmPesquisa.vComando := 'Select ID, NOME, IDENTIFICACAO, PROPRIETARIO from ANIMAL where TIPO = ' + QuotedStr('V') + ' ORDER BY NOME';
+      frmPesquisa.vComando := 'Select ID, NOME, IDENTIFICACAO, PROPRIETARIO from ANIMAL where TIPO = ' + QuotedStr('V') + ' AND PROPRIETARIO = ' + QuotedStr(edtCodProprietario.Text) + ' ORDER BY NOME';
       frmPesquisa.ShowModal;
     finally
       frmPesquisa.Release;
@@ -330,6 +410,7 @@ begin
       begin
         edtDescrServico.Text := DM.qryProprietario.FieldByName('DESCRICAO').AsString;
         edtVlrUnit.Text :=  DM.qryProprietario.FieldByName('valor').AsString;
+        TFMTBCDField(edtVlrUnit).DisplayFormat   := '###,####,###,##0.00';
       end
       else
       begin
@@ -418,6 +499,33 @@ begin
       frmPesquisa.Release;
     end;
   end;
+end;
+
+function TfrmInseminacao.ValidaCampos: Boolean;
+begin
+  Result := True;
+end;
+
+function TfrmInseminacao.VerificaServico: Boolean;
+var
+  vRetorno : Boolean;
+begin
+  vRetorno := True;
+  if Trim(edtCodServico.Text) = '' then
+  begin
+    ShowMessage('Informe o serviço!');
+    edtCodServico.SetFocus;
+    vRetorno := False;
+  end;
+
+  if Trim(edtCodAnimal.Text) = '' then
+  begin
+    ShowMessage('Informe o animal!');
+    edtCodAnimal.SetFocus;
+    vRetorno := False;
+  end;
+
+  Result := vRetorno;
 end;
 
 procedure TfrmInseminacao.edtCodAnimalExit(Sender: TObject);

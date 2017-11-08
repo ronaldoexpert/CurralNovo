@@ -47,6 +47,7 @@ type
     procedure btnAddClick(Sender: TObject);
     procedure btnGravarClick(Sender: TObject);
     procedure btnRemoveClick(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -165,6 +166,11 @@ procedure TfrmConfirmaInseminacao.edtCodVeterinarioExit(Sender: TObject);
 begin
   if Trim(edtProprietario.Text) <> '' then
     PesquisaVeterinario(True);
+end;
+
+procedure TfrmConfirmaInseminacao.FormActivate(Sender: TObject);
+begin
+  edtDtConfirmacao.DateTime := Date;
 end;
 
 procedure TfrmConfirmaInseminacao.PesquisaProdutor(vStatus: boolean);
