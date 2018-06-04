@@ -10,8 +10,11 @@ object frmCadastroProduto: TfrmCadastroProduto
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  KeyPreview = True
   OldCreateOrder = False
   Position = poScreenCenter
+  OnActivate = FormActivate
+  OnKeyPress = FormKeyPress
   PixelsPerInch = 96
   TextHeight = 13
   object pnlRodape: TPanel
@@ -55,6 +58,7 @@ object frmCadastroProduto: TfrmCadastroProduto
         F9A2F9FAE5FDFDFFFFFFFFFFFFFFFFFFFFFFFFCCDDE7BED5E3BBD3E3BBD3E3D5
         E4EDFFFFFFFFFFFFFFFFFFF7FEFEF0FEFEFAFFFFFFFFFFFFFFFF}
       TabOrder = 0
+      OnClick = btnNovoClick
     end
     object btnGravar: TBitBtn
       Left = 89
@@ -90,6 +94,7 @@ object frmCadastroProduto: TfrmCadastroProduto
         E9AB7851C9AE9BFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
       TabOrder = 1
+      OnClick = btnGravarClick
     end
     object btnCancelar: TBitBtn
       Left = 170
@@ -125,6 +130,7 @@ object frmCadastroProduto: TfrmCadastroProduto
         FAFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBEBF9ABABE58D
         8DDD8D8DDDAAAAE5E9E9F9FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
       TabOrder = 2
+      OnClick = btnCancelarClick
     end
     object btnExcluir: TBitBtn
       Left = 251
@@ -160,6 +166,7 @@ object frmCadastroProduto: TfrmCadastroProduto
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
       TabOrder = 3
+      OnClick = btnExcluirClick
     end
     object btnFechar: TBitBtn
       Left = 362
@@ -215,7 +222,7 @@ object frmCadastroProduto: TfrmCadastroProduto
       Caption = 'Descri'#231#227'o'
     end
     object lblValorUnit: TLabel
-      Left = 98
+      Left = 179
       Top = 57
       Width = 56
       Height = 13
@@ -229,11 +236,18 @@ object frmCadastroProduto: TfrmCadastroProduto
       Caption = 'Codigo'
     end
     object lblEstoque: TLabel
-      Left = 218
+      Left = 274
       Top = 57
       Width = 39
       Height = 13
       Caption = '&Estoque'
+    end
+    object lblUnidade: TLabel
+      Left = 102
+      Top = 57
+      Width = 39
+      Height = 13
+      Caption = 'Unidade'
     end
     object btnPesquisar: TBitBtn
       Left = 67
@@ -267,13 +281,16 @@ object frmCadastroProduto: TfrmCadastroProduto
         FFFFFFFFFFFFFFFFFFFFFFFFD5B4A4F4EECDFFFAE8FFF6CDFFEEBBFFF4C7F8D1
         A5BB928AFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD5
         B4A4D5B4A4CAA58EE1BBA3DAB39B8B8B8BFFFFFFFFFFFFFFFFFF}
-      TabOrder = 0
+      TabOrder = 6
+      TabStop = False
+      OnClick = btnPesquisarClick
     end
     object edtDescricao: TDBEdit
       Left = 98
       Top = 32
       Width = 271
       Height = 21
+      DataSource = DM.dtsProduto
       TabOrder = 1
     end
     object edtCodigo: TEdit
@@ -281,21 +298,46 @@ object frmCadastroProduto: TfrmCadastroProduto
       Top = 32
       Width = 53
       Height = 21
-      TabOrder = 2
+      TabOrder = 0
+      OnExit = edtCodigoExit
+      OnKeyDown = edtCodigoKeyDown
+      OnKeyPress = edtCodigoKeyPress
     end
     object edtEstoque: TDBEdit
-      Left = 218
+      Left = 274
       Top = 76
       Width = 95
       Height = 21
-      TabOrder = 3
+      DataSource = DM.dtsProduto
+      Enabled = False
+      TabOrder = 4
     end
     object edtVlrUnit: TDBEdit
+      Left = 179
+      Top = 76
+      Width = 66
+      Height = 21
+      DataSource = DM.dtsProduto
+      TabOrder = 3
+    end
+    object chkSituacao: TDBCheckBox
+      Left = 318
+      Top = 12
+      Width = 51
+      Height = 17
+      Caption = 'Ativo'
+      DataSource = DM.dtsProduto
+      TabOrder = 5
+      ValueChecked = 'Ativo'
+      ValueUnchecked = 'Inativo'
+    end
+    object edtUnidade: TDBEdit
       Left = 98
       Top = 76
       Width = 66
       Height = 21
-      TabOrder = 4
+      DataSource = DM.dtsProduto
+      TabOrder = 2
     end
   end
 end

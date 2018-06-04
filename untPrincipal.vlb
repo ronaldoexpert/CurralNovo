@@ -13,9 +13,6 @@ Coordinates=34,77,114,33
 [CadastrodeProduto]
 Coordinates=357,1,110,33
 
-[Cadastrais]
-Coordinates=357,56,66,33
-
 [CadastrodeServico]
 Coordinates=357,111,108,33
 
@@ -40,9 +37,6 @@ Coordinates=521,1,91,33
 [Inseminacao]
 Coordinates=521,56,76,33
 
-[Movimento]
-Coordinates=521,111,68,33
-
 [Relatorios]
 Coordinates=521,166,64,33
 
@@ -53,7 +47,7 @@ Coordinates=521,221,85,33
 Coordinates=0,115,40,33
 
 []
-Coordinates=240,40,68,33
+Coordinates=521,111,68,33
 Visible=True
 
 [ToolBar1]

@@ -26,7 +26,6 @@ object frmCadastroVeterinario: TfrmCadastroVeterinario
     Color = clBtnHighlight
     ParentBackground = False
     TabOrder = 0
-    ExplicitWidth = 505
     object lblCodigo: TLabel
       Left = 8
       Top = 16
@@ -115,7 +114,6 @@ object frmCadastroVeterinario: TfrmCadastroVeterinario
       Height = 165
       Align = alBottom
       TabOrder = 5
-      ExplicitWidth = 503
       object Label2: TLabel
         Left = 16
         Top = 16
@@ -290,7 +288,6 @@ object frmCadastroVeterinario: TfrmCadastroVeterinario
       Align = alBottom
       BevelInner = bvLowered
       TabOrder = 4
-      ExplicitWidth = 503
       object lblCrmv: TLabel
         Left = 16
         Top = 12
@@ -330,7 +327,6 @@ object frmCadastroVeterinario: TfrmCadastroVeterinario
       Align = alBottom
       BevelInner = bvLowered
       TabOrder = 3
-      ExplicitWidth = 503
       object lblCNPJ: TLabel
         Left = 18
         Top = 3
@@ -390,6 +386,19 @@ object frmCadastroVeterinario: TfrmCadastroVeterinario
         OnClick = rdTipoPessoaClick
       end
     end
+    object chkSituacao: TDBCheckBox
+      Left = 297
+      Top = 11
+      Width = 51
+      Height = 17
+      Caption = 'Ativo'
+      Color = clWhite
+      DataSource = DM.dtsCadastro
+      ParentColor = False
+      TabOrder = 7
+      ValueChecked = 'Ativo'
+      ValueUnchecked = 'Inativo'
+    end
   end
   object pnlRodape: TPanel
     Left = 0
@@ -398,7 +407,6 @@ object frmCadastroVeterinario: TfrmCadastroVeterinario
     Height = 48
     Align = alBottom
     TabOrder = 1
-    ExplicitWidth = 505
     object btnNovo: TBitBtn
       Left = 8
       Top = 5

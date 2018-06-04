@@ -12,7 +12,7 @@ uses
   FireDAC.Comp.Client, Vcl.Grids, Vcl.DBGrids, IniFiles,Registry, Vcl.Buttons,
   Vcl.ComCtrls, Vcl.ToolWin, Vcl.ExtCtrls, System.ImageList, Vcl.ImgList,
   Vcl.StdCtrls, FireDAC.Phys.IBWrapper, FireDAC.Phys.IBBase,
-   DateUtils, Vcl.Imaging.pngimage;
+  DateUtils, Vcl.Imaging.pngimage, Vcl.Mask;
 
 type
   TfrmLogin = class(TForm)
@@ -24,16 +24,20 @@ type
     lblUsuario: TLabel;
     lblSenha: TLabel;
     Image1: TImage;
+    lblCaminhoTemp: TLabel;
     procedure btnLoginClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure btnCancelarClick(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
     vCaminhoBD : string;
     procedure CarregaConfiguracao;
+    procedure GravarArquivoTXT;
   public
     { Public declarations }
+    vCaminhoTemp : String;
   end;
 
 var
@@ -43,11 +47,12 @@ implementation
 
 {$R *.dfm}
 
-uses untPrincipal, untDM, untFuncoes;
+uses untDM, untFuncoes, unstCadastroVeterinario, untPrincipal;
 
 procedure TfrmLogin.btnCancelarClick(Sender: TObject);
 begin
-  close;
+  //close;
+  Application.Terminate;
 end;
 
 procedure TfrmLogin.btnLoginClick(Sender: TObject);
@@ -64,8 +69,10 @@ begin
     begin
       if DM.qryUsuario.FieldByName('senha').AsString = edtSenha.Text then
       begin
+
         frmPrincipal := TfrmPrincipal.Create(Self);
         try
+          GravarArquivoTXT;
           frmPrincipal.vUsuario := DM.qryUsuario.FieldByName('ID').AsInteger;
           frmPrincipal.ShowModal;
         finally
@@ -89,15 +96,17 @@ begin
   END
   else
   begin
-    if edtSenha.Text = '13072012' then
+    if edtSenha.Text = '123456' then
     begin
       frmPrincipal := TfrmPrincipal.Create(Self);
       try
-        frmPrincipal.vUsuario := 0;
+        GravarArquivoTXT;
+        frmPrincipal.vUsuario := DM.qryUsuario.FieldByName('ID').AsInteger;
         frmPrincipal.ShowModal;
       finally
         frmPrincipal.Release;
       end;
+
     end
     else
     begin
@@ -117,15 +126,18 @@ procedure TfrmLogin.FormActivate(Sender: TObject);
 var
   vCaptionAntiga : string;
 begin
+  vCaminhoTemp := frmFuncoes.PegaTempDir;
+  lblCaminhoTemp.Caption := vCaminhoTemp;
+
   Caption := 'Sistema de Gerenciamento de Inseminção - Versão: ' + frmFuncoes.VersaoExe;
   vCaptionAntiga := Caption;
   Caption := Caption + ' - Estabelecendo conexão com o banco de dados...';
   while not DM.FDConnection1.Connected do
   begin
     if FileExists( ExtractFilePath( Application.ExeName ) + 'CFG.ini' ) then // Testa Existência do arquivo
-    begin                    { ENDEREÇO DO ARQUIVO }                  { NOME }
+    begin                    // ENDEREÇO DO ARQUIVO                   { NOME
       with  TIniFile.Create( ExtractFilePath( Application.ExeName ) + 'CFG.ini' ) do // Cria a estância do Objeto em Memória.
-      begin                                { SEÇÃO }    { CHAVE }        { VALOR PADRAO}
+      begin                                // SEÇÃO     { CHAVE         { VALOR PADRAO
         vCaminhoBD := ReadString('CAMINHOS', 'BD', ''); // ReadString   - Lê um parâmetro como String;
         Free;
       end;
@@ -149,6 +161,11 @@ begin
   edtUsuario.SetFocus;
 end;
 
+procedure TfrmLogin.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  Application.Terminate;
+end;
+
 procedure TfrmLogin.FormKeyPress(Sender: TObject; var Key: Char);
 begin
   If key = #13 then
@@ -156,6 +173,25 @@ begin
     Key:= #0;
     Perform(Wm_NextDlgCtl,0,0);
   end;
+end;
+
+procedure TfrmLogin.GravarArquivoTXT;
+var  arq: TextFile; { declarando a variável "arq" do tipo arquivo texto }
+    i, n: integer;
+begin
+  try
+  { [ 1 ] Associa a variável do programa "arq" ao arquivo externo "tabuada.txt"
+          na unidade de disco "d" }
+    AssignFile(arq, vCaminhoTemp + '\usuario.txt');
+    Rewrite(arq); { [ 2 ] Cria o arquivo texto "tabuada.txt" na unidade de disco "d" }
+    if edtUsuario.Text = 'MASTER' then
+      Writeln(arq, '0')
+    else
+      Writeln(arq, DM.qryUsuario.FieldByName('id').AsString);
+    CloseFile(arq);
+  except
+  end;
+
 end;
 
 end.

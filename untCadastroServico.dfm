@@ -10,8 +10,11 @@ object frmCadastroServico: TfrmCadastroServico
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  KeyPreview = True
   OldCreateOrder = False
   Position = poScreenCenter
+  OnActivate = FormActivate
+  OnKeyPress = FormKeyPress
   PixelsPerInch = 96
   TextHeight = 13
   object pnlRodape: TPanel
@@ -23,7 +26,7 @@ object frmCadastroServico: TfrmCadastroServico
     TabOrder = 0
     object btnNovo: TBitBtn
       Left = 8
-      Top = 5
+      Top = 6
       Width = 75
       Height = 37
       Caption = '&Novo'
@@ -55,6 +58,7 @@ object frmCadastroServico: TfrmCadastroServico
         F9A2F9FAE5FDFDFFFFFFFFFFFFFFFFFFFFFFFFCCDDE7BED5E3BBD3E3BBD3E3D5
         E4EDFFFFFFFFFFFFFFFFFFF7FEFEF0FEFEFAFFFFFFFFFFFFFFFF}
       TabOrder = 0
+      OnClick = btnNovoClick
     end
     object btnGravar: TBitBtn
       Left = 89
@@ -90,6 +94,7 @@ object frmCadastroServico: TfrmCadastroServico
         E9AB7851C9AE9BFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
       TabOrder = 1
+      OnClick = btnGravarClick
     end
     object btnCancelar: TBitBtn
       Left = 170
@@ -125,6 +130,7 @@ object frmCadastroServico: TfrmCadastroServico
         FAFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBEBF9ABABE58D
         8DDD8D8DDDAAAAE5E9E9F9FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
       TabOrder = 2
+      OnClick = btnCancelarClick
     end
     object btnExcluir: TBitBtn
       Left = 251
@@ -160,6 +166,7 @@ object frmCadastroServico: TfrmCadastroServico
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
       TabOrder = 3
+      OnClick = btnExcluirClick
     end
     object btnFechar: TBitBtn
       Left = 362
@@ -260,13 +267,16 @@ object frmCadastroServico: TfrmCadastroServico
         FFFFFFFFFFFFFFFFFFFFFFFFD5B4A4F4EECDFFFAE8FFF6CDFFEEBBFFF4C7F8D1
         A5BB928AFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD5
         B4A4D5B4A4CAA58EE1BBA3DAB39B8B8B8BFFFFFFFFFFFFFFFFFF}
-      TabOrder = 0
+      TabOrder = 4
+      TabStop = False
+      OnClick = btnPesquisarClick
     end
     object edtDescricao: TDBEdit
       Left = 98
       Top = 32
       Width = 271
       Height = 21
+      DataSource = DM.dtsServico
       TabOrder = 1
     end
     object edtCodigo: TEdit
@@ -274,14 +284,29 @@ object frmCadastroServico: TfrmCadastroServico
       Top = 32
       Width = 53
       Height = 21
-      TabOrder = 2
+      TabOrder = 0
+      OnExit = edtCodigoExit
+      OnKeyDown = edtCodigoKeyDown
+      OnKeyPress = edtCodigoKeyPress
     end
     object edtValorUnit: TDBEdit
       Left = 98
       Top = 76
-      Width = 121
+      Width = 95
       Height = 21
+      DataSource = DM.dtsServico
+      TabOrder = 2
+    end
+    object chkSituacao: TDBCheckBox
+      Left = 318
+      Top = 12
+      Width = 51
+      Height = 17
+      Caption = 'Ativo'
+      DataSource = DM.dtsServico
       TabOrder = 3
+      ValueChecked = 'Ativo'
+      ValueUnchecked = 'Inativo'
     end
   end
 end

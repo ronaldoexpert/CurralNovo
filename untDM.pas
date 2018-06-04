@@ -37,6 +37,14 @@ type
     dtsCadInseminacao: TDataSource;
     qryConfiguracao: TFDQuery;
     dtsConfiguracao: TDataSource;
+    qryMoviInseminacao: TFDQuery;
+    dtsMoviInseminacao: TDataSource;
+    qryServico: TFDQuery;
+    dtsServico: TDataSource;
+    qryProduto: TFDQuery;
+    dtsProduto: TDataSource;
+    qryAuxiliar: TFDQuery;
+    dtsAuxiliar: TDataSource;
   private
     { Private declarations }
   public

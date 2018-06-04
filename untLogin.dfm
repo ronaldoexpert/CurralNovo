@@ -5,8 +5,8 @@ object frmLogin: TfrmLogin
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Login'
-  ClientHeight = 142
-  ClientWidth = 443
+  ClientHeight = 153
+  ClientWidth = 439
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,19 +15,27 @@ object frmLogin: TfrmLogin
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  PopupMode = pmExplicit
   Position = poScreenCenter
   OnActivate = FormActivate
+  OnClose = FormClose
   OnKeyPress = FormKeyPress
   PixelsPerInch = 96
   TextHeight = 13
   object pnlPrincipal: TPanel
     Left = 0
     Top = 0
-    Width = 443
-    Height = 142
+    Width = 439
+    Height = 153
     Align = alClient
     Color = clWhite
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
     ParentBackground = False
+    ParentFont = False
     TabOrder = 0
     object lblUsuario: TLabel
       Left = 139
@@ -442,6 +450,19 @@ object frmLogin: TfrmLogin
         2437D70000000049454E44AE426082}
       Proportional = True
       Stretch = True
+    end
+    object lblCaminhoTemp: TLabel
+      Left = 8
+      Top = 127
+      Width = 54
+      Height = 8
+      Caption = 'lblCaminhoTemp'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -7
+      Font.Name = 'Tahoma'
+      Font.Style = [fsItalic]
+      ParentFont = False
     end
     object edtUsuario: TEdit
       Left = 139

@@ -77,6 +77,8 @@
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+        <VerInfo_MinorVer>1</VerInfo_MinorVer>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.1.0.0;Comments=</VerInfo_Keys>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <AppEnableHighDPI>true</AppEnableHighDPI>
@@ -97,10 +99,6 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="untPrincipal.pas">
-            <Form>frmPrincipal</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
         <DCCReference Include="untLogin.pas">
             <Form>frmLogin</Form>
             <FormType>dfm</FormType>
@@ -115,10 +113,6 @@
         </DCCReference>
         <DCCReference Include="untCadastroProdutor.pas">
             <Form>frmCadastroProdutor</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="untCadastroTipoProdutor.pas">
-            <Form>frmCadastroTipoProdutor</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="untCadastroProduto.pas">
@@ -155,6 +149,22 @@
         </DCCReference>
         <DCCReference Include="untConfirmaInseminacao.pas">
             <Form>frmConfirmaInseminacao</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="untRelatorioGraficos.pas">
+            <Form>frmRelGraficos</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="untMovimentaEstoque.pas">
+            <Form>frmMovimentaEstoque</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="untPrincipal.pas">
+            <Form>frmPrincipal</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="untConfiguracao.pas">
+            <Form>frmConfiguracao</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">

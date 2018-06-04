@@ -59,6 +59,7 @@ type
     edtInsEstadual: TDBEdit;
     lblInscEstadual: TLabel;
     rdTipoPessoa: TRadioGroup;
+    chkSituacao: TDBCheckBox;
     procedure FormActivate(Sender: TObject);
     procedure btnFecharClick(Sender: TObject);
     procedure rdTipoPessoaClick(Sender: TObject);
@@ -112,10 +113,13 @@ begin
     dm.qryCadastro.FieldByName('id').AsString := edtCodigo.Text;
   end;
 
-  if rdTipoPessoa.ItemIndex = 0 then
-    dm.qryCadastro.FieldByName('TIPO').AsString := 'F'
-  else
-    dm.qryCadastro.FieldByName('TIPO').AsString := 'J';
+  if vTipoCadastro = 'Proprietario' then
+  begin
+    if rdTipoPessoa.ItemIndex = 0 then
+      dm.qryCadastro.FieldByName('TIPO').AsString := 'F'
+    else
+      dm.qryCadastro.FieldByName('TIPO').AsString := 'J';
+  end;
 
   dm.qryCadastro.FieldByName('alteracao').AsDateTime := Date+time;
   dm.qryCadastro.FieldByName('usuario').AsInteger := frmPrincipal.vUsuario;
@@ -172,19 +176,22 @@ begin
   edtTelII.DataField := 'TELII';
   edtTelIII.DataField := 'TELIII';
   edtEmail.DataField := 'EMAIL';
+  chkSituacao.DataField := 'SITUACAO';
 
   if vTipoCadastro = 'Veterinario' then
   begin
     edtCrmv.DataField := 'CRMV';
     edtUFCRMV.DataField := 'UF_CRMV';
+    rdTipoPessoa.Visible := False;
   end
-  else if vTipoCadastro = 'Produtor' then
+  else if vTipoCadastro = 'Proprietario' then
   begin
-    edtInscRural.DataField := 'INSCEST_RURAL';
+    edtInscRural.DataField := 'INSC_RURAL';
     edtCNPJ.DataField := 'CNPJ';
     edtInsEstadual.DataField := 'INSCEST';
 
     dm.qryCadastro.FieldByName('CNPJ').EditMask := '##.###.###/####-##';
+    rdTipoPessoa.Visible := True;
   end;
 
   dm.qryCadastro.FieldByName('CEP').EditMask := '##.###-###';
@@ -233,7 +240,7 @@ end;
 
 procedure TfrmCadastroVeterinario.PesquisaBD(vStatus: boolean);
 begin
-if vStatus = True then
+  if vStatus = True then
   begin
     if Trim(edtCodigo.Text) <> '' then
     begin
@@ -246,11 +253,6 @@ if vStatus = True then
       begin
         dm.qryCadastro.Edit;
         CarregaCampos;
-
-        if dm.qryCadastro.FieldByName('TIPO').AsString = 'F' then
-          rdTipoPessoa.ItemIndex := 0
-        else
-          rdTipoPessoa.ItemIndex := 1;
       end
       else
       begin
@@ -283,7 +285,7 @@ end;
 
 procedure TfrmCadastroVeterinario.PossicionaElementos;
 begin
-if vTipoCadastro = 'Veterinario' then
+  if vTipoCadastro = 'Veterinario' then
   begin
     pnlDadosVet.Visible := True;
     pnlDadosProdutor.Visible := False;

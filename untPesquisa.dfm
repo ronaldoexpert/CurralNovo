@@ -1,9 +1,9 @@
 object frmPesquisa: TfrmPesquisa
   Left = 0
   Top = 0
-  BorderIcons = [biSystemMenu]
+  BorderIcons = [biSystemMenu, biMaximize]
   Caption = 'frmPesquisa'
-  ClientHeight = 346
+  ClientHeight = 365
   ClientWidth = 623
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -13,6 +13,7 @@ object frmPesquisa: TfrmPesquisa
   Font.Style = []
   OldCreateOrder = False
   Position = poScreenCenter
+  OnActivate = FormActivate
   OnKeyDown = FormKeyDown
   OnShow = FormShow
   PixelsPerInch = 96
@@ -21,8 +22,9 @@ object frmPesquisa: TfrmPesquisa
     Left = 0
     Top = 0
     Width = 623
-    Height = 245
+    Height = 243
     Align = alClient
+    DataSource = dtsPesquisa
     Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
     TabOrder = 0
     TitleFont.Charset = DEFAULT_CHARSET
@@ -37,9 +39,9 @@ object frmPesquisa: TfrmPesquisa
   end
   object pnlPesquisa: TPanel
     Left = 0
-    Top = 245
+    Top = 243
     Width = 623
-    Height = 101
+    Height = 122
     Align = alBottom
     TabOrder = 1
     object btnFechar: TBitBtn
@@ -154,7 +156,7 @@ object frmPesquisa: TfrmPesquisa
       Left = 16
       Top = 6
       Width = 490
-      Height = 75
+      Height = 107
       Caption = 'Pesquisa por'
       TabOrder = 1
       object lblCampoPesquisa: TLabel
@@ -171,12 +173,36 @@ object frmPesquisa: TfrmPesquisa
         Height = 21
         TabOrder = 0
         OnChange = edtPesquisaChange
+        OnKeyDown = edtPesquisaKeyDown
         OnKeyPress = edtPesquisaKeyPress
+      end
+      object chkConfirmadas: TCheckBox
+        Left = 336
+        Top = 68
+        Width = 73
+        Height = 17
+        Caption = '&Finalizadas'
+        TabOrder = 1
+        OnClick = chkConfirmadasClick
+      end
+      object rdgrpSexo: TRadioGroup
+        Left = 16
+        Top = 68
+        Width = 185
+        Height = 32
+        Columns = 2
+        ItemIndex = 0
+        Items.Strings = (
+          'F'#234'meas'
+          'Machos')
+        TabOrder = 2
+        Visible = False
+        OnClick = rdgrpSexoClick
       end
     end
   end
   object qryPesquisa: TFDQuery
-    Filtered = True
+    FilterOptions = [foCaseInsensitive]
     CachedUpdates = True
     Connection = DM.FDConnection1
     Left = 392

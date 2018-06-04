@@ -23,6 +23,8 @@ type
     procedure Botoes(vBotao : string; vSQL : TFDQuery);
     function VersaoExe: String;
     function FormataNumero(vNumero : string) : string;
+    function PegaTempDir : String;       //Pega o diretorio da Pasta Temporaria
+    function LerArquivoUsuario : String; //Pega o valor do arquivo usuario.txt no temp
   end;
 
 var
@@ -32,7 +34,7 @@ implementation
 
 {$R *.dfm}
 
-uses untDM;
+uses untDM, untLogin;
 
 { TfrmFuncoes }
 
@@ -68,7 +70,14 @@ begin
     if Application.MessageBox('Deseja realmente excluir o registro?', 'Curral Novo', MB_YESNO) = mrYes then
     begin
       vSQL.Delete;
+      vSQL.ApplyUpdates(-1);
     end;
+  end
+  ELSE if vBotao = 'Gravar' then
+  begin
+   vSQL.Post;
+   vSQL.ApplyUpdates(-1);
+   ShowMessage('Gravação efetuada com sucesso!');
   end;
 end;
 
@@ -116,6 +125,45 @@ begin
 
   Result := vRetorno;
 
+end;
+
+function TfrmFuncoes.LerArquivoUsuario: String;
+var
+  arq: TextFile;
+  linha: string;
+begin
+  AssignFile(arq, frmLogin.vCaminhoTemp + 'usuario.txt');
+
+  {$I-}         // desativa a diretiva de Input
+  Reset(arq);   // [ 3 ] Abre o arquivo texto para leitura
+  {$I+}         // ativa a diretiva de Input
+
+  if (IOResult <> 0) then // verifica o resultado da operação de abertura
+    ShowMessage('Erro na abertura do arquivo !!!')
+  else
+  begin
+     while (not eof(arq)) do
+     begin
+       readln(arq, linha);
+     end;
+     CloseFile(arq);
+   end;
+
+   Result := linha;
+end;
+
+function TfrmFuncoes.PegaTempDir: String;
+var DiretorioTemp : PChar;
+    TempBuffer    : Dword;
+begin
+  TempBuffer := 255;
+  GetMem(DiretorioTemp,255);
+  try
+    GetTempPath(tempbuffer,diretoriotemp);
+    result := DiretorioTemp;
+  finally
+    FreeMem(diretoriotemp);
+  end;
 end;
 
 function TfrmFuncoes.VersaoExe: String;

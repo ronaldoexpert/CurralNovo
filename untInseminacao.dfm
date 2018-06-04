@@ -2,8 +2,8 @@ object frmInseminacao: TfrmInseminacao
   Left = 0
   Top = 0
   Caption = 'Cadastro Insemina'#231#227'o'
-  ClientHeight = 495
-  ClientWidth = 538
+  ClientHeight = 462
+  ClientWidth = 555
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,8 +20,8 @@ object frmInseminacao: TfrmInseminacao
   object pnlCentro: TPanel
     Left = 0
     Top = 0
-    Width = 538
-    Height = 447
+    Width = 555
+    Height = 414
     Align = alClient
     Color = clBtnHighlight
     ParentBackground = False
@@ -29,16 +29,16 @@ object frmInseminacao: TfrmInseminacao
     object pnlTop: TPanel
       Left = 1
       Top = 1
-      Width = 536
+      Width = 553
       Height = 112
       Align = alTop
       TabOrder = 0
       object lblCodigo: TLabel
         Left = 8
         Top = 16
-        Width = 37
+        Width = 60
         Height = 13
-        Caption = 'N'#250'mero'
+        Caption = 'N'#250'mero (F2)'
       end
       object lblEmissao: TLabel
         Left = 124
@@ -50,23 +50,37 @@ object frmInseminacao: TfrmInseminacao
       object lblProprietario: TLabel
         Left = 206
         Top = 16
-        Width = 54
+        Width = 77
         Height = 13
-        Caption = 'Propret'#225'rio'
+        Caption = 'Propret'#225'rio (F2)'
       end
       object lblTouro: TLabel
         Left = 297
         Top = 61
-        Width = 28
+        Width = 51
         Height = 13
-        Caption = 'Touro'
+        Caption = 'Touro (F2)'
       end
       object Label5: TLabel
         Left = 8
         Top = 61
-        Width = 52
+        Width = 75
         Height = 13
-        Caption = '&Veterin'#225'rio'
+        Caption = '&Veterin'#225'rio (F2)'
+      end
+      object lblFinalizada: TLabel
+        Left = 368
+        Top = 2
+        Width = 157
+        Height = 24
+        Caption = '- FINALIZADA -'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clRed
+        Font.Height = -20
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Visible = False
       end
       object btnPesqProprietario: TBitBtn
         Left = 266
@@ -145,6 +159,7 @@ object frmInseminacao: TfrmInseminacao
         Top = 32
         Width = 228
         Height = 21
+        Color = clInfoBk
         Enabled = False
         TabOrder = 8
       end
@@ -153,8 +168,9 @@ object frmInseminacao: TfrmInseminacao
         Top = 32
         Width = 81
         Height = 21
-        TabOrder = 4
+        TabOrder = 0
         OnExit = edtNumeroExit
+        OnKeyDown = edtNumeroKeyDown
       end
       object btnPesqTouro: TBitBtn
         Left = 356
@@ -197,6 +213,7 @@ object frmInseminacao: TfrmInseminacao
         Top = 77
         Width = 138
         Height = 21
+        Color = clInfoBk
         Enabled = False
         TabOrder = 5
       end
@@ -205,16 +222,22 @@ object frmInseminacao: TfrmInseminacao
         Top = 77
         Width = 52
         Height = 21
-        TabOrder = 3
+        TabOrder = 4
+        OnChange = edtCodTouroChange
         OnExit = edtCodTouroExit
+        OnKeyDown = edtCodTouroKeyDown
+        OnKeyPress = edtCodTouroKeyPress
       end
       object edtCodProprietario: TEdit
         Left = 206
         Top = 32
         Width = 52
         Height = 21
-        TabOrder = 1
+        TabOrder = 2
+        OnChange = edtCodProprietarioChange
         OnExit = edtCodProprietarioExit
+        OnKeyDown = edtCodProprietarioKeyDown
+        OnKeyPress = edtCodProprietarioKeyPress
       end
       object edtDtEmissao: TDateTimePicker
         Left = 124
@@ -223,15 +246,18 @@ object frmInseminacao: TfrmInseminacao
         Height = 21
         Date = 43039.814233217590000000
         Time = 43039.814233217590000000
-        TabOrder = 0
+        TabOrder = 1
       end
       object edtCodVet: TEdit
         Left = 8
         Top = 77
         Width = 52
         Height = 21
-        TabOrder = 2
+        TabOrder = 3
+        OnChange = edtCodVetChange
         OnExit = edtCodVetExit
+        OnKeyDown = edtCodVetKeyDown
+        OnKeyPress = edtCodVetKeyPress
       end
       object btnPesqVet: TBitBtn
         Left = 66
@@ -274,6 +300,7 @@ object frmInseminacao: TfrmInseminacao
         Top = 77
         Width = 194
         Height = 21
+        Color = clInfoBk
         Enabled = False
         TabOrder = 6
       end
@@ -289,34 +316,34 @@ object frmInseminacao: TfrmInseminacao
     object pnlDados: TPanel
       Left = 1
       Top = 113
-      Width = 536
-      Height = 132
+      Width = 553
+      Height = 99
       Align = alClient
       TabOrder = 1
-      object Label1: TLabel
+      object lblAnimal: TLabel
         Left = 8
-        Top = 47
-        Width = 31
+        Top = 7
+        Width = 54
         Height = 13
-        Caption = 'Animal'
+        Caption = 'Animal (F2)'
       end
-      object Label2: TLabel
-        Left = 8
-        Top = 6
-        Width = 35
+      object lblServico: TLabel
+        Left = 600
+        Top = 30
+        Width = 61
         Height = 13
-        Caption = 'Servi'#231'o'
+        Caption = 'Servi'#231'o  (F2)'
       end
-      object Label3: TLabel
-        Left = 297
-        Top = 6
+      object lblVlrUnit: TLabel
+        Left = 600
+        Top = 67
         Width = 56
         Height = 13
         Caption = 'Vlr. Unit'#225'rio'
       end
       object btnPesqAnimal: TBitBtn
         Left = 66
-        Top = 62
+        Top = 22
         Width = 25
         Height = 25
         Glyph.Data = {
@@ -346,21 +373,22 @@ object frmInseminacao: TfrmInseminacao
           FFFFFFFFFFFFFFFFFFFFFFFFD5B4A4F4EECDFFFAE8FFF6CDFFEEBBFFF4C7F8D1
           A5BB928AFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD5
           B4A4D5B4A4CAA58EE1BBA3DAB39B8B8B8BFFFFFFFFFFFFFFFFFF}
-        TabOrder = 8
+        TabOrder = 5
         TabStop = False
         OnClick = btnPesqAnimalClick
       end
       object edtDescrAnimal: TEdit
         Left = 97
-        Top = 64
-        Width = 194
+        Top = 24
+        Width = 304
         Height = 21
+        Color = clInfoBk
         Enabled = False
-        TabOrder = 4
+        TabOrder = 2
       end
       object btnPesqServico: TBitBtn
-        Left = 66
-        Top = 19
+        Left = 658
+        Top = 43
         Width = 25
         Height = 25
         Glyph.Data = {
@@ -390,45 +418,54 @@ object frmInseminacao: TfrmInseminacao
           FFFFFFFFFFFFFFFFFFFFFFFFD5B4A4F4EECDFFFAE8FFF6CDFFEEBBFFF4C7F8D1
           A5BB928AFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD5
           B4A4D5B4A4CAA58EE1BBA3DAB39B8B8B8BFFFFFFFFFFFFFFFFFF}
-        TabOrder = 6
+        TabOrder = 4
         TabStop = False
         OnClick = btnPesqServicoClick
       end
       object edtDescrServico: TEdit
-        Left = 97
-        Top = 20
-        Width = 194
+        Left = 689
+        Top = 42
+        Width = 104
         Height = 21
+        Color = clInfoBk
         Enabled = False
-        TabOrder = 5
+        TabOrder = 3
       end
       object edtVlrUnit: TEdit
-        Left = 297
-        Top = 20
+        Left = 600
+        Top = 81
         Width = 90
         Height = 21
-        TabOrder = 1
+        TabStop = False
+        TabOrder = 8
         Text = '0,00'
       end
       object edtCodAnimal: TEdit
         Left = 8
-        Top = 64
-        Width = 52
-        Height = 21
-        TabOrder = 2
-        OnExit = edtCodAnimalExit
-      end
-      object edtCodServico: TEdit
-        Left = 8
-        Top = 20
+        Top = 24
         Width = 52
         Height = 21
         TabOrder = 0
+        OnChange = edtCodAnimalChange
+        OnExit = edtCodAnimalExit
+        OnKeyDown = edtCodAnimalKeyDown
+        OnKeyPress = edtCodAnimalKeyPress
+      end
+      object edtCodServico: TEdit
+        Left = 600
+        Top = 44
+        Width = 52
+        Height = 21
+        TabStop = False
+        TabOrder = 7
+        OnChange = edtCodServicoChange
         OnExit = edtCodServicoExit
+        OnKeyDown = edtCodServicoKeyDown
+        OnKeyPress = edtCodServicoKeyPress
       end
       object btnAdd: TBitBtn
         Left = 8
-        Top = 91
+        Top = 51
         Width = 85
         Height = 32
         Caption = 'Confirmar'
@@ -459,12 +496,12 @@ object frmInseminacao: TfrmInseminacao
           FFFFFFFFFFFFE5F8E99EE2B054CA713ABF5B36BD5948C26A97DBAAE1F5E7FFFF
           FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
           FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
-        TabOrder = 3
+        TabOrder = 1
         OnClick = btnAddClick
       end
       object btnDelete: TBitBtn
         Left = 99
-        Top = 91
+        Top = 51
         Width = 88
         Height = 32
         Caption = 'Excluir'
@@ -495,14 +532,15 @@ object frmInseminacao: TfrmInseminacao
           FFFFFFFFFFFFEBEBFBB6B5F07C7EE2696ADE676ADC7378DEAEB2EBE8E9F9FFFF
           FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
           FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
-        TabOrder = 7
+        TabOrder = 6
         TabStop = False
+        OnClick = btnDeleteClick
       end
     end
     object pgctrlDados: TPageControl
       Left = 1
-      Top = 245
-      Width = 536
+      Top = 212
+      Width = 553
       Height = 201
       ActivePage = TabSheet1
       Align = alBottom
@@ -512,10 +550,10 @@ object frmInseminacao: TfrmInseminacao
         object dbgDados: TDBGrid
           Left = 0
           Top = 0
-          Width = 528
+          Width = 545
           Height = 173
           Align = alClient
-          DataSource = dtsCadInseminacao
+          DataSource = DM.dtsMoviInseminacao
           Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
           TabOrder = 0
           TitleFont.Charset = DEFAULT_CHARSET
@@ -524,6 +562,7 @@ object frmInseminacao: TfrmInseminacao
           TitleFont.Name = 'Tahoma'
           TitleFont.Style = []
           OnDrawColumnCell = dbgDadosDrawColumnCell
+          OnDblClick = dbgDadosDblClick
         end
       end
       object TabSheet2: TTabSheet
@@ -551,8 +590,8 @@ object frmInseminacao: TfrmInseminacao
   end
   object pnlRodape: TPanel
     Left = 0
-    Top = 447
-    Width = 538
+    Top = 414
+    Width = 555
     Height = 48
     Align = alBottom
     TabOrder = 1
@@ -662,6 +701,7 @@ object frmInseminacao: TfrmInseminacao
         FAFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBEBF9ABABE58D
         8DDD8D8DDDAAAAE5E9E9F9FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
       TabOrder = 2
+      OnClick = btnCancelarClick
     end
     object btnExcluir: TBitBtn
       Left = 251
@@ -700,8 +740,8 @@ object frmInseminacao: TfrmInseminacao
       OnClick = btnExcluirClick
     end
     object btnFechar: TBitBtn
-      Left = 438
-      Top = 6
+      Left = 348
+      Top = 5
       Width = 75
       Height = 37
       Caption = '&Fechar'
@@ -735,16 +775,65 @@ object frmInseminacao: TfrmInseminacao
       TabOrder = 4
       OnClick = btnFecharClick
     end
+    object edtTotal: TEdit
+      Left = 436
+      Top = 6
+      Width = 90
+      Height = 33
+      Alignment = taRightJustify
+      Enabled = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = 25
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 5
+      Text = '0,00'
+    end
   end
-  object qryCadInseminacao: TFDQuery
+  object qryAuxiliar: TFDQuery
+    CachedUpdates = True
+    Connection = DM.FDConnection1
+    Left = 424
+    Top = 128
+  end
+  object dtsAuxiliar: TDataSource
+    DataSet = qryAuxiliar
+    Left = 480
+    Top = 128
+  end
+  object dtsAuxMovi: TDataSource
+    DataSet = qryAuxMovi
+    Left = 472
+    Top = 176
+  end
+  object qryAuxMovi: TFDQuery
     CachedUpdates = True
     Connection = DM.FDConnection1
     Left = 416
-    Top = 128
+    Top = 176
   end
-  object dtsCadInseminacao: TDataSource
-    DataSet = qryCadInseminacao
-    Left = 472
-    Top = 128
+  object qryAuxiliar1: TFDQuery
+    CachedUpdates = True
+    Connection = DM.FDConnection1
+    Left = 424
+    Top = 88
+  end
+  object dtsAuxiliar1: TDataSource
+    DataSet = qryAuxiliar1
+    Left = 480
+    Top = 88
+  end
+  object qryMoviProduto: TFDQuery
+    CachedUpdates = True
+    Connection = DM.FDConnection1
+    Left = 432
+    Top = 240
+  end
+  object dtsMoviProduto: TDataSource
+    DataSet = qryMoviProduto
+    Left = 488
+    Top = 240
   end
 end

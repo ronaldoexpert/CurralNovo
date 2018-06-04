@@ -1,0 +1,241 @@
+unit untPrincipalNovo;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, Vcl.StdCtrls, Vcl.Buttons,
+  Vcl.ToolWin, Vcl.ComCtrls, Vcl.ExtCtrls;
+
+type
+  TfrmPrincipalNovo = class(TForm)
+    Panel1: TPanel;
+    ToolBar1: TToolBar;
+    btnCadProdutor: TBitBtn;
+    btnVeterinario: TBitBtn;
+    btnCadAnimal: TBitBtn;
+    btnCadCria: TBitBtn;
+    btnInseminacao: TBitBtn;
+    btnSair: TBitBtn;
+    MainMenu1: TMainMenu;
+    Cadastro: TMenuItem;
+    CadastrodeVeterinario: TMenuItem;
+    CadastrodeProdutor: TMenuItem;
+    CadastrodeAnimal: TMenuItem;
+    CadastrodeCria: TMenuItem;
+    CadastrodeServico: TMenuItem;
+    CadastrodeProduto: TMenuItem;
+    CadastrodeUsuario: TMenuItem;
+    Movimentacao: TMenuItem;
+    Inseminacao: TMenuItem;
+    ConfirmaInseminacoes: TMenuItem;
+    MovimentaEstoque: TMenuItem;
+    Relatorios: TMenuItem;
+    Cadastrais: TMenuItem;
+    Movimento: TMenuItem;
+    GrficoInseminaes1: TMenuItem;
+    Sair1: TMenuItem;
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormShow(Sender: TObject);
+    procedure CadastrodeProdutorClick(Sender: TObject);
+    procedure CadastrodeAnimalClick(Sender: TObject);
+    procedure CadastrodeCriaClick(Sender: TObject);
+    procedure CadastrodeServicoClick(Sender: TObject);
+    procedure CadastrodeProdutoClick(Sender: TObject);
+    procedure InseminacaoClick(Sender: TObject);
+    procedure Sair1Click(Sender: TObject);
+    procedure CadastrodeUsuarioClick(Sender: TObject);
+    procedure CadastrodeVeterinarioClick(Sender: TObject);
+    procedure ConfirmaInseminacoesClick(Sender: TObject);
+    procedure MovimentaEstoqueClick(Sender: TObject);
+    procedure GrficoInseminaes1Click(Sender: TObject);
+    procedure btnCadProdutorClick(Sender: TObject);
+    procedure btnVeterinarioClick(Sender: TObject);
+    procedure btnCadAnimalClick(Sender: TObject);
+    procedure btnCadCriaClick(Sender: TObject);
+    procedure btnInseminacaoClick(Sender: TObject);
+    procedure btnSairClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    vUsuario : Integer;
+  end;
+
+var
+  frmPrincipalNovo: TfrmPrincipalNovo;
+
+implementation
+
+{$R *.dfm}
+
+uses unstCadastroVeterinario, untCadastroAnimal,
+  untCadastroCria, untCadastroProduto, untCadastroProdutor, untCadastroServico,
+  untCadastroUsuario, untLogin, untInseminacao, untConfirmaInseminacao,
+  untFuncoes, untRelatorioGraficos, untMovimentaEstoque, untDM;
+
+procedure TfrmPrincipalNovo.btnCadAnimalClick(Sender: TObject);
+begin
+  CadastrodeAnimalClick(Self);
+end;
+
+procedure TfrmPrincipalNovo.btnCadCriaClick(Sender: TObject);
+begin
+  CadastrodeCriaClick(Self);
+end;
+
+procedure TfrmPrincipalNovo.btnCadProdutorClick(Sender: TObject);
+begin
+  CadastrodeProdutorClick(Self);
+end;
+
+procedure TfrmPrincipalNovo.btnInseminacaoClick(Sender: TObject);
+begin
+  InseminacaoClick(Self);
+end;
+
+procedure TfrmPrincipalNovo.btnSairClick(Sender: TObject);
+begin
+  Sair1Click(Self);
+end;
+
+procedure TfrmPrincipalNovo.btnVeterinarioClick(Sender: TObject);
+begin
+  CadastrodeVeterinarioClick(Self);
+end;
+
+procedure TfrmPrincipalNovo.CadastrodeAnimalClick(Sender: TObject);
+begin
+  frmCadastroAnimal := TfrmCadastroAnimal.Create(Self);
+  try
+    frmCadastroAnimal.ShowModal;
+  finally
+    frmCadastroAnimal.Release;
+  end;
+end;
+
+procedure TfrmPrincipalNovo.CadastrodeCriaClick(Sender: TObject);
+begin
+  frmCadastroCria := TfrmCadastroCria.Create(Self);
+  try
+    frmCadastroCria.ShowModal;
+  finally
+    frmCadastroCria.Release;
+  end;
+end;
+
+procedure TfrmPrincipalNovo.CadastrodeProdutoClick(Sender: TObject);
+begin
+  frmCadastroProduto := TfrmCadastroProduto.Create(Self);
+  try
+    frmCadastroProduto.ShowModal;
+  finally
+    frmCadastroProduto.Release;
+  end;
+end;
+
+procedure TfrmPrincipalNovo.CadastrodeProdutorClick(Sender: TObject);
+begin
+  frmCadastroVeterinario:= TfrmCadastroVeterinario.Create(Self);
+  try
+    frmCadastroVeterinario.vTipoCadastro := 'Produtor';
+    frmCadastroVeterinario.ShowModal;
+  finally
+    frmCadastroVeterinario.Release;
+  end;
+end;
+
+procedure TfrmPrincipalNovo.CadastrodeServicoClick(Sender: TObject);
+begin
+  frmCadastroServico := TfrmCadastroServico.Create(Self);
+  try
+    frmCadastroServico.ShowModal;
+  finally
+    frmCadastroServico.Release;
+  end;
+end;
+
+procedure TfrmPrincipalNovo.CadastrodeUsuarioClick(Sender: TObject);
+begin
+  frmCadastroUsuario := TfrmCadastroUsuario.Create(Self);
+  try
+    frmCadastroUsuario.ShowModal;
+  finally
+    frmCadastroUsuario.Release;
+  end;
+end;
+
+procedure TfrmPrincipalNovo.CadastrodeVeterinarioClick(Sender: TObject);
+begin
+  frmCadastroVeterinario := TfrmCadastroVeterinario.Create(Self);
+  try
+    frmCadastroVeterinario.vTipoCadastro := 'Veterinario';
+    frmCadastroVeterinario.ShowModal;
+  finally
+    frmCadastroVeterinario.Release;
+  end;
+end;
+
+procedure TfrmPrincipalNovo.ConfirmaInseminacoesClick(Sender: TObject);
+begin
+  frmConfirmaInseminacao := TfrmConfirmaInseminacao.Create(Self);
+  try
+    frmConfirmaInseminacao.ShowModal;
+  finally
+    frmConfirmaInseminacao.Release;
+  end;
+end;
+
+procedure TfrmPrincipalNovo.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+  if Application.MessageBox('Deseja realmente sair do sistema?', 'Curral Novo', MB_YESNO) = mrYes then
+  BEGIN
+    Application.Terminate;
+  END;
+end;
+
+procedure TfrmPrincipalNovo.FormShow(Sender: TObject);
+begin
+  Caption := Caption + ' - ' + frmLogin.edtUsuario.Text + ' - Versao: ' + frmFuncoes.VersaoExe;
+end;
+
+procedure TfrmPrincipalNovo.GrficoInseminaes1Click(Sender: TObject);
+begin
+  frmRelGraficos := TfrmRelGraficos.Create(Self);
+  try
+    frmRelGraficos.ShowModal;
+  finally
+    frmRelGraficos.Release;
+  end;
+end;
+
+procedure TfrmPrincipalNovo.InseminacaoClick(Sender: TObject);
+begin
+  frmInseminacao := TfrmInseminacao.Create(Self);
+  try
+    frmInseminacao.ShowModal;
+  finally
+    frmInseminacao.Release;
+  end;
+end;
+
+procedure TfrmPrincipalNovo.MovimentaEstoqueClick(Sender: TObject);
+begin
+  frmMovimentaEstoque := TfrmMovimentaEstoque.Create(Self);
+  try
+    frmMovimentaEstoque.ShowModal;
+  finally
+    frmMovimentaEstoque.Release;
+  end;
+end;
+
+procedure TfrmPrincipalNovo.Sair1Click(Sender: TObject);
+begin
+  if Application.MessageBox('Deseja realmente sair do sistema?', 'Curral Novo', MB_YESNO) = mrYes then
+  BEGIN
+    Application.Terminate;
+  END;
+end;
+
+end.

@@ -1,7 +1,7 @@
 object DM: TDM
   OldCreateOrder = False
-  Height = 283
-  Width = 577
+  Height = 426
+  Width = 702
   object FDConnection1: TFDConnection
     Params.Strings = (
       'DriverID=FB'
@@ -141,5 +141,51 @@ object DM: TDM
     DataSet = qryConfiguracao
     Left = 472
     Top = 216
+  end
+  object qryMoviInseminacao: TFDQuery
+    CachedUpdates = True
+    Connection = FDConnection1
+    UpdateOptions.AssignedValues = [uvEDelete, uvEInsert, uvEUpdate, uvUpdateMode]
+    Left = 416
+    Top = 272
+  end
+  object dtsMoviInseminacao: TDataSource
+    DataSet = qryMoviInseminacao
+    Left = 472
+    Top = 272
+  end
+  object qryServico: TFDQuery
+    CachedUpdates = True
+    Connection = FDConnection1
+    Left = 280
+    Top = 272
+  end
+  object dtsServico: TDataSource
+    DataSet = qryServico
+    Left = 336
+    Top = 272
+  end
+  object qryProduto: TFDQuery
+    CachedUpdates = True
+    Connection = FDConnection1
+    Left = 280
+    Top = 328
+  end
+  object dtsProduto: TDataSource
+    DataSet = qryProduto
+    Left = 336
+    Top = 328
+  end
+  object qryAuxiliar: TFDQuery
+    CachedUpdates = True
+    Connection = FDConnection1
+    UpdateOptions.AssignedValues = [uvEDelete, uvEInsert, uvEUpdate, uvUpdateMode]
+    Left = 416
+    Top = 336
+  end
+  object dtsAuxiliar: TDataSource
+    DataSet = qryAuxiliar
+    Left = 472
+    Top = 336
   end
 end

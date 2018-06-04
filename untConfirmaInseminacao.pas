@@ -21,7 +21,6 @@ type
     btnGravar: TBitBtn;
     btnFechar: TBitBtn;
     btnPesquisar: TBitBtn;
-    dbgInsemacoes: TDBGrid;
     dbgConfirmadas: TDBGrid;
     btnAdd: TBitBtn;
     btnRemove: TBitBtn;
@@ -38,6 +37,13 @@ type
     edtDtConfirmacao: TDateTimePicker;
     qryAuxiliar: TFDQuery;
     dtsAuxiliar: TDataSource;
+    dbgInsemacoes: TDBGrid;
+    lblNaoConfirmadas: TLabel;
+    lblQtdNaoConfirmadas: TLabel;
+    lblConfirmadas: TLabel;
+    lblQtdConfirmadas: TLabel;
+    qryInseminacoes: TFDQuery;
+    dtsInseminacoes: TDataSource;
     procedure btnFecharClick(Sender: TObject);
     procedure btnPesquProprietarioClick(Sender: TObject);
     procedure edtCodProprietarioExit(Sender: TObject);
@@ -48,8 +54,12 @@ type
     procedure btnGravarClick(Sender: TObject);
     procedure btnRemoveClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
+    procedure edtCodProprietarioChange(Sender: TObject);
+    procedure edtCodVeterinarioChange(Sender: TObject);
   private
     { Private declarations }
+    vID : String;
+    procedure FormataGrid(vGRD : TDBGrid);
   public
     { Public declarations }
     procedure PesquisaProdutor(vStatus : boolean);
@@ -71,11 +81,22 @@ begin
   if DM.qryAConfirmar.IsEmpty = False then
   begin
     DM.qryConfirmados.Insert;
-    DM.qryConfirmados.FieldByName('numero').AsString := DM.qryAConfirmar.FieldByName('numero').AsString;
-    DM.qryConfirmados.FieldByName('data').AsString := DM.qryAConfirmar.FieldByName('data').AsString;
-    DM.qryConfirmados.FieldByName('confirmada').AsString := 'S';
-
+    DM.qryConfirmados.FieldByName('idMovi').AsString := DM.qryAConfirmar.FieldByName('idMovi').AsString;
+    DM.qryConfirmados.FieldByName('idInsem').AsString := DM.qryAConfirmar.FieldByName('idInsem').AsString;
+    DM.qryConfirmados.FieldByName('NUMERO').AsString := DM.qryAConfirmar.FieldByName('NUMERO').AsString;
+    DM.qryConfirmados.FieldByName('PROPRIETARIO').AsString := DM.qryAConfirmar.FieldByName('PROPRIETARIO').AsString;
+    DM.qryConfirmados.FieldByName('DATA').AsString := DM.qryAConfirmar.FieldByName('DATA').AsString;
+    DM.qryConfirmados.FieldByName('ANIMAL').AsString := DM.qryAConfirmar.FieldByName('ANIMAL').AsString;
+    DM.qryConfirmados.FieldByName('VETERINARIO').AsString := DM.qryAConfirmar.FieldByName('VETERINARIO').AsString;
+    DM.qryConfirmados.FieldByName('CONFIRMADA').AsString := 'S';
+    DM.qryConfirmados.FieldByName('DATA_CONFIRMACAO').AsDateTime := Date;
+    DM.qryConfirmados.FieldByName('ID_PRODUTOR').AsString := DM.qryAConfirmar.FieldByName('ID_PRODUTOR').AsString;
+    DM.qryConfirmados.FieldByName('ID_VETERINARIO').AsString := DM.qryAConfirmar.FieldByName('ID_VETERINARIO').AsString;
+    DM.qryConfirmados.Post;
     DM.qryAConfirmar.Delete;
+
+    lblQtdNaoConfirmadas.Caption := IntToStr(dm.qryAConfirmar.RecordCount);
+    lblQtdConfirmadas.Caption := IntToStr(dm.qryConfirmados.RecordCount);
   end;
 end;
 
@@ -85,52 +106,101 @@ begin
 end;
 
 procedure TfrmConfirmaInseminacao.btnGravarClick(Sender: TObject);
+var
+  vData : string;
 begin
   if dm.qryConfirmados.IsEmpty = False then
   begin
     dm.qryConfirmados.First;
     while not dm.qryConfirmados.Eof do
     begin
-      frmFuncoes.ExecutaSQL('Select * from INSEMINACAO WHERE NUMERO = ' + DM.qryConfirmados.FieldByName('NUMERO').AsString, 'Abrir', qryAuxiliar);
+      frmFuncoes.ExecutaSQL('Select * from MOVI_INSEMINACAO WHERE ID = ' + QuotedStr(DM.qryConfirmados.FieldByName('idMovi').AsString), 'Abrir', qryAuxiliar);
       qryAuxiliar.Edit;
-
-      qryAuxiliar.FieldByName('CONFIRMADA').AsString := DM.qryConfirmados.FieldByName('CONFIRMADA').AsString;
+      qryAuxiliar.FieldByName('CONFIRMADA').AsString := 'S';
       qryAuxiliar.FieldByName('DATA_CONFIRMACAO').AsDateTime := edtDtConfirmacao.Date;
-      qryAuxiliar.FieldByName('ALTERACAO').AsDateTime := Date+Time;
-      qryAuxiliar.FieldByName('USUARIO').AsInteger := frmPrincipal.vUsuario;
-
       qryAuxiliar.Post;
       qryAuxiliar.ApplyUpdates(-1);
+
       dm.qryConfirmados.Next;
     end;
-    ShowMessage('Gravação efetuada com sucesso');
-    DM.qryConfirmados.Close;
-    DM.qryAConfirmar.Close;
   end;
+
+  if DM.qryAConfirmar.IsEmpty = False then
+  begin
+    qryAuxiliar.EmptyDataSet;
+    dm.qryAConfirmar.First;
+    while not dm.qryAConfirmar.Eof do
+    begin
+      frmFuncoes.ExecutaSQL('Select * from MOVI_INSEMINACAO WHERE ID = ' + QuotedStr(DM.qryAConfirmar.FieldByName('idMovi').AsString), 'Abrir', qryAuxiliar);
+      qryAuxiliar.Edit;
+      qryAuxiliar.FieldByName('CONFIRMADA').AsString := 'N';
+      qryAuxiliar.FieldByName('DATA_CONFIRMACAO').AsDateTime := edtDtConfirmacao.Date;
+      qryAuxiliar.Post;
+      qryAuxiliar.ApplyUpdates(-1);
+
+      dm.qryAConfirmar.Next;
+    end;
+  end;
+
+  qryInseminacoes.First;
+  while not qryInseminacoes.Eof do
+  begin
+    qryInseminacoes.Edit;
+    qryInseminacoes.FieldByName('FINALIZADA').AsString := 'S';
+    qryInseminacoes.FieldByName('DT_FINALIZADA').AsDateTime := edtDtConfirmacao.Date;
+    qryInseminacoes.Post;
+    qryInseminacoes.ApplyUpdates(-1);
+
+    qryInseminacoes.Next;
+  end;
+
+  ShowMessage('Gravação efetuada com sucesso');
+  DM.qryConfirmados.Close;
+  DM.qryAConfirmar.Close;
+  lblQtdNaoConfirmadas.Caption := IntToStr(0);
+  lblQtdConfirmadas.Caption := IntToStr(0);
 end;
 
 procedure TfrmConfirmaInseminacao.btnPesquisarClick(Sender: TObject);
 var
-  vComando : string;
+  vComando, vComandoConfirmados, vComandoInseminacoes : string;
 begin
   if ValidaCampos then
   begin
-    vComando := 'Select I.numero, I.data, A.NOME, I.CONFIRMADA from INSEMINACAO I JOIN ANIMAL A ON (I.ID_ANIMAL = A.ID) WHERE confirmada = ' + QuotedStr('N');
+    vComandoInseminacoes := 'Select * from INSEMINACAO';
+    vComando := 'select I.numero, P.NOME AS PROPRIETARIO, I.DATA, A.NOME AS ANIMAL, V.NOME AS VETERINARIO, MI.CONFIRMADA, MI.DATA_CONFIRMACAO, I.ID_PRODUTOR, I.ID_VETERINARIO, MI.ID as idMovi, I.ID as idInsem from MOVI_INSEMINACAO MI ' +
+      ' JOIN INSEMINACAO I ON (I.ID = MI.ID_INSEMINACAO) ' +
+      ' JOIN ANIMAL A ON (A.ID = MI.ID_ANIMAL) ' +
+      ' JOIN PRODUTOR P ON (P.ID = I.ID_PRODUTOR) ' +
+      ' JOIN VETERINARIO V ON (V.ID = I.ID_VETERINARIO) ' +
+      ' Where ';
+    vComandoConfirmados := vComando;
+
+    vComando := vComando + ' MI.confirmada = ' + QuotedStr('A');
 
     if edtCodProprietario.Text <> '' then
     begin
-      vComando := vComando + ' and id_produtor = ' + QuotedStr(edtCodProprietario.Text);
+      vComando := vComando + ' and I.id_produtor = ' + QuotedStr(edtCodProprietario.Text);
+      vComandoInseminacoes := vComandoInseminacoes + ' and I.id_produtor = ' + QuotedStr(edtCodProprietario.Text);
     end;
 
     if edtCodVeterinario.Text <> '' then
     begin
-      vComando := vComando + ' and ID_VETERINARIO = ' + QuotedStr(edtCodVeterinario.Text);
+      vComando := vComando + ' and I.ID_VETERINARIO = ' + QuotedStr(edtCodVeterinario.Text);
+      vComandoInseminacoes := vComandoInseminacoes + ' and I.ID_VETERINARIO = ' + QuotedStr(edtCodVeterinario.Text);
     end;
 
-    frmFuncoes.ExecutaSQL(vComando, 'Abrir', DM.qryAConfirmar);
-
-    frmFuncoes.ExecutaSQL('Select I.numero, I.data, I.CONFIRMADA from INSEMINACAO I JOIN ANIMAL A ON (I.ID_ANIMAL = A.ID) WHERE I.id is null', 'Abrir', DM.qryConfirmados);
+    frmFuncoes.ExecutaSQL(vComando + ' order by PROPRIETARIO', 'Abrir', DM.qryAConfirmar);
+    frmFuncoes.ExecutaSQL(vComandoConfirmados + ' MI.ID IS NULL ORDER BY PROPRIETARIO', 'Abrir', DM.qryConfirmados);
+    frmFuncoes.ExecutaSQL(vComandoInseminacoes, 'Abrir', qryInseminacoes);
   end;
+
+  FormataGrid(dbgConfirmadas);
+  FormataGrid(dbgInsemacoes);
+  lblQtdNaoConfirmadas.Caption := IntToStr(dm.qryAConfirmar.RecordCount);
+  lblQtdConfirmadas.Caption := IntToStr(dm.qryConfirmados.RecordCount);
+
+
 end;
 
 procedure TfrmConfirmaInseminacao.btnPesquProprietarioClick(Sender: TObject);
@@ -148,18 +218,41 @@ begin
   if DM.qryConfirmados.IsEmpty = False then
   begin
     DM.qryAConfirmar.Insert;
-    DM.qryAConfirmar.FieldByName('numero').AsString := DM.qryConfirmados.FieldByName('numero').AsString;
-    DM.qryAConfirmar.FieldByName('data').AsString := DM.qryConfirmados.FieldByName('data').AsString;
-    DM.qryAConfirmar.FieldByName('confirmada').AsString := 'N';
+    DM.qryAConfirmar.FieldByName('idMovi').AsString := DM.qryConfirmados.FieldByName('idMovi').AsString;
+    DM.qryAConfirmar.FieldByName('idInsem').AsString := DM.qryConfirmados.FieldByName('idInsem').AsString;
+    DM.qryAConfirmar.FieldByName('NUMERO').AsString := DM.qryConfirmados.FieldByName('NUMERO').AsString;
+    DM.qryAConfirmar.FieldByName('PROPRIETARIO').AsString := DM.qryConfirmados.FieldByName('PROPRIETARIO').AsString;
+    DM.qryAConfirmar.FieldByName('DATA').AsString := DM.qryConfirmados.FieldByName('DATA').AsString;
+    DM.qryAConfirmar.FieldByName('ANIMAL').AsString := DM.qryConfirmados.FieldByName('ANIMAL').AsString;
+    DM.qryAConfirmar.FieldByName('VETERINARIO').AsString := DM.qryConfirmados.FieldByName('VETERINARIO').AsString;
+    DM.qryAConfirmar.FieldByName('CONFIRMADA').AsString := 'N';
+    DM.qryAConfirmar.FieldByName('DATA_CONFIRMACAO').AsString := '01/01/1900';
+    DM.qryAConfirmar.FieldByName('ID_PRODUTOR').AsString := DM.qryConfirmados.FieldByName('ID_PRODUTOR').AsString;
+    DM.qryAConfirmar.FieldByName('ID_VETERINARIO').AsString := DM.qryConfirmados.FieldByName('ID_VETERINARIO').AsString;
+    DM.qryAConfirmar.Post;
 
     DM.qryConfirmados.Delete;
+    lblQtdNaoConfirmadas.Caption := IntToStr(dm.qryAConfirmar.RecordCount);
+    lblQtdConfirmadas.Caption := IntToStr(dm.qryConfirmados.RecordCount);
   end;
+end;
+
+procedure TfrmConfirmaInseminacao.edtCodProprietarioChange(Sender: TObject);
+begin
+  if edtCodProprietario.text = '' then
+    edtProprietario.Clear;
 end;
 
 procedure TfrmConfirmaInseminacao.edtCodProprietarioExit(Sender: TObject);
 begin
   if Trim(edtProprietario.Text) <> '' then
     PesquisaProdutor(True);
+end;
+
+procedure TfrmConfirmaInseminacao.edtCodVeterinarioChange(Sender: TObject);
+begin
+  if edtCodVeterinario.text = '' then
+    edtVeterinario.Clear;
 end;
 
 procedure TfrmConfirmaInseminacao.edtCodVeterinarioExit(Sender: TObject);
@@ -170,7 +263,23 @@ end;
 
 procedure TfrmConfirmaInseminacao.FormActivate(Sender: TObject);
 begin
-  edtDtConfirmacao.DateTime := Date;
+  edtDtConfirmacao.Date := Date;
+end;
+
+procedure TfrmConfirmaInseminacao.FormataGrid(vGRD: TDBGrid);
+begin
+  vGRD.Columns.Items[0].Width := 70;
+  vGRD.Columns.Items[1].Width := 150;
+  vGRD.Columns.Items[2].Width := 70;
+  vGRD.Columns.Items[3].Width := 150;
+  vGRD.Columns.Items[4].Width := 150;
+
+  vGRD.Columns.Items[5].Visible := False;
+  vGRD.Columns.Items[6].Visible := False;
+  vGRD.Columns.Items[7].Visible := False;
+  vGRD.Columns.Items[8].Visible := False;
+  vGRD.Columns.Items[9].Visible := False;
+  vGRD.Columns.Items[10].Visible := False;
 end;
 
 procedure TfrmConfirmaInseminacao.PesquisaProdutor(vStatus: boolean);

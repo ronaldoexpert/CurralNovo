@@ -241,6 +241,14 @@ object frmCadastroAnimal: TfrmCadastroAnimal
       Height = 13
       Caption = '&Propriet'#225'rio'
     end
+    object lblEstoqueSemem: TLabel
+      Left = 250
+      Top = 103
+      Width = 76
+      Height = 13
+      Caption = '&Estoque S'#233'mem'
+      Visible = False
+    end
     object btnPesquisar: TBitBtn
       Left = 67
       Top = 30
@@ -274,6 +282,7 @@ object frmCadastroAnimal: TfrmCadastroAnimal
         A5BB928AFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD5
         B4A4D5B4A4CAA58EE1BBA3DAB39B8B8B8BFFFFFFFFFFFFFFFFFF}
       TabOrder = 8
+      TabStop = False
       OnClick = btnPesquisarClick
     end
     object edtCodigo: TEdit
@@ -283,6 +292,7 @@ object frmCadastroAnimal: TfrmCadastroAnimal
       Height = 21
       TabOrder = 0
       OnExit = edtCodigoExit
+      OnKeyDown = edtCodigoKeyDown
       OnKeyPress = edtCodigoKeyPress
     end
     object edtNome: TDBEdit
@@ -291,7 +301,7 @@ object frmCadastroAnimal: TfrmCadastroAnimal
       Width = 228
       Height = 21
       DataSource = dtsAnimal
-      TabOrder = 7
+      TabOrder = 1
     end
     object edtIdentificacao: TDBEdit
       Left = 332
@@ -299,7 +309,7 @@ object frmCadastroAnimal: TfrmCadastroAnimal
       Width = 125
       Height = 21
       DataSource = dtsAnimal
-      TabOrder = 1
+      TabOrder = 2
     end
     object rdgTipo: TRadioGroup
       Left = 380
@@ -311,7 +321,8 @@ object frmCadastroAnimal: TfrmCadastroAnimal
       Items.Strings = (
         'Vaca'
         'Touro')
-      TabOrder = 3
+      TabOrder = 5
+      OnClick = rdgTipoClick
     end
     object btnPesquProprietario: TBitBtn
       Left = 67
@@ -345,7 +356,8 @@ object frmCadastroAnimal: TfrmCadastroAnimal
         FFFFFFFFFFFFFFFFFFFFFFFFD5B4A4F4EECDFFFAE8FFF6CDFFEEBBFFF4C7F8D1
         A5BB928AFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD5
         B4A4D5B4A4CAA58EE1BBA3DAB39B8B8B8BFFFFFFFFFFFFFFFFFF}
-      TabOrder = 5
+      TabOrder = 7
+      TabStop = False
       OnClick = btnPesquProprietarioClick
     end
     object edtCodProprietario: TEdit
@@ -353,8 +365,9 @@ object frmCadastroAnimal: TfrmCadastroAnimal
       Top = 80
       Width = 53
       Height = 21
-      TabOrder = 2
+      TabOrder = 3
       OnExit = edtCodProprietarioExit
+      OnKeyDown = edtCodProprietarioKeyDown
       OnKeyPress = edtCodProprietarioKeyPress
     end
     object edtProprietario: TDBEdit
@@ -364,7 +377,7 @@ object frmCadastroAnimal: TfrmCadastroAnimal
       Height = 21
       DataSource = dtsProprietario
       Enabled = False
-      TabOrder = 6
+      TabOrder = 4
     end
     object PageControl1: TPageControl
       Left = 1
@@ -373,13 +386,13 @@ object frmCadastroAnimal: TfrmCadastroAnimal
       Height = 219
       ActivePage = tbResenha
       Align = alBottom
-      TabOrder = 4
+      TabOrder = 6
       object tbResenha: TTabSheet
         Caption = '&Resenha'
-        object imgFotoCria: TImage
+        object imgAnimal: TImage
           Left = 300
           Top = 12
-          Width = 152
+          Width = 160
           Height = 145
           Picture.Data = {
             0954506E67496D61676589504E470D0A1A0A0000000D49484452000002000000
@@ -1577,7 +1590,7 @@ object frmCadastroAnimal: TfrmCadastroAnimal
         object btnPesqFoto: TBitBtn
           Left = 300
           Top = 163
-          Width = 152
+          Width = 128
           Height = 25
           Caption = '&Pesquisar'
           Glyph.Data = {
@@ -1608,6 +1621,7 @@ object frmCadastroAnimal: TfrmCadastroAnimal
             FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
             FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
           TabOrder = 7
+          TabStop = False
           OnClick = btnPesqFotoClick
         end
         object edtAD: TDBEdit
@@ -1616,7 +1630,7 @@ object frmCadastroAnimal: TfrmCadastroAnimal
           Width = 121
           Height = 21
           DataSource = dtsAnimal
-          TabOrder = 1
+          TabOrder = 2
         end
         object edtAE: TDBEdit
           Left = 147
@@ -1624,7 +1638,7 @@ object frmCadastroAnimal: TfrmCadastroAnimal
           Width = 121
           Height = 21
           DataSource = dtsAnimal
-          TabOrder = 4
+          TabOrder = 3
         end
         object edtCabeca: TDBEdit
           Left = 147
@@ -1632,7 +1646,7 @@ object frmCadastroAnimal: TfrmCadastroAnimal
           Width = 147
           Height = 21
           DataSource = dtsAnimal
-          TabOrder = 3
+          TabOrder = 1
         end
         object edtOutras: TDBEdit
           Left = 3
@@ -1648,7 +1662,7 @@ object frmCadastroAnimal: TfrmCadastroAnimal
           Width = 121
           Height = 21
           DataSource = dtsAnimal
-          TabOrder = 2
+          TabOrder = 4
         end
         object edtPE: TDBEdit
           Left = 147
@@ -1666,7 +1680,67 @@ object frmCadastroAnimal: TfrmCadastroAnimal
           DataSource = dtsAnimal
           TabOrder = 0
         end
+        object btnLimpaFoto: TBitBtn
+          Left = 432
+          Top = 163
+          Width = 28
+          Height = 25
+          Hint = 'Limpar Foto'
+          Glyph.Data = {
+            36030000424D3603000000000000360000002800000010000000100000000100
+            18000000000000030000C40E0000C40E00000000000000000000FFFFFFFFFFFF
+            FFFFFFFFFFFFFCFCFCF6F6F8EFEFF2ECECF0ECECF0F0F0F3F6F6F8FDFDFDFFFF
+            FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5F5F6DBDBDCADADB45B5B992929A70D
+            0DB20D0DB22828A75B5B99ADADB5DCDCDDF6F6F7FFFFFFFFFFFFFFFFFFF9F9FA
+            D7D7D770709A1010B40404BB0000BA0000BA0000BA0000BA0404BB1111B56D6D
+            9BD8D8D8FAFAFBFFFFFFFFFFFFFEFEFE8484B30B0BBC0000BC0000BC0000BC00
+            00BC0000BC0000BC0000BC0000BC0C0CBC8181B6FEFEFEFFFFFFFFFFFFD3D3EC
+            1313BE0000BF0000BF0000BE0000BE0000BE0000BE0000BE0000BE0000BE0000
+            BE1313BECFCFEBFFFFFFFFFFFF5C5CCC0303C20000C10000C10000C10000C000
+            00C00000C00000C00000C00000C00000C00303C05858CBFFFFFFF6F6FC1818BF
+            0202C40404C40808C50C0CC61111C71515C81919C91C1CCA1C1CC91818C91212
+            C70707C41818BFF2F2FBD0D0F12828CB1F1FCD3F3FD46464DC6565DC6565DC65
+            65DC6565DC6565DC6565DC6464DC3737D21F1FCC2828CBCACAEFC7C7EF2B2BCF
+            2020CF8686E5FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF6C6C
+            DF2020CE2E2ECFC1C1ECDFDFF62B2BCC2020D22222D22424D22525D22626D227
+            27D22727D22626D22525D22424D12222D12020D12D2DCCDADAF4FFFFFF3D3DC8
+            2121D32323D32424D32626D42727D42828D42828D42727D42626D42424D32323
+            D22121D23A3AC8FEFEFFFFFFFF9292DE2E2ED42323D32525D32626D42828D429
+            29D42929D42828D42626D42525D32323D32D2DD48E8EDDFFFFFFFFFFFFF9F9FD
+            4747CA2929D42525D42727D42828D42A2AD52A2AD52828D42727D42525D42828
+            D44646CBF7F7FDFFFFFFFFFFFFFFFFFFE2E2F74444CA3030D52727D42828D42A
+            2AD42A2AD42828D42727D42F2FD54242CADFDFF6FFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFEEEEFA7474D53434CB3939D63434D63333D63939D73333CC7272D4EDED
+            FAFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBEBF9ABABE58D
+            8DDD8D8DDDAAAAE5E9E9F9FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 8
+          TabStop = False
+          OnClick = btnLimpaFotoClick
+        end
       end
+    end
+    object chkSituacao: TDBCheckBox
+      Left = 263
+      Top = 9
+      Width = 51
+      Height = 17
+      Caption = 'Ativo'
+      DataSource = dtsAnimal
+      TabOrder = 9
+      ValueChecked = 'Ativo'
+      ValueUnchecked = 'Inativo'
+    end
+    object edtEstSemem: TDBEdit
+      Left = 250
+      Top = 117
+      Width = 76
+      Height = 21
+      DataSource = dtsAnimal
+      Enabled = False
+      TabOrder = 10
+      Visible = False
     end
   end
   object edtCaminhoFoto: TEdit

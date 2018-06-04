@@ -85,7 +85,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls,
-  Vcl.ComCtrls, Vcl.Mask, Vcl.DBCtrls, Vcl.Imaging.pngimage;
+  Vcl.ComCtrls, Vcl.Mask, Vcl.DBCtrls, Vcl.Imaging.pngimage, UCrpeClasses,
+  UCrpe32;
 
 type
   TfrmCadastroCria = class(TForm)
@@ -133,13 +134,15 @@ type
     lblOutras: TLabel;
     OpenDialog1: TOpenDialog;
     edtCaminhoFoto: TEdit;
-    btnImprimir: TBitBtn;
     btnPesquisaMae: TBitBtn;
     btnPesquisaPai: TBitBtn;
     edtCodMae: TEdit;
     edtCodPai: TEdit;
     edtNomeMae: TEdit;
     edtNomePai: TEdit;
+    chkSituacao: TDBCheckBox;
+    btnLimpaFoto: TBitBtn;
+    Crpe1: TCrpe;
     procedure btnFecharClick(Sender: TObject);
     procedure btnPesqFotoClick(Sender: TObject);
     procedure btnNovoClick(Sender: TObject);
@@ -153,11 +156,22 @@ type
     procedure btnPesquisaPaiClick(Sender: TObject);
     procedure edtCodMaeExit(Sender: TObject);
     procedure edtCodPaiExit(Sender: TObject);
+    procedure edtCodigoExit(Sender: TObject);
+    procedure edtCodigoKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure edtCodigoKeyPress(Sender: TObject; var Key: Char);
+    procedure edtCodProprietarioKeyPress(Sender: TObject; var Key: Char);
+    procedure edtCodProprietarioKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure edtCodProprietarioExit(Sender: TObject);
+    procedure btnLimpaFotoClick(Sender: TObject);
   private
     { Private declarations }
     fNovo : Boolean;
     vID : String;
     procedure CarregaFotosPadrao;
+    procedure LimpaCampos;
+    function ValidaCampos : Boolean;
   public
     { Public declarations }
     procedure CarregaCampos;
@@ -174,7 +188,7 @@ implementation
 
 {$R *.dfm}
 
-uses untPesquisa, untDM, untFuncoes;
+uses untPesquisa, untDM, untFuncoes, untPrincipal;
 
 procedure TfrmCadastroCria.btnExcluirClick(Sender: TObject);
 begin
@@ -195,34 +209,52 @@ end;
 
 procedure TfrmCadastroCria.btnGravarClick(Sender: TObject);
 begin
-  if fNovo = True then
+  if ValidaCampos then
   begin
-    dm.qryCria.FieldByName('id').AsString := edtCodigo.Text;
+    if fNovo = True then
+    begin
+      dm.qryCria.FieldByName('id').AsString := edtCodigo.Text;
+    end;
+
+    if rdgTipo.ItemIndex = 0 then
+      dm.qryCria.FieldByName('SEXO').AsString := 'F'
+    else
+      dm.qryCria.FieldByName('SEXO').AsString := 'M';
+
+    dm.qryCria.FieldByName('proprietario').AsString := edtCodProprietario.Text;
+    dm.qryCria.FieldByName('foto').AsString := edtCaminhoFoto.Text;
+    dm.qryCria.FieldByName('mae').AsString := edtCodMae.Text;
+    dm.qryCria.FieldByName('pai').AsString := edtCodPai.Text;
+    dm.qryCria.FieldByName('fotomae').AsString := '';
+    dm.qryCria.FieldByName('fotopai').AsString := '';
+    dm.qryCria.FieldByName('alteracao').AsDateTime := Date + Time;
+    dm.qryCria.FieldByName('usuario').AsInteger := frmPrincipal.vUsuario;
+
+    dm.qryCria.ApplyUpdates(-1);
+    btnNovo.Enabled := True;
+    btnExcluir.Enabled := True;
+    edtCodigo.Enabled := True;
+    fNovo := False;
+    frmFuncoes.AutoIncre('CRIA', 'Gravar');
+    ShowMessage('Cadastro realizado com sucesso.');
   end;
+end;
 
-  if rdgTipo.ItemIndex = 0 then
-    dm.qryCria.FieldByName('TIPO').AsString := 'V'
-  else
-    dm.qryCria.FieldByName('TIPO').AsString := 'T';
-
-  dm.qryCria.FieldByName('proprietario').AsString := edtCodProprietario.Text;
-  dm.qryCria.FieldByName('foto').AsString := edtCaminhoFoto.Text;
-  dm.qryCria.FieldByName('mae').AsString := edtCodMae.Text;
-  dm.qryCria.FieldByName('pai').AsString := edtCodPai.Text;
-
-  dm.qryCria.ApplyUpdates(-1);
-  btnNovo.Enabled := True;
-  btnExcluir.Enabled := True;
-  edtCodigo.Enabled := True;
-  frmFuncoes.AutoIncre('CRIA', 'Gravar');
-  ShowMessage('Cadastro realizado com sucesso.');
+procedure TfrmCadastroCria.btnLimpaFotoClick(Sender: TObject);
+begin
+  if FileExists('fotos/imgPadrao.png') then
+  begin
+    edtCaminhoFoto.Text := 'fotos/imgPadrao.png';
+    imgFotoCria.Picture.LoadFromFile('fotos/imgPadrao.png');
+  end;
 end;
 
 procedure TfrmCadastroCria.btnNovoClick(Sender: TObject);
 begin
+  LimpaCampos;
   fNovo := True;
   dm.qryCria.Insert;
-
+  dm.qryCria.FieldByName('situacao').AsString := 'Ativo';
   btnNovo.Enabled := False;
   btnGravar.Enabled := True;
   btnExcluir.Enabled := False;
@@ -277,6 +309,7 @@ begin
   edtAE.DataField := 'AE';
   edtPE.DataField := 'PE';
   edtNascimento.DataField := 'DATA_NASCIMENTO';
+  chkSituacao.DataField := 'SITUACAO';
 
   dm.qryCria.FieldByName('data_nascimento').EditMask := '00/00/0000';
 end;
@@ -287,6 +320,25 @@ begin
   imgFotoCria.Picture.LoadFromFile('fotos/imgPadrao.png');
   imgFotoMae.Picture.LoadFromFile('fotos/imgPadrao.png');
   imgFotoPai.Picture.LoadFromFile('fotos/imgPadrao.png');
+end;
+
+procedure TfrmCadastroCria.edtCodigoExit(Sender: TObject);
+begin
+  if Trim(edtCodigo.Text) <> '' THEN
+    PesquisaAnimal(True);
+end;
+
+procedure TfrmCadastroCria.edtCodigoKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_F2 then
+    btnPesquisarClick(Self);
+end;
+
+procedure TfrmCadastroCria.edtCodigoKeyPress(Sender: TObject; var Key: Char);
+begin
+  If not( key in['0'..'9',#08] ) then
+    key := #0;
 end;
 
 procedure TfrmCadastroCria.edtCodMaeExit(Sender: TObject);
@@ -301,9 +353,29 @@ begin
     PesquisaPai(True);
 end;
 
+procedure TfrmCadastroCria.edtCodProprietarioExit(Sender: TObject);
+begin
+  if Trim(edtCodProprietario.Text) <> '' THEN
+    PesquisaProprietario(True);
+end;
+
+procedure TfrmCadastroCria.edtCodProprietarioKeyDown(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+begin
+  if Key = VK_F2 then
+    btnPesquProprietarioClick(Self)
+end;
+
+procedure TfrmCadastroCria.edtCodProprietarioKeyPress(Sender: TObject;
+  var Key: Char);
+begin
+  If not( key in['0'..'9',#08] ) then
+    key := #0;
+end;
+
 procedure TfrmCadastroCria.FormActivate(Sender: TObject);
 begin
-  vID := '0';
+  LimpaCampos;
   frmFuncoes.ExecutaSQL('Select * from CRIA where ID = ' + vID, 'Abrir', DM.qryCria);
   CarregaCampos;
   PageControl1.TabIndex := 0;
@@ -318,6 +390,27 @@ begin
   begin
     perform(WM_NEXTDLGCTL,0,0);
   end;
+end;
+
+procedure TfrmCadastroCria.LimpaCampos;
+begin
+  vID := '0';
+  edtCodigo.Clear;
+  edtNome.Clear;
+  edtIdentificacao.Clear;
+  edtProprietario.Clear;
+  edtCodProprietario.Clear;
+  rdgTipo.ItemIndex := 0;
+  chkSituacao.Checked := True;
+  edtPelagem.Clear;
+  edtCabeca.Clear;
+  edtAE.Clear;
+  edtAD.Clear;
+  edtPE.Clear;
+  edtPD.Clear;
+  edtOutras.Clear;
+  edtCaminhoFoto.Clear;
+  imgFotoCria.picture := nil;
 end;
 
 procedure TfrmCadastroCria.PesquisaAnimal(vStatus: boolean);
@@ -340,7 +433,7 @@ begin
         if Trim(edtCodProprietario.Text) <> '' then
           PesquisaProprietario(True);
 
-        if DM.qryCria.FieldByName('TIPO').AsString = 'V' then
+        if DM.qryCria.FieldByName('SEXO').AsString = 'F' then
           rdgTipo.ItemIndex := 0
         else
           rdgTipo.ItemIndex := 1;
@@ -350,15 +443,15 @@ begin
           else
             imgFotoCria.picture.loadfromfile('fotos/imgPadrao.png');
 
-          if DM.qryCria.FieldByName('FOTOMAE').AsString <> '' then
-            imgFotoMae.picture.loadfromfile(DM.qryCria.FieldByName('FOTOMAE').AsString)
+          {if DM.qryCria.FieldByName('FOTO_MAE').AsString <> '' then
+            imgFotoMae.picture.loadfromfile(DM.qryCria.FieldByName('FOTO_MAE').AsString)
           else
             imgFotoMae.picture.loadfromfile('fotos/imgPadrao.png');
 
-          if DM.qryCria.FieldByName('FOTOPAI').AsString <> '' then
-            imgFotoPai.picture.loadfromfile(DM.qryCria.FieldByName('FOTOPAI').AsString)
+          if DM.qryCria.FieldByName('FOTO_PAI').AsString <> '' then
+            imgFotoPai.picture.loadfromfile(DM.qryCria.FieldByName('FOTO_PAI').AsString)
           else
-            imgFotoPai.picture.loadfromfile('fotos/imgPadrao.png');
+            imgFotoPai.picture.loadfromfile('fotos/imgPadrao.png'); }
 
           edtCodMae.Text := DM.qryCria.FieldByName('MAE').AsString;
           if Trim(edtCodMae.Text) <> '' then
@@ -396,12 +489,12 @@ begin
     begin
       DM.qryMae.close;
       DM.qryMae.SQL.Clear;
-      DM.qryMae.SQL.Add('Select * from ANIMAL where ID = ' + QuotedStr(edtCodMae.Text));
+      DM.qryMae.SQL.Add('Select * from ANIMAL where ID = ' + QuotedStr(edtCodMae.Text) + ' and SEXO = ' + QuotedStr('F'));
       DM.qryMae.Open;
 
       if DM.qryMae.RecordCount > 0 then
       begin
-        if DM.qryMae.FieldByName('FOTO').AsString <> '' then
+        if FileExists(DM.qryMae.FieldByName('FOTO').AsString) then
           imgFotoMae.picture.loadfromfile(DM.qryMae.FieldByName('FOTO').AsString)
         else
           imgFotoMae.picture.loadfromfile('fotos/imgPadrao.png');
@@ -420,7 +513,7 @@ begin
     try
       frmPesquisa.vTabela := 'ANIMAL';
       frmPesquisa.vTela := 'CAD_CRIA_MAE';
-      frmPesquisa.vComando := 'Select ID, NOME, IDENTIFICACAO, PROPRIETARIO from ANIMAL where TIPO = ' + QuotedStr('V') + ' ORDER BY NOME';
+      frmPesquisa.vComando := 'Select ID, NOME, IDENTIFICACAO, PROPRIETARIO from ANIMAL where SEXO = ' + QuotedStr('F') + ' ORDER BY NOME';
       frmPesquisa.ShowModal;
     finally
       frmPesquisa.Release;
@@ -436,12 +529,12 @@ begin
     begin
       DM.qryMae.close;
       DM.qryMae.SQL.Clear;
-      DM.qryMae.SQL.Add('Select * from ANIMAL where ID = ' + QuotedStr(edtCodPai.Text));
+      DM.qryMae.SQL.Add('Select * from ANIMAL where ID = ' + QuotedStr(edtCodPai.Text) + ' and SEXO = ' + QuotedStr('M'));
       DM.qryMae.Open;
 
       if DM.qryMae.RecordCount > 0 then
       begin
-        if DM.qryMae.FieldByName('FOTO').AsString <> '' then
+        if FileExists(DM.qryMae.FieldByName('FOTO').AsString) then
           imgFotoPai.picture.loadfromfile(DM.qryMae.FieldByName('FOTO').AsString)
         else
           imgFotoPai.picture.loadfromfile('fotos/imgPadrao.png');
@@ -460,7 +553,7 @@ begin
     try
       frmPesquisa.vTabela := 'ANIMAL';
       frmPesquisa.vTela := 'CAD_CRIA_PAI';
-      frmPesquisa.vComando := 'Select ID, NOME, IDENTIFICACAO, PROPRIETARIO from ANIMAL where TIPO = ' + QuotedStr('T') + ' ORDER BY NOME';
+      frmPesquisa.vComando := 'Select ID, NOME, IDENTIFICACAO, PROPRIETARIO from ANIMAL where SEXO = ' + QuotedStr('M') + ' ORDER BY NOME';
       frmPesquisa.ShowModal;
     finally
       frmPesquisa.Release;
@@ -470,7 +563,7 @@ end;
 
 procedure TfrmCadastroCria.PesquisaProprietario(vStatus: boolean);
 begin
-if vStatus = True then
+  if vStatus = True then
   begin
     if Trim(edtCodigo.Text) <> '' then
     begin
@@ -495,12 +588,42 @@ if vStatus = True then
     try
       frmPesquisa.vTabela := 'PRODUTOR';
       frmPesquisa.vTela := 'CAD_CRIA';
-      frmPesquisa.vComando := 'Select ID, NOME, INSCEST_RURAL from PRODUTOR';
+      frmPesquisa.vComando := 'Select ID, NOME, INSC_RURAL from PRODUTOR';
       frmPesquisa.ShowModal;
     finally
       frmPesquisa.Release;
     end;
   end;
+end;
+
+function TfrmCadastroCria.ValidaCampos: Boolean;
+var
+  vRetorno : Boolean;
+begin
+  vRetorno := True;
+  if trim(edtCodProprietario.Text) = '' then
+  begin
+    ShowMessage('Informe o proprietário!');
+    edtCodProprietario.SetFocus;
+    vRetorno := False;
+  end;
+
+  if trim(edtNome.Text) = '' then
+  begin
+    ShowMessage('Informe o nome do animal!');
+    edtNome.SetFocus;
+    vRetorno := False;
+  end;
+
+  if edtNascimento.Text = '  /  /    ' then
+  begin
+    ShowMessage('Informe a data de nascimento!');
+    edtNascimento.SetFocus;
+    vRetorno := False;
+  end;
+
+  Result := vRetorno;
+
 end;
 
 end.

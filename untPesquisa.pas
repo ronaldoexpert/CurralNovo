@@ -20,6 +20,8 @@ type
     GroupBox1: TGroupBox;
     lblCampoPesquisa: TLabel;
     edtPesquisa: TEdit;
+    chkConfirmadas: TCheckBox;
+    rdgrpSexo: TRadioGroup;
     procedure FormShow(Sender: TObject);
     procedure dbgPesquisaDblClick(Sender: TObject);
     procedure btnFecharClick(Sender: TObject);
@@ -30,6 +32,11 @@ type
     procedure dbgPesquisaKeyPress(Sender: TObject; var Key: Char);
     procedure dbgPesquisaTitleClick(Column: TColumn);
     procedure edtPesquisaKeyPress(Sender: TObject; var Key: Char);
+    procedure chkConfirmadasClick(Sender: TObject);
+    procedure edtPesquisaKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure FormActivate(Sender: TObject);
+    procedure rdgrpSexoClick(Sender: TObject);
   private
     { Private declarations }
     procedure Selecionar;
@@ -46,16 +53,29 @@ implementation
 
 {$R *.dfm}
 
-uses unstCadastroVeterinario, untCadastroAnimal, untCadastroCria,
+uses untCadastroCria,
   untCadastroProduto, untCadastroProdutor, untCadastroServico,
-  untCadastroTipoProdutor, untCadastroUsuario, untDM, untFuncoes, untLogin,
-  untPrincipal, untConfirmaInseminacao, untInseminacao;
+  untCadastroUsuario, untDM, untFuncoes, untLogin,
+  untPrincipal, untConfirmaInseminacao, untInseminacao, unstCadastroVeterinario,
+  untCadastroAnimal, untMovimentaEstoque, untConfiguracao;
 
 { TfrmPesquisa }
 
 procedure TfrmPesquisa.btnFecharClick(Sender: TObject);
 begin
   close;
+end;
+
+procedure TfrmPesquisa.chkConfirmadasClick(Sender: TObject);
+begin
+  if chkConfirmadas.Checked = True then
+  BEGIN
+    vComando := 'Select I.NUMERO, I.DATA, P.NOME PRODUTOR, V.NOME VETERINARIO from INSEMINACAO I JOIN PRODUTOR P ON (P.ID = I.ID_PRODUTOR) JOIN VETERINARIO V ON (V.ID = I.ID_VETERINARIO) WHERE I.FINALIZADA = ' + QuotedStr('S') + ' ORDER BY I.NUMERO'
+  END
+  ELSE
+    vComando := 'Select I.NUMERO, I.DATA, P.NOME PRODUTOR, V.NOME VETERINARIO from INSEMINACAO I JOIN PRODUTOR P ON (P.ID = I.ID_PRODUTOR) JOIN VETERINARIO V ON (V.ID = I.ID_VETERINARIO) WHERE I.FINALIZADA = ' + QuotedStr('N') + ' ORDER BY I.NUMERO';
+
+  frmFuncoes.ExecutaSQL(vComando, 'Abrir', qryPesquisa);
 end;
 
 procedure TfrmPesquisa.dbgPesquisaDblClick(Sender: TObject);
@@ -107,6 +127,21 @@ begin
   end;
 end;
 
+procedure TfrmPesquisa.edtPesquisaKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if key = 38 then
+  begin
+    // seta para cima, volta um registro
+    qryPesquisa.Prior;
+  end
+  else if key = 40 then
+  begin
+    // seta para baixo, avança um registro
+    qryPesquisa.Next;
+  end;
+end;
+
 procedure TfrmPesquisa.edtPesquisaKeyPress(Sender: TObject; var Key: Char);
 begin
   if key = #13 then
@@ -119,6 +154,11 @@ begin
     // pressionado ESC
     close;
   end;
+end;
+
+procedure TfrmPesquisa.FormActivate(Sender: TObject);
+begin
+  Caption := 'Pesquisa de ' + vTabela;
 end;
 
 procedure TfrmPesquisa.FormKeyDown(Sender: TObject; var Key: Word;
@@ -148,9 +188,33 @@ begin
   ELSE if (vTabela = 'SERVICO') OR (vTabela = 'PRODUTO') then
   BEGIN
     lblCampoPesquisa.Caption := 'DESCRICAO';
+    TFMTBCDField(qryPesquisa.FieldByName('valor')).DisplayFormat   := '###,####,###,##0.00';
   END;
 
+  if vTela = 'CAD_ANIMAL' then     //Versao 1.1.0 - 25/05/2018
+    rdgrpSexo.Visible := true       //Versao 1.1.0 - 25/05/2018
+  else
+    rdgrpSexo.Visible := False; //Versao 1.1.0 - 25/05/2018
+
+
+  if vTabela = 'INSEMINACAO' then
+    chkConfirmadas.Visible := True
+  else
+    chkConfirmadas.Visible := False;
+
   edtPesquisa.SetFocus;
+end;
+
+procedure TfrmPesquisa.rdgrpSexoClick(Sender: TObject);      //Versao 1.1 - 25/05/2018
+begin
+  if rdgrpSexo.ItemIndex = 0 then        //Versao 1.1 - 25/05/2018
+  BEGIN
+    vComando := 'Select ID, NOME, IDENTIFICACAO, PROPRIETARIO from ANIMAL Where SEXO = ' + QuotedStr('F')    //Versao 1.1 - 25/05/2018
+  END
+  ELSE
+    vComando := 'Select ID, NOME, IDENTIFICACAO, ESTOQUE from ANIMAL Where SEXO = ' + QuotedStr('M');      //Versao 1.1 - 25/05/2018
+
+  frmFuncoes.ExecutaSQL(vComando, 'Abrir', qryPesquisa);
 end;
 
 procedure TfrmPesquisa.Selecionar;
@@ -179,6 +243,21 @@ begin
     BEGIN
       frmInseminacao.edtCodAnimal.Text := dbgPesquisa.Fields[0].Value;
       frmInseminacao.PesquisaAnimal(True);
+    END
+    else if vTela = 'CAD_CRIA_MAE' then
+    BEGIN
+      frmCadastroCria.edtCodMae.Text := dbgPesquisa.Fields[0].Value;
+      frmCadastroCria.PesquisaMae(True);
+    END
+    else if vTela = 'CAD_CRIA_PAI' then
+    BEGIN
+      frmCadastroCria.edtCodPai.Text := dbgPesquisa.Fields[0].Value;
+      frmCadastroCria.PesquisaPai(True);
+    END
+    else if vTela = 'MOVI_PRODUTO' then
+    BEGIN
+      frmMovimentaEstoque.edtCodAnimal.Text := dbgPesquisa.Fields[0].Value;
+      frmMovimentaEstoque.PesquisaAnimal(True);
     END;
   end
   ELSE
@@ -234,10 +313,57 @@ begin
     BEGIN
       frmInseminacao.edtCodVet.Text := dbgPesquisa.Fields[0].Value;
       frmInseminacao.PesquisaVeterinario(True);
+    END
+    else if vTela = 'CONFIG' then
+    BEGIN
+      frmConfiguracao.edtCodVet.Text := dbgPesquisa.Fields[0].Value;
+      frmConfiguracao.PesquisaVeterinario(True);
     END;
-
+  end
+  else if vTabela = 'INSEMINACAO' then
+  begin
+    if vTela = 'INSEMINACAO' then
+    BEGIN
+      frmInseminacao.edtNumero.Text := dbgPesquisa.Fields[0].Value;
+      frmInseminacao.PesquisaBD(True);
+    END;
+  end
+  else if vTabela = 'SERVICO' then
+  begin
+    if vTela = 'INSEMINACAO' then
+    BEGIN
+      frmInseminacao.edtCodServico.Text := dbgPesquisa.Fields[0].Value;
+      frmInseminacao.PesquisaServico(True);
+    END
+    ELSE if vTela = 'CAD_SERVICO' then
+    BEGIN
+      frmCadastroServico.edtCodigo.Text := dbgPesquisa.Fields[0].Value;
+      frmCadastroServico.PesquisaBD(True);
+    END
+    ELSE if vTela = 'CONFIG' then
+    BEGIN
+      frmConfiguracao.edtCodServico.Text := dbgPesquisa.Fields[0].Value;
+      frmConfiguracao.PesquisaServico(True);
+    END;
+  end
+  else if vTabela = 'PRODUTO' then
+  begin
+    if vTela = 'CAD_PRODUTO' then
+    BEGIN
+      frmCadastroProduto.edtCodigo.Text := dbgPesquisa.Fields[0].Value;
+      frmCadastroProduto.PesquisaBD(True);
+    END
+    else if vTela = 'MOVI_PRODUTO' then
+    BEGIN
+      frmMovimentaEstoque.edtCodProduto.Text := dbgPesquisa.Fields[0].Value;
+      frmMovimentaEstoque.PesquisaProduto(True);
+    END
+    else if vTela = 'CONFIG' then
+    BEGIN
+      frmConfiguracao.edtCodProduto.Text := dbgPesquisa.Fields[0].Value;
+      frmConfiguracao.PesquisaProduto(True);
+    END;
   end;
-
 
   Close;
 end;

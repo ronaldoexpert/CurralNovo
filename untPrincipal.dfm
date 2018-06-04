@@ -1,9 +1,9 @@
 object frmPrincipal: TfrmPrincipal
   Left = 0
   Top = 0
-  Caption = 'Sistema Gerencial de Insemina'#231#227'o Artificial '
-  ClientHeight = 416
-  ClientWidth = 707
+  Caption = 'Curral Novo - Sistema de Controle de Insemina'#231#227'o Artificial'
+  ClientHeight = 438
+  ClientWidth = 983
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,18 +20,44 @@ object frmPrincipal: TfrmPrincipal
   object Panel1: TPanel
     Left = 0
     Top = 60
-    Width = 707
-    Height = 356
+    Width = 983
+    Height = 378
     Align = alClient
     BorderStyle = bsSingle
     Color = clInactiveBorder
     ParentBackground = False
     TabOrder = 0
+    ExplicitLeft = -8
+    ExplicitTop = 64
+    object DBGrid1: TDBGrid
+      Left = 12
+      Top = 4
+      Width = 393
+      Height = 177
+      DataSource = DM.dtsAuxiliar
+      TabOrder = 0
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+      Visible = False
+    end
+    object BitBtn1: TBitBtn
+      Left = 93
+      Top = 187
+      Width = 75
+      Height = 25
+      Caption = 'CARREGAR'
+      TabOrder = 1
+      Visible = False
+      OnClick = BitBtn1Click
+    end
   end
   object ToolBar1: TToolBar
     Left = 0
     Top = 0
-    Width = 707
+    Width = 983
     Height = 60
     ButtonHeight = 58
     ButtonWidth = 43
@@ -56,7 +82,7 @@ object frmPrincipal: TfrmPrincipal
       Height = 58
       Cursor = crHandPoint
       Align = alTop
-      Caption = '&Produtor'
+      Caption = '&Propriet'#225'rios'
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -190,8 +216,8 @@ object frmPrincipal: TfrmPrincipal
       Layout = blGlyphTop
       ParentFont = False
       Spacing = 1
-      TabOrder = 1
-      OnClick = btnCadProdutorClick
+      TabOrder = 0
+      OnClick = CadastrodeProdutorClick
     end
     object btnVeterinario: TBitBtn
       Left = 89
@@ -334,8 +360,8 @@ object frmPrincipal: TfrmPrincipal
       Layout = blGlyphTop
       ParentFont = False
       Spacing = 1
-      TabOrder = 5
-      OnClick = btnVeterinarioClick
+      TabOrder = 1
+      OnClick = CadastrodeVeterinarioClick
     end
     object btnCadAnimal: TBitBtn
       Left = 178
@@ -479,7 +505,7 @@ object frmPrincipal: TfrmPrincipal
       ParentFont = False
       Spacing = 1
       TabOrder = 2
-      OnClick = btnCadAnimalClick
+      OnClick = CadastrodeAnimalClick
     end
     object btnCadCria: TBitBtn
       Left = 267
@@ -623,7 +649,7 @@ object frmPrincipal: TfrmPrincipal
       ParentFont = False
       Spacing = 1
       TabOrder = 3
-      OnClick = btnCadCriaClick
+      OnClick = CadastrodeCriaClick
     end
     object btnInseminacao: TBitBtn
       Left = 356
@@ -807,7 +833,7 @@ object frmPrincipal: TfrmPrincipal
       ParentFont = False
       Spacing = 1
       TabOrder = 4
-      OnClick = btnInseminacaoClick
+      OnClick = InseminacaoClick
     end
     object btnSair: TBitBtn
       Left = 445
@@ -924,25 +950,31 @@ object frmPrincipal: TfrmPrincipal
       Layout = blGlyphTop
       ParentFont = False
       Spacing = 1
-      TabOrder = 0
+      TabOrder = 5
       OnClick = btnSairClick
     end
   end
+  object BitBtn2: TBitBtn
+    Left = 14
+    Top = 249
+    Width = 75
+    Height = 25
+    Caption = 'GRAVAR'
+    TabOrder = 2
+    Visible = False
+    OnClick = BitBtn2Click
+  end
   object MainMenu1: TMainMenu
-    Left = 560
-    Top = 152
+    Left = 296
+    Top = 264
     object Cadastro: TMenuItem
       Caption = '&Cadastro'
       object CadastrodeVeterinario: TMenuItem
         Caption = 'Cadastro de &Veterin'#225'rio'
         OnClick = CadastrodeVeterinarioClick
       end
-      object CadastroTipoProdutor: TMenuItem
-        Caption = 'Cadastro &Tipo Produtor'
-        OnClick = CadastroTipoProdutorClick
-      end
       object CadastrodeProdutor: TMenuItem
-        Caption = 'Cadastro de &Produtor'
+        Caption = 'Cadastro de &Propriet'#225'rios'
         OnClick = CadastrodeProdutorClick
       end
       object CadastrodeAnimal: TMenuItem
@@ -976,19 +1008,42 @@ object frmPrincipal: TfrmPrincipal
         Caption = 'Confirma Insemina'#231#245'es'
         OnClick = ConfirmaInseminacoesClick
       end
+      object MovimentaEstoque: TMenuItem
+        Caption = '&Movimenta Estoque'
+        OnClick = MovimentaEstoqueClick
+      end
     end
     object Relatorios: TMenuItem
       Caption = '&Relat'#243'rios'
-      object Cadastrais: TMenuItem
-        Caption = '&Cadastrais'
+      OnClick = RelatoriosClick
+    end
+    object Configurao: TMenuItem
+      Caption = 'Con&figura'#231#227'o'
+      OnClick = ConfiguraoClick
+    end
+    object Utilitrios: TMenuItem
+      Caption = '&Utilit'#225'rios'
+      object AjustanomesProprietarios: TMenuItem
+        Caption = 'Ajusta nomes Propriet'#225'rios'
+        OnClick = AjustanomesProprietariosClick
       end
-      object Movimento: TMenuItem
-        Caption = '&Movimento'
+    end
+    object SuporteOnline1: TMenuItem
+      Caption = 'Suporte &Online'
+      object eamViewer1: TMenuItem
+        Caption = 'Team &Viewer'
+        OnClick = eamViewer1Click
       end
+    end
+    object N1: TMenuItem
+      Caption = '|'
     end
     object Sair1: TMenuItem
       Caption = '&Sair'
-      OnClick = Sair1Click
     end
+  end
+  object OpenDialog2: TOpenDialog
+    Left = 368
+    Top = 264
   end
 end

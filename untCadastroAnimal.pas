@@ -34,7 +34,7 @@ type
     edtProprietario: TDBEdit;
     PageControl1: TPageControl;
     tbResenha: TTabSheet;
-    imgFotoCria: TImage;
+    imgAnimal: TImage;
     btnPesqFoto: TBitBtn;
     edtAD: TDBEdit;
     edtAE: TDBEdit;
@@ -56,6 +56,10 @@ type
     dtsProprietario: TDataSource;
     edtCaminhoFoto: TEdit;
     OpenDialog1: TOpenDialog;
+    chkSituacao: TDBCheckBox;
+    btnLimpaFoto: TBitBtn;
+    edtEstSemem: TDBEdit;
+    lblEstoqueSemem: TLabel;
     procedure btnFecharClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure btnPesquisarClick(Sender: TObject);
@@ -69,10 +73,18 @@ type
     procedure btnExcluirClick(Sender: TObject);
     procedure btnPesqFotoClick(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
+    procedure edtCodigoKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure edtCodProprietarioKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure btnLimpaFotoClick(Sender: TObject);
+    procedure rdgTipoClick(Sender: TObject);
   private
     { Private declarations }
     vID : String;
     fNovo : Boolean;
+    procedure LimpaCampos;
+    function ValidaCampos : Boolean;
   public
     { Public declarations }
     procedure PesquisaAnimal(vStatus : boolean);
@@ -87,7 +99,7 @@ implementation
 
 {$R *.dfm}
 
-uses untDM, untPesquisa, untFuncoes;
+uses untDM, untPesquisa, untFuncoes, untPrincipal;
 
 procedure TfrmCadastroAnimal.btnExcluirClick(Sender: TObject);
 begin
@@ -96,7 +108,8 @@ begin
     if qryAnimal.RecordCount > 0 then
     begin
       frmFuncoes.Botoes('Excluir', qryAnimal);
-      imgFotoCria.Picture.LoadFromFile('fotos/imgPadrao.png');
+      imgAnimal.Picture.LoadFromFile('fotos/imgPadrao.png');
+      LimpaCampos;
     end;
   end;
 end;
@@ -108,40 +121,58 @@ end;
 
 procedure TfrmCadastroAnimal.btnGravarClick(Sender: TObject);
 begin
-  if fNovo = True then
+  if ValidaCampos then
   begin
-    qryAnimal.FieldByName('id').AsString := edtCodigo.Text;
+    if fNovo = True then
+    begin
+      qryAnimal.FieldByName('id').AsString := edtCodigo.Text;
+    end;
+
+    if rdgTipo.ItemIndex = 0 then
+      qryAnimal.FieldByName('SEXO').AsString := 'F'
+    else
+      qryAnimal.FieldByName('SEXO').AsString := 'M';
+
+    qryAnimal.FieldByName('proprietario').AsString := edtCodProprietario.Text;
+    qryAnimal.FieldByName('foto').AsString := edtCaminhoFoto.Text;
+    qryAnimal.FieldByName('ALTERACAO').AsDateTime := Date + Time;
+    qryAnimal.FieldByName('USUARIO').AsInteger := frmPrincipal.vUsuario;
+
+    qryAnimal.Post;
+    qryAnimal.ApplyUpdates(-1);
+    btnNovo.Enabled := True;
+    btnExcluir.Enabled := True;
+    edtCodigo.Enabled := True;
+    fNovo := False;
+    frmFuncoes.AutoIncre('ANIMAL', 'Gravar');
+    ShowMessage('Cadastro realizado com sucesso.');
   end;
+end;
 
-
-  if rdgTipo.ItemIndex = 0 then
-    qryAnimal.FieldByName('TIPO').AsString := 'V'
-  else
-    qryAnimal.FieldByName('TIPO').AsString := 'T';
-
-  qryAnimal.FieldByName('proprietario').AsString := edtCodProprietario.Text;
-  qryAnimal.FieldByName('foto').AsString := edtCaminhoFoto.Text;
-
-  qryAnimal.Post;
-  qryAnimal.ApplyUpdates(-1);
-  btnNovo.Enabled := True;
-  btnExcluir.Enabled := True;
-  edtCodigo.Enabled := True;
-  frmFuncoes.AutoIncre('ANIMAL', 'Gravar');
-  ShowMessage('Cadastro realizado com sucesso.');
+procedure TfrmCadastroAnimal.btnLimpaFotoClick(Sender: TObject);
+begin
+  if FileExists('fotos/imgPadrao.png') then
+  begin
+    edtCaminhoFoto.Text := 'fotos/imgPadrao.png';
+    imgAnimal.Picture.LoadFromFile('fotos/imgPadrao.png');
+  end;
 end;
 
 procedure TfrmCadastroAnimal.btnNovoClick(Sender: TObject);
 begin
+  LimpaCampos;
   fNovo := True;
+
   qryAnimal.Insert;
+  qryAnimal.FieldByName('situacao').AsString := 'Ativo';
 
   btnNovo.Enabled := False;
   btnGravar.Enabled := True;
   btnExcluir.Enabled := False;
   edtNome.SetFocus;
   edtCodigo.Enabled := False;
-  imgFotoCria.Picture.LoadFromFile('fotos/imgPadrao.png');
+  imgAnimal.Picture.LoadFromFile('fotos/imgPadrao.png');
+  edtEstSemem.Field.Value := 0;
 
   edtCodigo.Text := IntToStr(frmFuncoes.AutoIncre('ANIMAL', 'Novo'));
 end;
@@ -152,9 +183,9 @@ begin
   begin
     edtCaminhoFoto.Text := OpenDialog1.FileName;
     If not fileexists (edtCaminhoFoto.text) then
-      imgFotoCria.picture := nil
+      imgAnimal.picture := nil
     Else
-      imgFotoCria.picture.loadfromfile(edtCaminhoFoto.text);
+      imgAnimal.picture.loadfromfile(edtCaminhoFoto.text);
   end;
 end;
 
@@ -180,12 +211,21 @@ begin
   edtOutras.DataField := 'OUTRAS';
   edtAE.DataField := 'AE';
   edtPE.DataField := 'PE';
+  chkSituacao.DataField := 'SITUACAO';
+  edtEstSemem.DataField := 'ESTOQUE';
 end;
 
 procedure TfrmCadastroAnimal.edtCodigoExit(Sender: TObject);
 begin
   if Trim(edtCodigo.Text) <> '' then
     PesquisaAnimal(True);
+end;
+
+procedure TfrmCadastroAnimal.edtCodigoKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_F2 then
+    btnPesquisarClick(Self);
 end;
 
 procedure TfrmCadastroAnimal.edtCodigoKeyPress(Sender: TObject; var Key: Char);
@@ -200,6 +240,13 @@ begin
     PesquisaProprietario(True);
 end;
 
+procedure TfrmCadastroAnimal.edtCodProprietarioKeyDown(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+begin
+  if Key = VK_F2 then
+    btnPesquProprietarioClick(Self);
+end;
+
 procedure TfrmCadastroAnimal.edtCodProprietarioKeyPress(Sender: TObject;
   var Key: Char);
 begin
@@ -209,11 +256,11 @@ end;
 
 procedure TfrmCadastroAnimal.FormActivate(Sender: TObject);
 begin
-  vID := '0';
+  LimpaCampos;
   frmFuncoes.ExecutaSQL('Select * from ANIMAL where ID = ' + vID, 'Abrir', qryAnimal);
   CarregaCampos;
   edtCodigo.SetFocus;
-  imgFotoCria.Picture.LoadFromFile('fotos/imgPadrao.png');
+  imgAnimal.Picture.LoadFromFile('fotos/imgPadrao.png');
 end;
 
 procedure TfrmCadastroAnimal.FormKeyPress(Sender: TObject; var Key: Char);
@@ -223,6 +270,28 @@ begin
     Key:= #0;
     Perform(Wm_NextDlgCtl,0,0);
   end;
+end;
+
+procedure TfrmCadastroAnimal.LimpaCampos;
+begin
+  vID := '0';
+  edtCodigo.Clear;
+  edtNome.Clear;
+  edtIdentificacao.Clear;
+  edtProprietario.Clear;
+  edtCodProprietario.Clear;
+  edtEstSemem.Text := '0';
+  rdgTipo.ItemIndex := 0;
+  chkSituacao.Checked := True;
+  edtPelagem.Clear;
+  edtCabeca.Clear;
+  edtAE.Clear;
+  edtAD.Clear;
+  edtPE.Clear;
+  edtPD.Clear;
+  edtOutras.Clear;
+  edtCaminhoFoto.Clear;
+  imgAnimal.picture := nil;
 end;
 
 procedure TfrmCadastroAnimal.PesquisaAnimal(vStatus: boolean);
@@ -245,13 +314,26 @@ begin
         if Trim(edtCodProprietario.Text) <> '' then
           PesquisaProprietario(True);
 
-        if qryAnimal.FieldByName('TIPO').AsString = 'V' then
+        if qryAnimal.FieldByName('SEXO').AsString = 'F' then
           rdgTipo.ItemIndex := 0
         else
           rdgTipo.ItemIndex := 1;
 
-        if qryAnimal.FieldByName('foto').AsString <> '' then
-          imgFotoCria.picture.loadfromfile(qryAnimal.FieldByName('foto').AsString);
+        if rdgTipo.ItemIndex = 0 then
+        BEGIN
+          edtEstSemem.Visible := False;
+          lblEstoqueSemem.Visible := False;
+        END
+        else
+        begin
+          edtEstSemem.Visible := True;
+          lblEstoqueSemem.Visible := True;
+        end;
+
+        if FileExists(qryAnimal.FieldByName('FOTO').AsString) then
+          imgAnimal.picture.loadfromfile(qryAnimal.FieldByName('FOTO').AsString)
+        else
+          imgAnimal.picture.loadfromfile('fotos/imgPadrao.png');
       end
       else
       begin
@@ -265,7 +347,7 @@ begin
     try
       frmPesquisa.vTabela := 'ANIMAL';
       frmPesquisa.vTela := 'CAD_ANIMAL';
-      frmPesquisa.vComando := 'Select ID, NOME, IDENTIFICACAO, PROPRIETARIO from ANIMAL';
+      frmPesquisa.vComando := 'Select ID, NOME, IDENTIFICACAO, PROPRIETARIO from ANIMAL Where SEXO = ' + QuotedStr('F');
       frmPesquisa.ShowModal;
     finally
       frmPesquisa.Release;
@@ -300,12 +382,48 @@ begin
     try
       frmPesquisa.vTabela := 'PRODUTOR';
       frmPesquisa.vTela := 'CAD_ANIMAL';
-      frmPesquisa.vComando := 'Select ID, NOME, INSCEST_RURAL from PRODUTOR';
+      frmPesquisa.vComando := 'Select ID, NOME, INSC_RURAL from PRODUTOR';
       frmPesquisa.ShowModal;
     finally
       frmPesquisa.Release;
     end;
   end;
+end;
+
+procedure TfrmCadastroAnimal.rdgTipoClick(Sender: TObject);
+begin
+  if rdgTipo.ItemIndex = 0 then
+  BEGIN
+    edtEstSemem.Visible := False;
+    lblEstoqueSemem.Visible := False;
+  END
+  else
+  begin
+    edtEstSemem.Visible := True;
+    lblEstoqueSemem.Visible := True;
+  end;
+end;
+
+function TfrmCadastroAnimal.ValidaCampos: Boolean;
+var
+  vRetorno : Boolean;
+begin
+  vRetorno := True;
+  if trim(edtCodProprietario.Text) = '' then
+  begin
+    ShowMessage('Informe o proprietário!');
+    edtCodProprietario.SetFocus;
+    vRetorno := False;
+  end;
+
+  if trim(edtNome.Text) = '' then
+  begin
+    ShowMessage('Informe o nome do animal!');
+    edtNome.SetFocus;
+    vRetorno := False;
+  end;
+
+  Result := vRetorno;
 end;
 
 end.
