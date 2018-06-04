@@ -19,6 +19,9 @@ type
     procedure FormShow(Sender: TObject);
     procedure btnRelProprietarioClick(Sender: TObject);
     procedure btnFecharClick(Sender: TObject);
+    procedure btnRelInseminacoesClick(Sender: TObject);
+    procedure btnRelAnimaisClick(Sender: TObject);
+    procedure btnGraficosClick(Sender: TObject);
   private
     { Private declarations }
     function LeRegWin(root: HKey; chave, valor: string): string;
@@ -33,7 +36,8 @@ var
 
 implementation
 
-uses untDM, untRelProprietarios;
+uses untDM, untRelProprietarios, untRelInseminacao, untRelAnimais,
+  untGraficos;
 
 {$R *.dfm}
 
@@ -108,6 +112,39 @@ end;
 procedure TfrmPrincipal.btnFecharClick(Sender: TObject);
 begin
   Application.Terminate;
+end;
+
+procedure TfrmPrincipal.btnRelInseminacoesClick(Sender: TObject);
+begin
+  GravaRegWin;
+  frmRelInseminacoes := TfrmRelInseminacoes.Create(Self);
+  try
+    frmRelInseminacoes.ShowModal;
+  finally
+    frmRelInseminacoes.Release;
+  end;
+end;
+
+procedure TfrmPrincipal.btnRelAnimaisClick(Sender: TObject);
+begin
+  GravaRegWin;
+  frmRelAnimais := TfrmRelAnimais.Create(Self);
+  try
+    frmRelAnimais.ShowModal;
+  finally
+    frmRelAnimais.Release;
+  end;
+end;
+
+procedure TfrmPrincipal.btnGraficosClick(Sender: TObject);
+begin
+  GravaRegWin;
+  frmRelGraficos := TfrmRelGraficos.Create(Self);
+  try
+    frmRelGraficos.ShowModal;
+  finally
+    frmRelGraficos.Release;
+  end;
 end;
 
 end.
