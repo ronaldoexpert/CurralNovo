@@ -55,7 +55,7 @@ implementation
 
 {$R *.dfm}
 
-uses untPesquisa, untFuncoes, untDM;
+uses untPesquisa, untFuncoes, untDM, untPrincipal;
 
 procedure TfrmConfiguracao.btnFecharClick(Sender: TObject);
 begin
@@ -71,7 +71,7 @@ begin
   dm.qryConfiguracao.FieldByName('caminho_foto').AsString := edtCaminhoFoto.Text;
   dm.qryConfiguracao.FieldByName('usuario').AsInteger := StrToInt(frmFuncoes.LerArquivoUsuario);
   dm.qryConfiguracao.FieldByName('alteracao').AsDateTime := Date+Time;
-
+  dm.qryConfiguracao.FieldByName('CODEMPRESA').AsInteger := frmPrincipal.vEmpresa;        //Versao 1.4 - 14/10/2018
   frmFuncoes.Botoes('Gravar', dm.qryConfiguracao);
 end;
 

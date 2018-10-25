@@ -2,8 +2,8 @@ object frmCadastroAnimal: TfrmCadastroAnimal
   Left = 0
   Top = 0
   Caption = 'Cadastro Animal'
-  ClientHeight = 388
-  ClientWidth = 487
+  ClientHeight = 430
+  ClientWidth = 475
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,14 +19,15 @@ object frmCadastroAnimal: TfrmCadastroAnimal
   TextHeight = 13
   object pnlRodape: TPanel
     Left = 0
-    Top = 340
-    Width = 487
+    Top = 382
+    Width = 475
     Height = 48
     Align = alBottom
     TabOrder = 0
+    ExplicitTop = 340
     object btnNovo: TBitBtn
       Left = 8
-      Top = 5
+      Top = 6
       Width = 75
       Height = 37
       Caption = '&Novo'
@@ -168,7 +169,7 @@ object frmCadastroAnimal: TfrmCadastroAnimal
       OnClick = btnExcluirClick
     end
     object btnFechar: TBitBtn
-      Left = 382
+      Left = 390
       Top = 6
       Width = 75
       Height = 37
@@ -207,12 +208,13 @@ object frmCadastroAnimal: TfrmCadastroAnimal
   object pnlCentro: TPanel
     Left = 0
     Top = 0
-    Width = 487
-    Height = 340
+    Width = 475
+    Height = 382
     Align = alClient
     Color = clBtnHighlight
     ParentBackground = False
     TabOrder = 1
+    ExplicitHeight = 340
     object lblCodigo: TLabel
       Left = 8
       Top = 13
@@ -381,19 +383,69 @@ object frmCadastroAnimal: TfrmCadastroAnimal
     end
     object PageControl1: TPageControl
       Left = 1
-      Top = 120
-      Width = 485
+      Top = 162
+      Width = 473
       Height = 219
       ActivePage = tbResenha
       Align = alBottom
       TabOrder = 6
+      ExplicitTop = 120
       object tbResenha: TTabSheet
         Caption = '&Resenha'
+        object lblPelagem: TLabel
+          Left = 3
+          Top = 5
+          Width = 40
+          Height = 13
+          Caption = 'Pelagem'
+        end
+        object lblCabeca: TLabel
+          Left = 147
+          Top = 5
+          Width = 36
+          Height = 13
+          Caption = 'Cabeca'
+        end
+        object lblAE: TLabel
+          Left = 147
+          Top = 51
+          Width = 13
+          Height = 13
+          Caption = 'AE'
+        end
+        object lblAD: TLabel
+          Left = 3
+          Top = 51
+          Width = 14
+          Height = 13
+          Caption = 'AD'
+        end
+        object lblPE: TLabel
+          Left = 147
+          Top = 93
+          Width = 12
+          Height = 13
+          Caption = 'PE'
+        end
+        object lblPD: TLabel
+          Left = 3
+          Top = 93
+          Width = 13
+          Height = 13
+          Caption = 'PD'
+        end
+        object lblOutras: TLabel
+          Left = 3
+          Top = 135
+          Width = 33
+          Height = 13
+          Caption = 'Outras'
+        end
         object imgAnimal: TImage
           Left = 300
-          Top = 12
+          Top = 13
           Width = 160
-          Height = 145
+          Height = 147
           Picture.Data = {
             0954506E67496D61676589504E470D0A1A0A0000000D49484452000002000000
             02001006000000A4E808B90000000467414D410000B18F0BFC61050000000173
@@ -1538,55 +1590,6 @@ object frmCadastroAnimal: TfrmCadastroAnimal
             6D616769636B2D495437305A4341679C9BCA9E0000000049454E44AE426082}
           Stretch = True
         end
-        object lblPelagem: TLabel
-          Left = 3
-          Top = 5
-          Width = 40
-          Height = 13
-          Caption = 'Pelagem'
-        end
-        object lblCabeca: TLabel
-          Left = 147
-          Top = 5
-          Width = 36
-          Height = 13
-          Caption = 'Cabeca'
-        end
-        object lblAE: TLabel
-          Left = 147
-          Top = 51
-          Width = 13
-          Height = 13
-          Caption = 'AE'
-        end
-        object lblAD: TLabel
-          Left = 3
-          Top = 51
-          Width = 14
-          Height = 13
-          Caption = 'AD'
-        end
-        object lblPE: TLabel
-          Left = 147
-          Top = 93
-          Width = 12
-          Height = 13
-          Caption = 'PE'
-        end
-        object lblPD: TLabel
-          Left = 3
-          Top = 93
-          Width = 13
-          Height = 13
-          Caption = 'PD'
-        end
-        object lblOutras: TLabel
-          Left = 3
-          Top = 135
-          Width = 33
-          Height = 13
-          Caption = 'Outras'
-        end
         object btnPesqFoto: TBitBtn
           Left = 300
           Top = 163
@@ -1742,10 +1745,31 @@ object frmCadastroAnimal: TfrmCadastroAnimal
       TabOrder = 10
       Visible = False
     end
+    object chkMorte: TDBCheckBox
+      Left = 8
+      Top = 109
+      Width = 53
+      Height = 17
+      Caption = 'Morto'
+      DataSource = dtsAnimal
+      TabOrder = 11
+      ValueChecked = 'S'
+      ValueUnchecked = 'N'
+      OnClick = chkMorteClick
+    end
+    object edtDtMorte: TDBEdit
+      Left = 8
+      Top = 132
+      Width = 75
+      Height = 21
+      DataSource = dtsAnimal
+      TabOrder = 12
+      Visible = False
+    end
   end
   object edtCaminhoFoto: TEdit
-    Left = 305
-    Top = 280
+    Left = 346
+    Top = 129
     Width = 121
     Height = 21
     TabOrder = 2
@@ -1777,5 +1801,9 @@ object frmCadastroAnimal: TfrmCadastroAnimal
   object OpenDialog1: TOpenDialog
     Left = 440
     Top = 168
+  end
+  object OpenPictureDialog1: TOpenPictureDialog
+    Left = 536
+    Top = 72
   end
 end

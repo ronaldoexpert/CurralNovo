@@ -5,8 +5,8 @@ object frmLogin: TfrmLogin
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Login'
-  ClientHeight = 153
-  ClientWidth = 439
+  ClientHeight = 145
+  ClientWidth = 471
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -25,8 +25,8 @@ object frmLogin: TfrmLogin
   object pnlPrincipal: TPanel
     Left = 0
     Top = 0
-    Width = 439
-    Height = 153
+    Width = 471
+    Height = 145
     Align = alClient
     Color = clWhite
     Font.Charset = DEFAULT_CHARSET
@@ -39,14 +39,14 @@ object frmLogin: TfrmLogin
     TabOrder = 0
     object lblUsuario: TLabel
       Left = 139
-      Top = 29
+      Top = 43
       Width = 36
       Height = 13
       Caption = 'Usu'#225'rio'
     end
     object lblSenha: TLabel
-      Left = 294
-      Top = 29
+      Left = 325
+      Top = 43
       Width = 30
       Height = 13
       Caption = 'Senha'
@@ -466,24 +466,34 @@ object frmLogin: TfrmLogin
     end
     object edtUsuario: TEdit
       Left = 139
-      Top = 48
-      Width = 148
+      Top = 62
+      Width = 174
       Height = 21
       CharCase = ecUpperCase
       TabOrder = 0
     end
     object edtSenha: TEdit
-      Left = 294
-      Top = 48
+      Left = 325
+      Top = 62
       Width = 121
       Height = 21
       PasswordChar = '*'
       TabOrder = 1
     end
+    object edtEmpresas: TDBLookupComboBox
+      Left = 139
+      Top = 16
+      Width = 307
+      Height = 21
+      ListFieldIndex = 1
+      ListSource = dtsEmpresas
+      TabOrder = 2
+      TabStop = False
+    end
   end
   object btnLogin: TBitBtn
-    Left = 259
-    Top = 88
+    Left = 290
+    Top = 94
     Width = 75
     Height = 33
     Caption = '&Entrar'
@@ -518,8 +528,8 @@ object frmLogin: TfrmLogin
     OnClick = btnLoginClick
   end
   object btnCancelar: TBitBtn
-    Left = 340
-    Top = 88
+    Left = 371
+    Top = 94
     Width = 75
     Height = 33
     Caption = '&Cancelar'
@@ -552,5 +562,16 @@ object frmLogin: TfrmLogin
       8DDD8D8DDDAAAAE5E9E9F9FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
     TabOrder = 2
     OnClick = btnCancelarClick
+  end
+  object qryEmpresas: TFDQuery
+    CachedUpdates = True
+    Connection = DM.FDConnection1
+    Left = 64
+    Top = 168
+  end
+  object dtsEmpresas: TDataSource
+    DataSet = qryEmpresas
+    Left = 112
+    Top = 168
   end
 end

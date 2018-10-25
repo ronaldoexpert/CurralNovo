@@ -8,7 +8,7 @@ uses
   Vcl.Buttons, Vcl.ExtCtrls, Data.DB, Vcl.Grids, Vcl.DBGrids, FireDAC.Stan.Intf,
   FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
-  FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.ComCtrls;
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.ComCtrls, Vcl.Menus;
 
 type
   TfrmConfirmaInseminacao = class(TForm)
@@ -44,6 +44,10 @@ type
     lblQtdConfirmadas: TLabel;
     qryInseminacoes: TFDQuery;
     dtsInseminacoes: TDataSource;
+    popmnNaoConfirmadas: TPopupMenu;
+    Excluir1: TMenuItem;
+    popmnConfirmadas: TPopupMenu;
+    MenuItem1: TMenuItem;
     procedure btnFecharClick(Sender: TObject);
     procedure btnPesquProprietarioClick(Sender: TObject);
     procedure edtCodProprietarioExit(Sender: TObject);
@@ -56,6 +60,9 @@ type
     procedure FormActivate(Sender: TObject);
     procedure edtCodProprietarioChange(Sender: TObject);
     procedure edtCodVeterinarioChange(Sender: TObject);
+    procedure FormKeyPress(Sender: TObject; var Key: Char);
+    procedure Excluir1Click(Sender: TObject);
+    procedure MenuItem1Click(Sender: TObject);
   private
     { Private declarations }
     vID : String;
@@ -114,6 +121,7 @@ begin
     dm.qryConfirmados.First;
     while not dm.qryConfirmados.Eof do
     begin
+      qryAuxiliar.Close;
       frmFuncoes.ExecutaSQL('Select * from MOVI_INSEMINACAO WHERE ID = ' + QuotedStr(DM.qryConfirmados.FieldByName('idMovi').AsString), 'Abrir', qryAuxiliar);
       qryAuxiliar.Edit;
       qryAuxiliar.FieldByName('CONFIRMADA').AsString := 'S';
@@ -127,7 +135,7 @@ begin
 
   if DM.qryAConfirmar.IsEmpty = False then
   begin
-    qryAuxiliar.EmptyDataSet;
+    qryAuxiliar.Close;
     dm.qryAConfirmar.First;
     while not dm.qryAConfirmar.Eof do
     begin
@@ -167,27 +175,29 @@ var
 begin
   if ValidaCampos then
   begin
-    vComandoInseminacoes := 'Select * from INSEMINACAO';
+    vComandoInseminacoes := 'Select * from INSEMINACAO where FINALIZADA = ' + QuotedStr('N');   //Versao 1.1.1 - 15/06/2018
     vComando := 'select I.numero, P.NOME AS PROPRIETARIO, I.DATA, A.NOME AS ANIMAL, V.NOME AS VETERINARIO, MI.CONFIRMADA, MI.DATA_CONFIRMACAO, I.ID_PRODUTOR, I.ID_VETERINARIO, MI.ID as idMovi, I.ID as idInsem from MOVI_INSEMINACAO MI ' +
       ' JOIN INSEMINACAO I ON (I.ID = MI.ID_INSEMINACAO) ' +
       ' JOIN ANIMAL A ON (A.ID = MI.ID_ANIMAL) ' +
       ' JOIN PRODUTOR P ON (P.ID = I.ID_PRODUTOR) ' +
       ' JOIN VETERINARIO V ON (V.ID = I.ID_VETERINARIO) ' +
       ' Where ';
+
     vComandoConfirmados := vComando;
 
     vComando := vComando + ' MI.confirmada = ' + QuotedStr('A');
 
+
     if edtCodProprietario.Text <> '' then
     begin
       vComando := vComando + ' and I.id_produtor = ' + QuotedStr(edtCodProprietario.Text);
-      vComandoInseminacoes := vComandoInseminacoes + ' and I.id_produtor = ' + QuotedStr(edtCodProprietario.Text);
+      vComandoInseminacoes := vComandoInseminacoes + ' and id_produtor = ' + QuotedStr(edtCodProprietario.Text);
     end;
 
     if edtCodVeterinario.Text <> '' then
     begin
       vComando := vComando + ' and I.ID_VETERINARIO = ' + QuotedStr(edtCodVeterinario.Text);
-      vComandoInseminacoes := vComandoInseminacoes + ' and I.ID_VETERINARIO = ' + QuotedStr(edtCodVeterinario.Text);
+      vComandoInseminacoes := vComandoInseminacoes + ' and ID_VETERINARIO = ' + QuotedStr(edtCodVeterinario.Text);
     end;
 
     frmFuncoes.ExecutaSQL(vComando + ' order by PROPRIETARIO', 'Abrir', DM.qryAConfirmar);
@@ -199,8 +209,6 @@ begin
   FormataGrid(dbgInsemacoes);
   lblQtdNaoConfirmadas.Caption := IntToStr(dm.qryAConfirmar.RecordCount);
   lblQtdConfirmadas.Caption := IntToStr(dm.qryConfirmados.RecordCount);
-
-
 end;
 
 procedure TfrmConfirmaInseminacao.btnPesquProprietarioClick(Sender: TObject);
@@ -245,7 +253,7 @@ end;
 
 procedure TfrmConfirmaInseminacao.edtCodProprietarioExit(Sender: TObject);
 begin
-  if Trim(edtProprietario.Text) <> '' then
+  if Trim(edtCodProprietario.Text) <> '' then      //Versao 1.1.1 - 15/06/2018
     PesquisaProdutor(True);
 end;
 
@@ -257,22 +265,32 @@ end;
 
 procedure TfrmConfirmaInseminacao.edtCodVeterinarioExit(Sender: TObject);
 begin
-  if Trim(edtProprietario.Text) <> '' then
+  if Trim(edtVeterinario.Text) <> '' then
     PesquisaVeterinario(True);
+end;
+
+procedure TfrmConfirmaInseminacao.Excluir1Click(Sender: TObject);
+begin
+  dm.qryAConfirmar.Delete;                        //Versao 1.3.1 - 23/08/2018
+  lblQtdNaoConfirmadas.Caption := IntToStr(dm.qryAConfirmar.RecordCount);
+  lblQtdConfirmadas.Caption := IntToStr(dm.qryConfirmados.RecordCount);
 end;
 
 procedure TfrmConfirmaInseminacao.FormActivate(Sender: TObject);
 begin
   edtDtConfirmacao.Date := Date;
+  qryInseminacoes.Close;
+  DM.qryAConfirmar.Close;
+  DM.qryConfirmados.Close;
 end;
 
 procedure TfrmConfirmaInseminacao.FormataGrid(vGRD: TDBGrid);
 begin
   vGRD.Columns.Items[0].Width := 70;
-  vGRD.Columns.Items[1].Width := 150;
+  vGRD.Columns.Items[1].Width := 220;
   vGRD.Columns.Items[2].Width := 70;
   vGRD.Columns.Items[3].Width := 150;
-  vGRD.Columns.Items[4].Width := 150;
+  vGRD.Columns.Items[4].Width := 180;
 
   vGRD.Columns.Items[5].Visible := False;
   vGRD.Columns.Items[6].Visible := False;
@@ -280,6 +298,22 @@ begin
   vGRD.Columns.Items[8].Visible := False;
   vGRD.Columns.Items[9].Visible := False;
   vGRD.Columns.Items[10].Visible := False;
+end;
+
+procedure TfrmConfirmaInseminacao.FormKeyPress(Sender: TObject; var Key: Char);
+begin
+  If key = #13 then
+  Begin
+    Key:= #0;
+    Perform(Wm_NextDlgCtl,0,0);
+  end;
+end;
+
+procedure TfrmConfirmaInseminacao.MenuItem1Click(Sender: TObject);      //Versao 1.3.1 - 23/08/2018
+begin
+  dm.qryConfirmados.Delete;          //Versao 1.3.1 - 23/08/2018
+  lblQtdNaoConfirmadas.Caption := IntToStr(dm.qryAConfirmar.RecordCount);
+  lblQtdConfirmadas.Caption := IntToStr(dm.qryConfirmados.RecordCount);
 end;
 
 procedure TfrmConfirmaInseminacao.PesquisaProdutor(vStatus: boolean);
@@ -306,7 +340,7 @@ begin
     try
       frmPesquisa.vTabela := 'PRODUTOR';
       frmPesquisa.vTela := 'CONFIRMA_INS';
-      frmPesquisa.vComando := 'Select ID, NOME, INSCEST_RURAL from PRODUTOR';
+      frmPesquisa.vComando := 'Select ID, NOME, INSC_RURAL from PRODUTOR';
       frmPesquisa.ShowModal;
     finally
       frmPesquisa.Release;

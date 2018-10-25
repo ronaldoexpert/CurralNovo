@@ -12,7 +12,7 @@ uses
   FireDAC.Comp.Client, Vcl.Grids, Vcl.DBGrids, IniFiles,Registry, Vcl.Buttons,
   Vcl.ComCtrls, Vcl.ToolWin, Vcl.ExtCtrls, System.ImageList, Vcl.ImgList,
   Vcl.StdCtrls, FireDAC.Phys.IBWrapper, FireDAC.Phys.IBBase,
-  DateUtils, Vcl.Imaging.pngimage, Vcl.Mask;
+  DateUtils, Vcl.Imaging.pngimage, Vcl.Mask, Vcl.DBCtrls;
 
 type
   TfrmLogin = class(TForm)
@@ -25,6 +25,9 @@ type
     lblSenha: TLabel;
     Image1: TImage;
     lblCaminhoTemp: TLabel;
+    edtEmpresas: TDBLookupComboBox;
+    qryEmpresas: TFDQuery;
+    dtsEmpresas: TDataSource;
     procedure btnLoginClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure btnCancelarClick(Sender: TObject);
@@ -34,6 +37,7 @@ type
     { Private declarations }
     vCaminhoBD : string;
     procedure CarregaConfiguracao;
+    procedure CarregaEmpresa;
     procedure GravarArquivoTXT;
   public
     { Public declarations }
@@ -74,6 +78,7 @@ begin
         try
           GravarArquivoTXT;
           frmPrincipal.vUsuario := DM.qryUsuario.FieldByName('ID').AsInteger;
+          frmPrincipal.vEmpresa := edtEmpresas.KeyValue;
           frmPrincipal.ShowModal;
         finally
           frmPrincipal.Release;
@@ -122,6 +127,20 @@ begin
   frmFuncoes.ExecutaSQL('Select * from CONFIGURACAO', 'Abrir', dm.qryConfiguracao);
 end;
 
+procedure TfrmLogin.CarregaEmpresa;
+begin
+  qryEmpresas.SQL.Clear;
+  qryEmpresas.SQL.Add('Select * from EMPRESA order by ID');
+  qryEmpresas.Open;
+  qryEmpresas.First;
+
+  edtEmpresas.ListSource := dtsEmpresas;
+  edtEmpresas.KeyValue := qryEmpresas.FieldByName('ID').AsInteger;
+  edtEmpresas.KeyField := 'ID';
+  edtEmpresas.ListFieldIndex := 1;
+  edtEmpresas.ListField := 'RAZAO_SOCIAL';
+end;
+
 procedure TfrmLogin.FormActivate(Sender: TObject);
 var
   vCaptionAntiga : string;
@@ -151,6 +170,7 @@ begin
 
     try
       DM.FDConnection1.Connected := True;
+      CarregaEmpresa;
     except
        on e : EFDDBEngineException  do
          DM.FDConnection1.Connected := False;
@@ -180,10 +200,9 @@ var  arq: TextFile; { declarando a variável "arq" do tipo arquivo texto }
     i, n: integer;
 begin
   try
-  { [ 1 ] Associa a variável do programa "arq" ao arquivo externo "tabuada.txt"
-          na unidade de disco "d" }
+  { [ 1 ] Associa a variável do programa "arq" ao arquivo externo }
     AssignFile(arq, vCaminhoTemp + '\usuario.txt');
-    Rewrite(arq); { [ 2 ] Cria o arquivo texto "tabuada.txt" na unidade de disco "d" }
+    Rewrite(arq); { [ 2 ] Cria o arquivo texto "usuario.txt" }
     if edtUsuario.Text = 'MASTER' then
       Writeln(arq, '0')
     else

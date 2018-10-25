@@ -57,7 +57,7 @@ uses untCadastroCria,
   untCadastroProduto, untCadastroProdutor, untCadastroServico,
   untCadastroUsuario, untDM, untFuncoes, untLogin,
   untPrincipal, untConfirmaInseminacao, untInseminacao, unstCadastroVeterinario,
-  untCadastroAnimal, untMovimentaEstoque, untConfiguracao;
+  untCadastroAnimal, untMovimentaEstoque, untConfiguracao, untCadastroEmpresa;
 
 { TfrmPesquisa }
 
@@ -191,7 +191,7 @@ begin
     TFMTBCDField(qryPesquisa.FieldByName('valor')).DisplayFormat   := '###,####,###,##0.00';
   END;
 
-  if vTela = 'CAD_ANIMAL' then     //Versao 1.1.0 - 25/05/2018
+  if (vTela = 'CAD_ANIMAL') and (vTabela = 'ANIMAL') then   //Versao 1.1.2 - 02/07/2018  //Versao 1.1.0 - 25/05/2018
     rdgrpSexo.Visible := true       //Versao 1.1.0 - 25/05/2018
   else
     rdgrpSexo.Visible := False; //Versao 1.1.0 - 25/05/2018
@@ -362,6 +362,14 @@ begin
     BEGIN
       frmConfiguracao.edtCodProduto.Text := dbgPesquisa.Fields[0].Value;
       frmConfiguracao.PesquisaProduto(True);
+    END;
+  end
+  else if vTabela = 'EMPRESA' then    //VERSAO 1.3.0 - 14/08/2018
+  begin
+    if vTela = 'CAD_EMPRESA' then
+    BEGIN
+      frmCadastroEmpresa.edtCodigo.Text := dbgPesquisa.Fields[0].Value;
+      frmCadastroEmpresa.PesquisaBD(True);
     END;
   end;
 

@@ -1,7 +1,7 @@
 object frmPrincipal: TfrmPrincipal
   Left = 0
   Top = 0
-  Caption = 'Curral Novo - Sistema de Controle de Insemina'#231#227'o Artificial'
+  Caption = 'InseminaSys - Sistema de Controle de Insemina'#231#227'o Artificial'
   ClientHeight = 438
   ClientWidth = 983
   Color = clBtnFace
@@ -27,8 +27,6 @@ object frmPrincipal: TfrmPrincipal
     Color = clInactiveBorder
     ParentBackground = False
     TabOrder = 0
-    ExplicitLeft = -8
-    ExplicitTop = 64
     object DBGrid1: TDBGrid
       Left = 12
       Top = 4
@@ -1008,6 +1006,10 @@ object frmPrincipal: TfrmPrincipal
         Caption = 'Confirma Insemina'#231#245'es'
         OnClick = ConfirmaInseminacoesClick
       end
+      object CncelaInseminaes1: TMenuItem
+        Caption = 'Ca&ncela Insemina'#231#245'es'
+        OnClick = CncelaInseminaes1Click
+      end
       object MovimentaEstoque: TMenuItem
         Caption = '&Movimenta Estoque'
         OnClick = MovimentaEstoqueClick
@@ -1023,6 +1025,10 @@ object frmPrincipal: TfrmPrincipal
     end
     object Utilitrios: TMenuItem
       Caption = '&Utilit'#225'rios'
+      object Empresa1: TMenuItem
+        Caption = '&Empresa'
+        OnClick = Empresa1Click
+      end
       object AjustanomesProprietarios: TMenuItem
         Caption = 'Ajusta nomes Propriet'#225'rios'
         OnClick = AjustanomesProprietariosClick

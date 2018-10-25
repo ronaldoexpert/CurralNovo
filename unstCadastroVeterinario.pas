@@ -123,6 +123,7 @@ begin
 
   dm.qryCadastro.FieldByName('alteracao').AsDateTime := Date+time;
   dm.qryCadastro.FieldByName('usuario').AsInteger := frmPrincipal.vUsuario;
+  dm.qryCadastro.FieldByName('CODEMPRESA').AsInteger := frmPrincipal.vEmpresa;        //Versao 1.4 - 14/10/2018
 
   dm.qryCadastro.Post;
   dm.qryCadastro.ApplyUpdates(-1);
@@ -131,10 +132,25 @@ begin
   edtCodigo.Enabled := True;
 
   if vTipoCadastro = 'Veterinario' then
-    frmFuncoes.AutoIncre('VETERINARIO', 'Gravar')
+  begin
+    frmFuncoes.AutoIncre('VETERINARIO', 'Gravar');
+    if fNovo = True then                       //Versao 1.2.0 - 04/07/2018
+      frmFuncoes.GravaLog('Adição de cadastro de Veterinário. Codigo: ' + edtCodigo.Text, IntToStr(frmPrincipal.vUsuario))     //Versao 1.2.0 - 04/07/2018
+    else
+      frmFuncoes.GravaLog('Alteração de cadastro de Veterinário. Codigo: ' + edtCodigo.Text, IntToStr(frmPrincipal.vUsuario));   //Versao 1.2.0 - 04/07/2018
+  end
   else
+  begin
     frmFuncoes.AutoIncre('PRODUTOR', 'Gravar');
+    if fNovo = True then                       //Versao 1.2.0 - 04/07/2018
+      frmFuncoes.GravaLog('Adição de cadastro de Produtor. Codigo: ' + edtCodigo.Text, IntToStr(frmPrincipal.vUsuario))     //Versao 1.2.0 - 04/07/2018
+    else
+      frmFuncoes.GravaLog('Alteração de cadastro de Produtor. Codigo: ' + edtCodigo.Text, IntToStr(frmPrincipal.vUsuario));   //Versao 1.2.0 - 04/07/2018
+  end;
+
+
   ShowMessage('Cadastro realizado com sucesso.');
+  PesquisaBD(True);  //Versao 1.3.0 - 19/07/2018 - RS
 end;
 
 procedure TfrmCadastroVeterinario.btnNovoClick(Sender: TObject);

@@ -4,9 +4,11 @@ object DM: TDM
   Width = 702
   object FDConnection1: TFDConnection
     Params.Strings = (
-      'DriverID=FB'
       'User_Name=sysdba'
-      'Password=masterkey')
+      'Password=masterkey'
+      'Database=C:\DelphiBerlin\Curral Novo\BD\INSEMINASYS.FDB'
+      'DriverID=FB')
+    LoginPrompt = False
     Left = 40
     Top = 40
   end
@@ -187,5 +189,16 @@ object DM: TDM
     DataSet = qryAuxiliar
     Left = 472
     Top = 336
+  end
+  object qryEmpresa: TFDQuery
+    CachedUpdates = True
+    Connection = FDConnection1
+    Left = 32
+    Top = 280
+  end
+  object dtsEmpresa: TDataSource
+    DataSet = qryEmpresa
+    Left = 80
+    Top = 280
   end
 end

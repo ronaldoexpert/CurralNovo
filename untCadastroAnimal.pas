@@ -34,7 +34,6 @@ type
     edtProprietario: TDBEdit;
     PageControl1: TPageControl;
     tbResenha: TTabSheet;
-    imgAnimal: TImage;
     btnPesqFoto: TBitBtn;
     edtAD: TDBEdit;
     edtAE: TDBEdit;
@@ -60,6 +59,10 @@ type
     btnLimpaFoto: TBitBtn;
     edtEstSemem: TDBEdit;
     lblEstoqueSemem: TLabel;
+    OpenPictureDialog1: TOpenPictureDialog;
+    imgAnimal: TImage;
+    chkMorte: TDBCheckBox;
+    edtDtMorte: TDBEdit;
     procedure btnFecharClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure btnPesquisarClick(Sender: TObject);
@@ -77,8 +80,9 @@ type
       Shift: TShiftState);
     procedure edtCodProprietarioKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
-    procedure btnLimpaFotoClick(Sender: TObject);
     procedure rdgTipoClick(Sender: TObject);
+    procedure btnLimpaFotoClick(Sender: TObject);
+    procedure chkMorteClick(Sender: TObject);
   private
     { Private declarations }
     vID : String;
@@ -137,6 +141,7 @@ begin
     qryAnimal.FieldByName('foto').AsString := edtCaminhoFoto.Text;
     qryAnimal.FieldByName('ALTERACAO').AsDateTime := Date + Time;
     qryAnimal.FieldByName('USUARIO').AsInteger := frmPrincipal.vUsuario;
+    qryAnimal.FieldByName('CODEMPRESA').AsInteger := frmPrincipal.vEmpresa;        //Versao 1.4 - 14/10/2018
 
     qryAnimal.Post;
     qryAnimal.ApplyUpdates(-1);
@@ -146,23 +151,22 @@ begin
     fNovo := False;
     frmFuncoes.AutoIncre('ANIMAL', 'Gravar');
     ShowMessage('Cadastro realizado com sucesso.');
+    PesquisaAnimal(True);    //Versao 1.3.0 - 19/07/2018 - RS
   end;
 end;
 
 procedure TfrmCadastroAnimal.btnLimpaFotoClick(Sender: TObject);
 begin
-  if FileExists('fotos/imgPadrao.png') then
-  begin
-    edtCaminhoFoto.Text := 'fotos/imgPadrao.png';
-    imgAnimal.Picture.LoadFromFile('fotos/imgPadrao.png');
-  end;
+  edtCaminhoFoto.Text := 'fotos\imgPadrao.png';
+  imgAnimal.picture.loadfromfile(edtCaminhoFoto.text);
 end;
 
 procedure TfrmCadastroAnimal.btnNovoClick(Sender: TObject);
 begin
   LimpaCampos;
   fNovo := True;
-
+  frmFuncoes.ExecutaSQL('Select * from ANIMAL where ID = ' + vID, 'Abrir', qryAnimal);
+  CarregaCampos;
   qryAnimal.Insert;
   qryAnimal.FieldByName('situacao').AsString := 'Ativo';
 
@@ -213,6 +217,23 @@ begin
   edtPE.DataField := 'PE';
   chkSituacao.DataField := 'SITUACAO';
   edtEstSemem.DataField := 'ESTOQUE';
+  chkMorte.DataField := 'MORTO';      //Versao 1.4 - 14/10/2018
+  edtDtMorte.DataField := 'DT_MORTE';    //Versao 1.4 - 14/10/2018
+  qryAnimal.FieldByName('dt_morte').EditMask := '99/99/9999';
+end;
+
+procedure TfrmCadastroAnimal.chkMorteClick(Sender: TObject);     //Versao 1.4 - 14/10/2018
+begin
+  if chkMorte.Checked then            //Versao 1.4 - 14/10/2018
+  begin
+    edtDtMorte.Visible := True;
+    edtDtMorte.Field.Value := DateToStr(Date);
+  end
+  else
+  begin
+    edtDtMorte.Visible := False;
+    edtDtMorte.Text := '01/01/1900';
+  end;
 end;
 
 procedure TfrmCadastroAnimal.edtCodigoExit(Sender: TObject);
@@ -330,10 +351,12 @@ begin
           lblEstoqueSemem.Visible := True;
         end;
 
-        if FileExists(qryAnimal.FieldByName('FOTO').AsString) then
-          imgAnimal.picture.loadfromfile(qryAnimal.FieldByName('FOTO').AsString)
+        edtCaminhoFoto.Text := qryAnimal.FieldByName('FOTO').AsString;
+        if FileExists(edtCaminhoFoto.Text) then
+          imgAnimal.picture.loadfromfile(edtCaminhoFoto.Text)
         else
           imgAnimal.picture.loadfromfile('fotos/imgPadrao.png');
+
       end
       else
       begin

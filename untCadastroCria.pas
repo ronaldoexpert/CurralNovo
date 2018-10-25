@@ -85,8 +85,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls,
-  Vcl.ComCtrls, Vcl.Mask, Vcl.DBCtrls, Vcl.Imaging.pngimage, UCrpeClasses,
-  UCrpe32;
+  Vcl.ComCtrls, Vcl.Mask, Vcl.DBCtrls, Vcl.Imaging.pngimage;
 
 type
   TfrmCadastroCria = class(TForm)
@@ -142,7 +141,6 @@ type
     edtNomePai: TEdit;
     chkSituacao: TDBCheckBox;
     btnLimpaFoto: TBitBtn;
-    Crpe1: TCrpe;
     procedure btnFecharClick(Sender: TObject);
     procedure btnPesqFotoClick(Sender: TObject);
     procedure btnNovoClick(Sender: TObject);
@@ -229,6 +227,7 @@ begin
     dm.qryCria.FieldByName('fotopai').AsString := '';
     dm.qryCria.FieldByName('alteracao').AsDateTime := Date + Time;
     dm.qryCria.FieldByName('usuario').AsInteger := frmPrincipal.vUsuario;
+    dm.qryCria.FieldByName('CODEMPRESA').AsInteger := frmPrincipal.vEmpresa;        //Versao 1.4 - 14/10/2018
 
     dm.qryCria.ApplyUpdates(-1);
     btnNovo.Enabled := True;
@@ -237,6 +236,7 @@ begin
     fNovo := False;
     frmFuncoes.AutoIncre('CRIA', 'Gravar');
     ShowMessage('Cadastro realizado com sucesso.');
+    PesquisaAnimal(True);     //Versao 1.3.0 - 19/07/2018 - RS
   end;
 end;
 

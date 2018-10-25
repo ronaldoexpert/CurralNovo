@@ -25,10 +25,7 @@ type
     lblCodigo: TLabel;
     btnPesquisar: TBitBtn;
     lblEmissao: TLabel;
-    btnPesqProprietario: TBitBtn;
-    edtDescrProprietario: TEdit;
     pnlDados: TPanel;
-    lblProprietario: TLabel;
     lblTouro: TLabel;
     btnPesqTouro: TBitBtn;
     edtDescrTouro: TEdit;
@@ -47,7 +44,6 @@ type
     edtCodTouro: TEdit;
     edtCodAnimal: TEdit;
     edtCodServico: TEdit;
-    edtCodProprietario: TEdit;
     btnAdd: TBitBtn;
     btnDelete: TBitBtn;
     edtObs: TMemo;
@@ -67,6 +63,10 @@ type
     lblFinalizada: TLabel;
     qryMoviProduto: TFDQuery;
     dtsMoviProduto: TDataSource;
+    edtCodProprietario: TEdit;
+    lblProprietario: TLabel;
+    btnPesqProprietario: TBitBtn;
+    edtDescrProprietario: TEdit;
     procedure FormActivate(Sender: TObject);
     procedure btnPesqTouroClick(Sender: TObject);
     procedure btnPesqAnimalClick(Sender: TObject);
@@ -279,8 +279,10 @@ begin
     dm.qryCadInseminacao.FieldByName('observacao').AsString := edtObs.Text;
     dm.qryCadInseminacao.FieldByName('FINALIZADA').AsString := 'N';
     dm.qryCadInseminacao.FieldByName('DT_FINALIZADA').AsString := '01/01/1900';
+    dm.qryCadInseminacao.FieldByName('NOMETOURO').AsString := edtDescrTouro.Text;
     dm.qryCadInseminacao.FieldByName('alteracao').AsDateTime := Date+Time;
     dm.qryCadInseminacao.FieldByName('usuario').AsString := inttostr(frmPrincipal.vUsuario);
+    dm.qryCadInseminacao.FieldByName('CODEMPRESA').AsInteger := frmPrincipal.vEmpresa;        //Versao 1.4 - 14/10/2018
 
     dm.qryCadInseminacao.Post;
     if dm.qryCadInseminacao.ApplyUpdates(-1) = 0 then
@@ -483,10 +485,11 @@ begin
   qryMoviProduto.FieldByName('UNIDADE').AsString := 'UN';
   qryMoviProduto.FieldByName('ALTERACAO').AsDateTime := Date+Time;
   qryMoviProduto.FieldByName('USUARIO').AsInteger := StrToInt(frmFuncoes.LerArquivoUsuario);
+  qryMoviProduto.FieldByName('CODEMPRESA').AsInteger := frmPrincipal.vEmpresa;        //Versao 1.4 - 14/10/2018
 
   qryMoviProduto.Post;
   qryMoviProduto.ApplyUpdates(-1);
-  frmFuncoes.AutoIncre('MOVI_INSEMINACAO', '');
+  frmFuncoes.AutoIncre('MOVI_PRODUTO', '');
 end;
 
 procedure TfrmInseminacao.LimpaCampos;
@@ -988,3 +991,4 @@ begin
 end;
 
 end.
+

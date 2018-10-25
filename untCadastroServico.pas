@@ -107,6 +107,7 @@ begin
 
   dm.qryServico.FieldByName('alteracao').AsDateTime := Date+time;
   dm.qryServico.FieldByName('usuario').AsInteger := frmPrincipal.vUsuario;
+  dm.qryServico.FieldByName('CODEMPRESA').AsInteger := frmPrincipal.vEmpresa;        //Versao 1.4 - 14/10/2018
 
   btnNovo.Enabled := True;
   btnExcluir.Enabled := True;

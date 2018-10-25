@@ -26,7 +26,6 @@ object frmMovimentaEstoque: TfrmMovimentaEstoque
     Color = clHighlightText
     ParentBackground = False
     TabOrder = 0
-    ExplicitWidth = 412
     object lblData: TLabel
       Left = 99
       Top = 5
@@ -298,7 +297,6 @@ object frmMovimentaEstoque: TfrmMovimentaEstoque
     Height = 48
     Align = alBottom
     TabOrder = 1
-    ExplicitWidth = 412
     object btnNovo: TBitBtn
       Left = 8
       Top = 5

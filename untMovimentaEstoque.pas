@@ -167,6 +167,7 @@ begin
     qryAuxiliar.FieldByName('UNIDADE').AsString := qryGrid.FieldByName('UNIDADE').AsString;
     qryAuxiliar.FieldByName('ALTERACAO').AsDateTime := qryGrid.FieldByName('ALTERACAO').AsDateTime;
     qryAuxiliar.FieldByName('USUARIO').AsInteger := qryGrid.FieldByName('USUARIO').AsInteger;
+    qryAuxiliar.FieldByName('CODEMPRESA').AsInteger := frmPrincipal.vEmpresa;        //Versao 1.4 - 14/10/2018
 
     qryAuxiliar.Post;
     qryAuxiliar.ApplyUpdates(-1);

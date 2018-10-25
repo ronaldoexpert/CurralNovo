@@ -43,6 +43,8 @@ type
     eamViewer1: TMenuItem;
     Utilitrios: TMenuItem;
     AjustanomesProprietarios: TMenuItem;
+    Empresa1: TMenuItem;
+    CncelaInseminaes1: TMenuItem;
     procedure btnSairClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure CadastrodeVeterinarioClick(Sender: TObject);
@@ -62,11 +64,13 @@ type
     procedure eamViewer1Click(Sender: TObject);
     procedure ConfiguraoClick(Sender: TObject);
     procedure AjustanomesProprietariosClick(Sender: TObject);
+    procedure Empresa1Click(Sender: TObject);
+    procedure CncelaInseminaes1Click(Sender: TObject);
   private
     { Private declarations }
   public
     { Public declarations }
-    vUsuario : Integer;
+    vUsuario, vEmpresa : Integer;
   end;
 
 var
@@ -76,11 +80,12 @@ implementation
 
 {$R *.dfm}
 
-uses unstCadastroVeterinario, untCadastroAnimal, untCadastroCria,
+uses unstCadastroVeterinario, untCadastroCria,
   untCadastroProduto, untCadastroProdutor, untCadastroServico,
   untCadastroUsuario, untConfirmaInseminacao, untInseminacao,
   untMovimentaEstoque, untLogin, untFuncoes, untDM, untConfiguracao,
-  untRelatorioGraficos;
+  untRelatorioGraficos, untCadastroAnimal, untCadastroEmpresa,
+  untCancelaInseminacao;
 
 procedure TfrmPrincipal.AjustanomesProprietariosClick(Sender: TObject);
 var
@@ -230,6 +235,16 @@ begin
   end;
 end;
 
+procedure TfrmPrincipal.CncelaInseminaes1Click(Sender: TObject);   //Versao 1.5.0 - 25/10/2018 - RS
+begin
+  frmCancelaInseminacao := TfrmCancelaInseminacao.Create(Self);   //Versao 1.5.0 - 25/10/2018 - RS
+  try
+    frmCancelaInseminacao.ShowModal;
+  finally
+    frmCancelaInseminacao.Release;
+  end;
+end;
+
 procedure TfrmPrincipal.ConfiguraoClick(Sender: TObject);
 begin
   frmConfiguracao := TfrmConfiguracao.Create(Self);
@@ -253,6 +268,16 @@ end;
 procedure TfrmPrincipal.eamViewer1Click(Sender: TObject);
 begin
   ShellExecute(handle,'open',PChar('TeamViewerQS.exe'), '','',SW_SHOWNORMAL);
+end;
+
+procedure TfrmPrincipal.Empresa1Click(Sender: TObject);
+begin
+  frmCadastroEmpresa := TfrmCadastroEmpresa.Create(Self);
+  try
+    frmCadastroEmpresa.ShowModal;
+  finally
+    frmCadastroEmpresa.Release;
+  end;
 end;
 
 procedure TfrmPrincipal.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -287,7 +312,7 @@ end;
 
 procedure TfrmPrincipal.RelatoriosClick(Sender: TObject);
 begin
-  ShellExecute(handle,'open',PChar('CurralRel.exe'), '','',SW_SHOWNORMAL);
+  ShellExecute(handle,'open',PChar('ManagerReport.exe'), '','',SW_SHOWNORMAL);
 end;
 
 end.

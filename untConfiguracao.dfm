@@ -26,8 +26,6 @@ object frmConfiguracao: TfrmConfiguracao
     Color = clBtnHighlight
     ParentBackground = False
     TabOrder = 0
-    ExplicitTop = 234
-    ExplicitWidth = 357
     object btnGravar: TBitBtn
       Left = 221
       Top = 5
@@ -110,10 +108,6 @@ object frmConfiguracao: TfrmConfiguracao
     Color = clBtnHighlight
     ParentBackground = False
     TabOrder = 1
-    ExplicitLeft = -8
-    ExplicitTop = -6
-    ExplicitWidth = 379
-    ExplicitHeight = 309
     object lblCaminhoFoto: TLabel
       Left = 16
       Top = 194

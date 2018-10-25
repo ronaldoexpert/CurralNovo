@@ -52,7 +52,7 @@ implementation
 
 {$R *.dfm}
 
-uses untFuncoes, untDM, untPesquisa;
+uses untFuncoes, untDM, untPesquisa, untPrincipal;
 
 procedure TfrmCadastroUsuario.btnExcluirClick(Sender: TObject);
 begin
@@ -78,6 +78,8 @@ begin
   begin
     qryUsuario.FieldByName('id').AsString := edtCodigo.Text;
   end;
+
+ qryUsuario.FieldByName('CODEMPRESA').AsInteger := frmPrincipal.vEmpresa;        //Versao 1.4 - 14/10/2018
 
   qryUsuario.ApplyUpdates(-1);
   btnNovo.Enabled := True;

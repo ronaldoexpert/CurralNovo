@@ -4,11 +4,15 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Buttons,
-  Vcl.Mask, Vcl.DBCtrls, FireDAC.Stan.Intf, FireDAC.Stan.Option,
-  FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
-  FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB,
-  FireDAC.Comp.DataSet, FireDAC.Comp.Client;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, FireDAC.Stan.Intf,
+  FireDAC.Stan.Option, FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf,
+  FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys,
+  FireDAC.Phys.FB, FireDAC.Phys.FBDef, FireDAC.VCLUI.Wait, FireDAC.Stan.Param,
+  FireDAC.DatS, FireDAC.DApt.Intf, FireDAC.DApt, FireDAC.Comp.DataSet,
+  FireDAC.Comp.Client, Vcl.Grids, Vcl.DBGrids, IniFiles,Registry, Vcl.Buttons,
+  Vcl.ComCtrls, Vcl.ToolWin, Vcl.ExtCtrls, System.ImageList, Vcl.ImgList,
+  Vcl.StdCtrls, FireDAC.Phys.IBWrapper, FireDAC.Phys.IBBase,
+  DateUtils, Vcl.Imaging.pngimage, Vcl.Mask, Vcl.DBCtrls;
 
 type
   TfrmFuncoes = class(TForm)
@@ -25,6 +29,8 @@ type
     function FormataNumero(vNumero : string) : string;
     function PegaTempDir : String;       //Pega o diretorio da Pasta Temporaria
     function LerArquivoUsuario : String; //Pega o valor do arquivo usuario.txt no temp
+    procedure GravaLog (vLog, vUsuario : String);     //Versao 1.2.0 - 04/07/2018
+    function LerArquivoIni(vSecao, vLinha : String) : string;     //Versao 1.5.0 - 25/10/2018 - RS
   end;
 
 var
@@ -125,6 +131,56 @@ begin
 
   Result := vRetorno;
 
+end;
+
+procedure TfrmFuncoes.GravaLog (vLog, vUsuario : String);     //Versao 1.2.0 - 04/07/2018
+var
+  arq: TextFile;
+  i, n: integer;
+  vNomeArquivo, vTexto, vHora : string;
+begin
+  try
+    vNomeArquivo := 'Logs\' + FormatDateTime('DDMMYYY', date) + '.txt';
+
+    vHora := TimeToStr(Time);
+
+    vTexto := vHora + ', ' + vLog + ', ' + vUsuario;
+
+    AssignFile(arq, vNomeArquivo);
+    if FileExists(vNomeArquivo) then
+    begin
+      Append(arq);
+    end
+    else
+    begin
+      Rewrite(arq);
+    end;
+
+    Writeln(arq, vTexto);
+    CloseFile(arq);
+  except
+  end;
+
+end;
+
+function TfrmFuncoes.LerArquivoIni(vSecao, vLinha : String): string;      //Versao 1.5.0 - 25/10/2018 - RS
+var
+  vComando : String;
+begin
+  if FileExists( ExtractFilePath( Application.ExeName ) + 'COMANDOS.ini' ) then // Testa Existência do arquivo
+  begin                    // ENDEREÇO DO ARQUIVO                   { NOME
+    with  TIniFile.Create( ExtractFilePath( Application.ExeName ) + 'COMANDOS.ini' ) do // Cria a estância do Objeto em Memória.
+    begin                                // SEÇÃO     { CHAVE         { VALOR PADRAO
+      vComando := ReadString(vSecao, vLinha, ''); // ReadString   - Lê um parâmetro como String;
+      Free;
+    end;
+  end
+  else
+  begin
+    ShowMessage( 'Arquivo Ini Não Encontrado!!!' );
+  end;
+
+  Result := vComando;
 end;
 
 function TfrmFuncoes.LerArquivoUsuario: String;

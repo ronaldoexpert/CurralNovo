@@ -45,6 +45,8 @@ type
     dtsProduto: TDataSource;
     qryAuxiliar: TFDQuery;
     dtsAuxiliar: TDataSource;
+    qryEmpresa: TFDQuery;
+    dtsEmpresa: TDataSource;
   private
     { Private declarations }
   public

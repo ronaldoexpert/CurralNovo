@@ -111,6 +111,7 @@ begin
 
   dm.qryProduto.FieldByName('alteracao').AsDateTime := Date+time;
   dm.qryProduto.FieldByName('usuario').AsInteger := frmPrincipal.vUsuario;
+  dm.qryProduto.FieldByName('CODEMPRESA').AsInteger := frmPrincipal.vEmpresa;        //Versao 1.4 - 14/10/2018
 
   btnNovo.Enabled := True;
   btnExcluir.Enabled := True;
@@ -121,6 +122,11 @@ begin
     frmFuncoes.AutoIncre('PRODUTO', 'Gravar');
     PesquisaBD(True);
     fNovo := False;
+
+    if fNovo = True then                       //Versao 1.2.0 - 04/07/2018
+      frmFuncoes.GravaLog('Adição de cadastro de Produto. Codigo: ' + edtCodigo.Text, IntToStr(frmPrincipal.vUsuario))     //Versao 1.2.0 - 04/07/2018
+    else
+      frmFuncoes.GravaLog('Alteração de cadastro de Produto. Codigo: ' + edtCodigo.Text, IntToStr(frmPrincipal.vUsuario));   //Versao 1.2.0 - 04/07/2018
   Except on E: Exception do
     ShowMessage('Erro na gravação. >>>> ' + E.Message);
   end;
