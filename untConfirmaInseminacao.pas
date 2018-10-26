@@ -153,11 +153,15 @@ begin
   qryInseminacoes.First;
   while not qryInseminacoes.Eof do
   begin
-    qryInseminacoes.Edit;
-    qryInseminacoes.FieldByName('FINALIZADA').AsString := 'S';
-    qryInseminacoes.FieldByName('DT_FINALIZADA').AsDateTime := edtDtConfirmacao.Date;
-    qryInseminacoes.Post;
-    qryInseminacoes.ApplyUpdates(-1);
+    frmFuncoes.ExecutaSQL('Select * from MOVI_INSEMINACAO WHERE ID_INSEMINACAO = ' + QuotedStr(qryInseminacoes.FieldByName('ID').AsString)+ ' and CONFIRMADA = ' + QuotedStr('A'), 'Abrir', qryAuxiliar);   //Versao 1.5.0 - 25/10/2018 - RS
+    if qryAuxiliar.RecordCount = 0 then     //Versao 1.5.0 - 25/10/2018 - RS
+    begin
+      qryInseminacoes.Edit;
+      qryInseminacoes.FieldByName('FINALIZADA').AsString := 'S';
+      qryInseminacoes.FieldByName('DT_FINALIZADA').AsDateTime := edtDtConfirmacao.Date;
+      qryInseminacoes.Post;
+      qryInseminacoes.ApplyUpdates(-1);
+    end;
 
     qryInseminacoes.Next;
   end;
