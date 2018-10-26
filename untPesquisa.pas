@@ -57,7 +57,8 @@ uses untCadastroCria,
   untCadastroProduto, untCadastroProdutor, untCadastroServico,
   untCadastroUsuario, untDM, untFuncoes, untLogin,
   untPrincipal, untConfirmaInseminacao, untInseminacao, unstCadastroVeterinario,
-  untCadastroAnimal, untMovimentaEstoque, untConfiguracao, untCadastroEmpresa;
+  untCadastroAnimal, untMovimentaEstoque, untConfiguracao, untCadastroEmpresa,
+  untCancelaInseminacao;
 
 { TfrmPesquisa }
 
@@ -287,6 +288,11 @@ begin
     BEGIN
       frmInseminacao.edtCodProprietario.Text := dbgPesquisa.Fields[0].Value;
       frmInseminacao.PesquisaProprietario(True);
+    END
+    else if vTela = 'CANCELA_INS' then       //Versao 1.5.0 - 25/10/2018 - RS
+    BEGIN
+      frmCancelaInseminacao.edtCodProprietario.Text := dbgPesquisa.Fields[0].Value;      //Versao 1.5.0 - 25/10/2018 - RS
+      frmCancelaInseminacao.PesquisaProdutor(True);         //Versao 1.5.0 - 25/10/2018 - RS
     END;
   end
   else if vTabela = 'CRIA' then

@@ -14,7 +14,7 @@ type
   TfrmCancelaInseminacao = class(TForm)
     pnlPrincipal: TPanel;
     pnlRodape: TPanel;
-    lblConfirmadas: TLabel;
+    lblInseminacoes: TLabel;
     btnFechar: TBitBtn;
     grpTop: TGroupBox;
     edtCodProprietario: TEdit;
@@ -27,6 +27,8 @@ type
     dtsInseminacoes: TDataSource;
     qryAuxiliar: TFDQuery;
     dtsAuxiliar: TDataSource;
+    qryProdutor: TFDQuery;
+    dtsProdutor: TDataSource;
     procedure FormShow(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure edtCodProprietarioChange(Sender: TObject);
@@ -34,11 +36,15 @@ type
     procedure dbgInseminacoesKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure btnPesquisarClick(Sender: TObject);
+    procedure edtCodProprietarioExit(Sender: TObject);
+    procedure btnPesquProprietarioClick(Sender: TObject);
+    procedure btnFecharClick(Sender: TObject);
   private
     { Private declarations }
     procedure CarregaGrid;
   public
     { Public declarations }
+    procedure PesquisaProdutor(vStatus : boolean);
   end;
 
 var
@@ -48,11 +54,25 @@ implementation
 
 {$R *.dfm}
 
-uses untFuncoes;
+uses untFuncoes, untPesquisa;
+
+procedure TfrmCancelaInseminacao.btnFecharClick(Sender: TObject);
+begin
+  close;
+end;
 
 procedure TfrmCancelaInseminacao.btnPesquisarClick(Sender: TObject);
 begin
-  CarregaGrid;
+  if edtCodProprietario.Text <> '' then
+    CarregaGrid
+  else
+    ShowMessage('Selecione um produto.');
+  edtCodProprietario.SetFocus;
+end;
+
+procedure TfrmCancelaInseminacao.btnPesquProprietarioClick(Sender: TObject);
+begin
+  PesquisaProdutor(False);
 end;
 
 procedure TfrmCancelaInseminacao.CarregaGrid;
@@ -62,6 +82,8 @@ begin
   qryInseminacoes.SQL.Add(frmFuncoes.LerArquivoIni('INSEMINACAO', 'CANCELAR'));
   qryInseminacoes.ParamByName('ID_PRODUTOR').AsString := edtCodProprietario.Text;
   qryInseminacoes.Open;
+
+  lblInseminacoes.Caption := IntToStr(qryInseminacoes.RecordCount) + ' Inseminações';
 end;
 
 procedure TfrmCancelaInseminacao.dbgInseminacoesKeyDown(Sender: TObject;
@@ -88,6 +110,12 @@ begin
     edtProprietario.Clear;
 end;
 
+procedure TfrmCancelaInseminacao.edtCodProprietarioExit(Sender: TObject);
+begin
+  if edtCodProprietario.Text <> '' then
+    PesquisaProdutor(True);
+end;
+
 procedure TfrmCancelaInseminacao.edtCodProprietarioKeyPress(Sender: TObject;
   var Key: Char);
 begin
@@ -109,6 +137,37 @@ begin
   edtCodProprietario.Clear;
   edtProprietario.Clear;
   qryInseminacoes.Close;
+end;
+
+procedure TfrmCancelaInseminacao.PesquisaProdutor(vStatus: boolean);
+begin
+  if vStatus = True then
+  begin
+    if Trim(edtCodProprietario.Text) <> '' then
+    begin
+      frmFuncoes.ExecutaSQL('Select * from PRODUTOR where ID =  ' + QuotedStr(edtCodProprietario.Text), 'Abrir', qryProdutor);
+      if qryProdutor.RecordCount > 0 then
+      begin
+        edtProprietario.Text := qryProdutor.FieldByName('NOME').AsString;
+      end
+      else
+      begin
+        Application.MessageBox('Registro não encontrado.', 'Curral Novo', MB_OK);
+      end;
+    end;
+  end
+  else
+  begin
+    frmPesquisa := TfrmPesquisa.Create(Self);
+    try
+      frmPesquisa.vTabela := 'PRODUTOR';
+      frmPesquisa.vTela := 'CANCELA_INS';
+      frmPesquisa.vComando := frmFuncoes.LerArquivoIni('INSEMINACAO', 'PRODUTOR');
+      frmPesquisa.ShowModal;
+    finally
+      frmPesquisa.Release;
+    end;
+  end;
 end;
 
 end.

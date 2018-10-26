@@ -10,7 +10,9 @@ object frmCancelaInseminacao: TfrmCancelaInseminacao
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  KeyPreview = True
   OldCreateOrder = False
+  Position = poScreenCenter
   OnKeyPress = FormKeyPress
   OnShow = FormShow
   PixelsPerInch = 96
@@ -28,6 +30,9 @@ object frmCancelaInseminacao: TfrmCancelaInseminacao
       Width = 517
       Height = 88
       Align = alTop
+      Color = clWhite
+      ParentBackground = False
+      ParentColor = False
       TabOrder = 0
       object lblProdutor: TLabel
         Left = 10
@@ -43,6 +48,7 @@ object frmCancelaInseminacao: TfrmCancelaInseminacao
         Height = 21
         TabOrder = 0
         OnChange = edtCodProprietarioChange
+        OnExit = edtCodProprietarioExit
         OnKeyPress = edtCodProprietarioKeyPress
       end
       object btnPesquProprietario: TBitBtn
@@ -78,6 +84,8 @@ object frmCancelaInseminacao: TfrmCancelaInseminacao
           A5BB928AFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD5
           B4A4D5B4A4CAA58EE1BBA3DAB39B8B8B8BFFFFFFFFFFFFFFFFFF}
         TabOrder = 1
+        TabStop = False
+        OnClick = btnPesquProprietarioClick
       end
       object edtProprietario: TEdit
         Left = 103
@@ -148,9 +156,11 @@ object frmCancelaInseminacao: TfrmCancelaInseminacao
     Width = 519
     Height = 48
     Align = alBottom
+    Color = clWhite
+    ParentBackground = False
     TabOrder = 1
-    object lblConfirmadas: TLabel
-      Left = 11
+    object lblInseminacoes: TLabel
+      Left = 19
       Top = 14
       Width = 113
       Height = 18
@@ -196,6 +206,7 @@ object frmCancelaInseminacao: TfrmCancelaInseminacao
         659A9D9AFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
       TabOrder = 0
+      OnClick = btnFecharClick
     end
   end
   object qryInseminacoes: TFDQuery
@@ -219,5 +230,16 @@ object frmCancelaInseminacao: TfrmCancelaInseminacao
     DataSet = qryAuxiliar
     Left = 419
     Top = 224
+  end
+  object qryProdutor: TFDQuery
+    CachedUpdates = True
+    Connection = DM.FDConnection1
+    Left = 384
+    Top = 136
+  end
+  object dtsProdutor: TDataSource
+    DataSet = qryProdutor
+    Left = 419
+    Top = 136
   end
 end
