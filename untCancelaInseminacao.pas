@@ -25,6 +25,8 @@ type
     btnPesquisar: TBitBtn;
     qryInseminacoes: TFDQuery;
     dtsInseminacoes: TDataSource;
+    qryAuxiliar: TFDQuery;
+    dtsAuxiliar: TDataSource;
     procedure FormShow(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure edtCodProprietarioChange(Sender: TObject);
@@ -58,19 +60,24 @@ begin
   qryInseminacoes.Close;
   qryInseminacoes.SQL.Clear;
   qryInseminacoes.SQL.Add(frmFuncoes.LerArquivoIni('INSEMINACAO', 'CANCELAR'));
-  qryInseminacoes.ParamByName('STATUS').AsString := 'S';
   qryInseminacoes.ParamByName('ID_PRODUTOR').AsString := edtCodProprietario.Text;
   qryInseminacoes.Open;
 end;
 
 procedure TfrmCancelaInseminacao.dbgInseminacoesKeyDown(Sender: TObject;
   var Key: Word; Shift: TShiftState);
+VAR
+  vIdInseminacao, vIdMovi : String;
 begin
   if (Key = VK_DELETE) then
   begin
     if Application.MessageBox('Deseja realmente cancelar a Inseminação?', 'Curral Novo', MB_YESNO) = mrYes then
     begin
-
+      vIdInseminacao := qryInseminacoes.FieldByName('IdInsem').AsString;
+      vIdMovi := qryInseminacoes.FieldByName('IdMovi').AsString;
+      frmFuncoes.ExecutaSQL('Update MOVI_INSEMINACAO set CONFIRMADA = ' + QuotedStr('A') + ', DATA_CONFIRMACAO = ' + QuotedStr('01/01/1900') + ' Where id = ' + vIdMovi, 'Executar', qryAuxiliar);
+      frmFuncoes.ExecutaSQL('Update INSEMINACAO set FINALIZADA = ' + QuotedStr('N') + ', DT_FINALIZADA = ' + QuotedStr('01/01/1900') + ' Where id = ' + vIdInseminacao, 'Executar', qryAuxiliar);
+      CarregaGrid;
     end;
   end;
 end;

@@ -22,10 +22,6 @@ object frmCancelaInseminacao: TfrmCancelaInseminacao
     Height = 291
     Align = alClient
     TabOrder = 0
-    ExplicitLeft = -24
-    ExplicitTop = -6
-    ExplicitWidth = 633
-    ExplicitHeight = 351
     object grpTop: TGroupBox
       Left = 1
       Top = 1
@@ -153,8 +149,6 @@ object frmCancelaInseminacao: TfrmCancelaInseminacao
     Height = 48
     Align = alBottom
     TabOrder = 1
-    ExplicitTop = 330
-    ExplicitWidth = 751
     object lblConfirmadas: TLabel
       Left = 11
       Top = 14
@@ -214,5 +208,16 @@ object frmCancelaInseminacao: TfrmCancelaInseminacao
     DataSet = qryInseminacoes
     Left = 419
     Top = 176
+  end
+  object qryAuxiliar: TFDQuery
+    CachedUpdates = True
+    Connection = DM.FDConnection1
+    Left = 384
+    Top = 224
+  end
+  object dtsAuxiliar: TDataSource
+    DataSet = qryAuxiliar
+    Left = 419
+    Top = 224
   end
 end
