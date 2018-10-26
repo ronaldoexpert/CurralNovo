@@ -83,6 +83,8 @@ begin
   qryInseminacoes.ParamByName('ID_PRODUTOR').AsString := edtCodProprietario.Text;
   qryInseminacoes.Open;
 
+  dbgInseminacoes.Columns.Items[0].Visible := False;
+  dbgInseminacoes.Columns.Items[1].Visible := False;
   lblInseminacoes.Caption := IntToStr(qryInseminacoes.RecordCount) + ' Inseminações';
 end;
 

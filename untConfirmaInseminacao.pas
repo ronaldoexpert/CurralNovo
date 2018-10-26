@@ -286,6 +286,7 @@ begin
   qryInseminacoes.Close;
   DM.qryAConfirmar.Close;
   DM.qryConfirmados.Close;
+  edtCodProprietario.SetFocus;    //Versao 1.5.0 - 25/10/2018 - RS
 end;
 
 procedure TfrmConfirmaInseminacao.FormataGrid(vGRD: TDBGrid);

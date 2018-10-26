@@ -25,7 +25,7 @@ object frmConfirmaInseminacao: TfrmConfirmaInseminacao
     Align = alClient
     Color = clBtnHighlight
     ParentBackground = False
-    TabOrder = 0
+    TabOrder = 1
     object btnAdd: TBitBtn
       Left = 270
       Top = 160
@@ -177,7 +177,7 @@ object frmConfirmaInseminacao: TfrmConfirmaInseminacao
     Width = 722
     Height = 48
     Align = alBottom
-    TabOrder = 1
+    TabOrder = 2
     object lblNaoConfirmadas: TLabel
       Left = 224
       Top = 13
@@ -311,7 +311,9 @@ object frmConfirmaInseminacao: TfrmConfirmaInseminacao
     Align = alTop
     Color = clBtnHighlight
     ParentBackground = False
-    TabOrder = 2
+    TabOrder = 0
+    ExplicitLeft = 1
+    ExplicitTop = -5
     object lblProdutor: TLabel
       Left = 6
       Top = 8
