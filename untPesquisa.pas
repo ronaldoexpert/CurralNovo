@@ -40,6 +40,7 @@ type
   private
     { Private declarations }
     procedure Selecionar;
+    procedure FormataGrid;    //Versao 1.6.0 - 09/11/2018 - RS
   public
     { Public declarations }
     vTabela, vTela, vComando : String;
@@ -160,6 +161,17 @@ end;
 procedure TfrmPesquisa.FormActivate(Sender: TObject);
 begin
   Caption := 'Pesquisa de ' + vTabela;
+  FormataGrid;        //Versao 1.6.0 - 09/11/2018 - RS
+end;
+
+procedure TfrmPesquisa.FormataGrid;      //Versao 1.6.0 - 09/11/2018 - RS
+begin
+  if (vTela = 'CAD_CRIA_PAI') or (vTela = 'CAD_CRIA_MAE') OR (vTela = 'CAD_ANIMAL') then
+  BEGIN
+    dbgPesquisa.Columns[1].Width := 100;
+    dbgPesquisa.Columns[2].Width := 90;
+    dbgPesquisa.Columns[4].Visible := False;
+  END;
 end;
 
 procedure TfrmPesquisa.FormKeyDown(Sender: TObject; var Key: Word;
@@ -182,7 +194,7 @@ begin
   frmFuncoes.ExecutaSQL(vComando, 'Abrir', qryPesquisa);
   dbgPesquisa.DataSource := dtsPesquisa;
 
-  if (vTabela = 'ANIMAL') OR (vTabela = 'CRIA') OR (vTabela = 'PRODUTOR') OR (vTabela = 'VETERINARIO') OR (vTabela = 'USUARIO') then
+  if (vTabela = 'PRODUTOR') OR (vTabela = 'VETERINARIO') OR (vTabela = 'USUARIO') then
   BEGIN
     lblCampoPesquisa.Caption := 'NOME';
   END
@@ -190,9 +202,13 @@ begin
   BEGIN
     lblCampoPesquisa.Caption := 'DESCRICAO';
     TFMTBCDField(qryPesquisa.FieldByName('valor')).DisplayFormat   := '###,####,###,##0.00';
+  END
+  ELSE if (vTabela = 'ANIMAL') then
+  BEGIN
+    lblCampoPesquisa.Caption := 'ANIMAL';
   END;
 
-  if (vTela = 'CAD_ANIMAL') and (vTabela = 'ANIMAL') then   //Versao 1.1.2 - 02/07/2018  //Versao 1.1.0 - 25/05/2018
+  if (((vTela = 'CAD_ANIMAL') OR (vTela = 'CAD_ANIMAL_CRIA')) and (vTabela = 'ANIMAL')) then  //Versao 1.6.0 - 09/11/2018 - RS  //Versao 1.1.2 - 02/07/2018  //Versao 1.1.0 - 25/05/2018
     rdgrpSexo.Visible := true       //Versao 1.1.0 - 25/05/2018
   else
     rdgrpSexo.Visible := False; //Versao 1.1.0 - 25/05/2018
@@ -210,12 +226,18 @@ procedure TfrmPesquisa.rdgrpSexoClick(Sender: TObject);      //Versao 1.1 - 25/0
 begin
   if rdgrpSexo.ItemIndex = 0 then        //Versao 1.1 - 25/05/2018
   BEGIN
-    vComando := 'Select ID, NOME, IDENTIFICACAO, PROPRIETARIO from ANIMAL Where SEXO = ' + QuotedStr('F')    //Versao 1.1 - 25/05/2018
+    vComando := 'Select A.ID, A.NOME AS ANIMAL, A.IDENTIFICACAO, P.NOME AS PROPRIETARIO, A.TIPO from ANIMAL A JOIN PRODUTOR P ON (P.ID = A.PROPRIETARIO) Where A.SEXO = ' + QuotedStr('F')  //Versao 1.1 - 25/05/2018
   END
   ELSE
-    vComando := 'Select ID, NOME, IDENTIFICACAO, ESTOQUE from ANIMAL Where SEXO = ' + QuotedStr('M');      //Versao 1.1 - 25/05/2018
+    vComando := 'Select A.ID, A.NOME AS ANIMAL, A.IDENTIFICACAO, P.NOME AS PROPRIETARIO, A.TIPO from ANIMAL A JOIN PRODUTOR P ON (P.ID = A.PROPRIETARIO) Where A.SEXO = ' + QuotedStr('M');   //Versao 1.1 - 25/05/2018
+
+  if vTela = 'CAD_ANIMAL' then            //Versao 1.6.0 - 09/11/2018 - RS
+    vComando := vComando + ' and A.TIPO = ' + QuotedStr('Animal')       //Versao 1.6.0 - 09/11/2018 - RS
+  else if vTela = 'CAD_ANIMAL_CRIA' then
+    vComando := vComando + ' and A.TIPO = ' + QuotedStr('Cria');        //Versao 1.6.0 - 09/11/2018 - RS
 
   frmFuncoes.ExecutaSQL(vComando, 'Abrir', qryPesquisa);
+  FormataGrid;
 end;
 
 procedure TfrmPesquisa.Selecionar;
@@ -230,7 +252,7 @@ begin
   end
   else if vTabela = 'ANIMAL' then
   begin
-    if vTela = 'CAD_ANIMAL' then
+    if (vTela = 'CAD_ANIMAL') or (vTela = 'CAD_ANIMAL_CRIA') then
     BEGIN
       frmCadastroAnimal.edtCodigo.Text := dbgPesquisa.Fields[0].Value;
       frmCadastroAnimal.PesquisaAnimal(True);
@@ -247,13 +269,17 @@ begin
     END
     else if vTela = 'CAD_CRIA_MAE' then
     BEGIN
-      frmCadastroCria.edtCodMae.Text := dbgPesquisa.Fields[0].Value;
-      frmCadastroCria.PesquisaMae(True);
+      {frmCadastroCria.edtCodMae.Text := dbgPesquisa.Fields[0].Value;
+      frmCadastroCria.PesquisaMae(True);}   //Versao 1.6.0 - 09/11/2018 - RS
+      frmCadastroAnimal.edtCodMae.Text := dbgPesquisa.Fields[0].Value;
+      frmCadastroAnimal.PesquisaMae(True);
     END
     else if vTela = 'CAD_CRIA_PAI' then
     BEGIN
-      frmCadastroCria.edtCodPai.Text := dbgPesquisa.Fields[0].Value;
-      frmCadastroCria.PesquisaPai(True);
+      {frmCadastroCria.edtCodPai.Text := dbgPesquisa.Fields[0].Value;
+      frmCadastroCria.PesquisaPai(True);}   //Versao 1.6.0 - 09/11/2018 - RS
+      frmCadastroAnimal.edtCodPai.Text := dbgPesquisa.Fields[0].Value;
+      frmCadastroAnimal.PesquisaPai(True);
     END
     else if vTela = 'MOVI_PRODUTO' then
     BEGIN

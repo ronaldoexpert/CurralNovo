@@ -167,6 +167,7 @@ procedure TfrmPrincipal.CadastrodeAnimalClick(Sender: TObject);
 begin
   frmCadastroAnimal := TfrmCadastroAnimal.Create(Self);
   try
+    frmCadastroAnimal.vTipo := 'Animal';    //Versao 1.6.0 - 09/11/2018 - RS
     frmCadastroAnimal.ShowModal;
   finally
     frmCadastroAnimal.Release;
@@ -175,12 +176,21 @@ end;
 
 procedure TfrmPrincipal.CadastrodeCriaClick(Sender: TObject);
 begin
+  frmCadastroAnimal := TfrmCadastroAnimal.Create(Self);
+  try
+    frmCadastroAnimal.vTipo := 'Cria';    //Versao 1.6.0 - 09/11/2018 - RS
+    frmCadastroAnimal.ShowModal;
+  finally
+    frmCadastroAnimal.Release;
+  end;
+
+  {COMENTADO >> //Versao 1.6.0 - 09/11/2018 - RS
   frmCadastroCria := TfrmCadastroCria.Create(Self);
   try
     frmCadastroCria.ShowModal;
   finally
     frmCadastroCria.Release;
-  end;
+  end;}
 end;
 
 procedure TfrmPrincipal.CadastrodeProdutoClick(Sender: TObject);

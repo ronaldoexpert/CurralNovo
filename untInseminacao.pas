@@ -518,7 +518,7 @@ begin
   begin
     if Trim(edtCodAnimal.Text) <> '' then
     begin
-      frmFuncoes.ExecutaSQL('Select * from ANIMAL where SEXO = ' + QuotedStr('F') + ' and ID = ' + QuotedStr(edtCodAnimal.Text) + ' AND PROPRIETARIO = ' + QuotedStr(edtCodProprietario.Text) + ' and ID NOT IN (SELECT ID_ANIMAL FROM MOVI_INSEMINACAO WHERE CONFIRMADA IN (' + QuotedStr('A') + ', ' + QuotedStr('S') + '))', 'Abrir', DM.qryAnimal);
+      frmFuncoes.ExecutaSQL('Select * from ANIMAL where SEXO = ' + QuotedStr('F') + ' AND TIPO = ' + QuotedStr('Animal') + ' and ID = ' + QuotedStr(edtCodAnimal.Text) + ' AND PROPRIETARIO = ' + QuotedStr(edtCodProprietario.Text) + ' and ID NOT IN (SELECT ID_ANIMAL FROM MOVI_INSEMINACAO WHERE CONFIRMADA IN (' + QuotedStr('A') + ', ' + QuotedStr('S') + '))', 'Abrir', DM.qryAnimal);
       if DM.qryAnimal.RecordCount > 0 then
       begin
         edtDescrAnimal.Text := DM.qryAnimal.FieldByName('NOME').AsString;
@@ -538,7 +538,8 @@ begin
     try
       frmPesquisa.vTabela := 'ANIMAL';
       frmPesquisa.vTela := 'INSEMINACAO';
-      frmPesquisa.vComando := 'Select ID, NOME, IDENTIFICACAO, PROPRIETARIO from ANIMAL where SEXO = ' + QuotedStr('F') + ' AND PROPRIETARIO = ' + QuotedStr(edtCodProprietario.Text) + ' AND ID NOT IN (SELECT ID_ANIMAL FROM MOVI_INSEMINACAO WHERE CONFIRMADA IN (' + QuotedStr('A') + ', ' + QuotedStr('S') + ')) ORDER BY NOME';
+      //frmPesquisa.vComando := 'Select ID, NOME, IDENTIFICACAO, PROPRIETARIO from ANIMAL where SEXO = ' + QuotedStr('F') + ' AND PROPRIETARIO = ' + QuotedStr(edtCodProprietario.Text) + ' AND ID NOT IN (SELECT ID_ANIMAL FROM MOVI_INSEMINACAO WHERE CONFIRMADA IN (' + QuotedStr('A') + ', ' + QuotedStr('S') + ')) ORDER BY NOME';
+      frmPesquisa.vComando := frmFuncoes.LerArquivoIni('INSEMINACAO', 'ANIMALF') + ' AND PROPRIETARIO = ' + QuotedStr(edtCodProprietario.Text) + ' order by NOME';
       frmPesquisa.ShowModal;
     finally
       frmPesquisa.Release;

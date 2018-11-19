@@ -1736,6 +1736,8 @@ object frmCadastroCria: TfrmCadastroCria
       object tbGenealogia: TTabSheet
         Caption = '&Genealogia'
         ImageIndex = 1
+        ExplicitLeft = 7
+        ExplicitTop = 23
         object imgFotoMae: TImage
           Left = 21
           Top = 19
