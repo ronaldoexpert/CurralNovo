@@ -223,7 +223,7 @@ object frmCadastroProduto: TfrmCadastroProduto
     end
     object lblValorUnit: TLabel
       Left = 179
-      Top = 57
+      Top = 60
       Width = 56
       Height = 13
       Caption = 'Vlr. Unit'#225'rio'
@@ -237,14 +237,14 @@ object frmCadastroProduto: TfrmCadastroProduto
     end
     object lblEstoque: TLabel
       Left = 274
-      Top = 57
+      Top = 60
       Width = 39
       Height = 13
       Caption = '&Estoque'
     end
     object lblUnidade: TLabel
-      Left = 102
-      Top = 57
+      Left = 98
+      Top = 60
       Width = 39
       Height = 13
       Caption = 'Unidade'
@@ -338,6 +338,17 @@ object frmCadastroProduto: TfrmCadastroProduto
       Height = 21
       DataSource = DM.dtsProduto
       TabOrder = 2
+    end
+    object chkSemen: TDBCheckBox
+      Left = 98
+      Top = 102
+      Width = 51
+      Height = 17
+      Caption = 'Semem'
+      DataSource = DM.dtsProduto
+      TabOrder = 7
+      ValueChecked = 'S'
+      ValueUnchecked = 'N'
     end
   end
 end

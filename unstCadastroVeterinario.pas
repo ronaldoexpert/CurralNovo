@@ -60,6 +60,8 @@ type
     lblInscEstadual: TLabel;
     rdTipoPessoa: TRadioGroup;
     chkSituacao: TDBCheckBox;
+    edtPropriedade: TDBEdit;
+    lblPropriedade: TLabel;
     procedure FormActivate(Sender: TObject);
     procedure btnFecharClick(Sender: TObject);
     procedure rdTipoPessoaClick(Sender: TObject);
@@ -205,6 +207,7 @@ begin
     edtInscRural.DataField := 'INSC_RURAL';
     edtCNPJ.DataField := 'CNPJ';
     edtInsEstadual.DataField := 'INSCEST';
+    edtPropriedade.DataField := 'PROPRIEDADE';
 
     dm.qryCadastro.FieldByName('CNPJ').EditMask := '##.###.###/####-##';
     rdTipoPessoa.Visible := True;
@@ -307,12 +310,16 @@ begin
     pnlDadosProdutor.Visible := False;
     edtCPF.Visible := True;
     lblCPF.Visible := True;
+    lblPropriedade.Visible := False;     //VERSAO 1.6.3  16/01/2019
+    edtPropriedade.Visible := False;     //VERSAO 1.6.3  16/01/2019
     Height := 390;
   end
   else
   begin
     pnlDadosVet.Visible := False;
     pnlDadosProdutor.Visible := True;
+    lblPropriedade.Visible := True;     //VERSAO 1.6.3  16/01/2019
+    edtPropriedade.Visible := True;     //VERSAO 1.6.3  16/01/2019
 
     if rdTipoPessoa.ItemIndex = 0 then
     begin
@@ -332,7 +339,7 @@ begin
       lblInscEstadual.Visible := True;
       edtInsEstadual.Visible := True;
     end;
-
+    Height := 450;
   end;
 end;
 

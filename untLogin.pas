@@ -3,16 +3,13 @@ unit untLogin;
 interface
 
 uses
- Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, FireDAC.Stan.Intf,
-  FireDAC.Stan.Option, FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf,
-  FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys,
-  FireDAC.Phys.FB, FireDAC.Phys.FBDef, FireDAC.VCLUI.Wait, FireDAC.Stan.Param,
-  FireDAC.DatS, FireDAC.DApt.Intf, FireDAC.DApt, FireDAC.Comp.DataSet,
-  FireDAC.Comp.Client, Vcl.Grids, Vcl.DBGrids, IniFiles,Registry, Vcl.Buttons,
-  Vcl.ComCtrls, Vcl.ToolWin, Vcl.ExtCtrls, System.ImageList, Vcl.ImgList,
-  Vcl.StdCtrls, FireDAC.Phys.IBWrapper, FireDAC.Phys.IBBase,
-  DateUtils, Vcl.Imaging.pngimage, Vcl.Mask, Vcl.DBCtrls, UCrpeClasses, UCrpe32;
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, Vcl.StdCtrls, Vcl.Buttons,
+  Vcl.ToolWin, Vcl.ComCtrls, Vcl.ExtCtrls, shellapi, Vcl.Grids, Data.DB,
+  Data.Win.ADODB, Vcl.DBGrids, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
+  FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet,
+  FireDAC.Comp.Client, Vcl.DBCtrls, Vcl.Imaging.pngimage,IniFiles, Registry;
 
 type
   TfrmLogin = class(TForm)
@@ -55,8 +52,8 @@ uses untDM, untFuncoes, unstCadastroVeterinario, untPrincipal;
 
 procedure TfrmLogin.btnCancelarClick(Sender: TObject);
 begin
-  //close;
-  Application.Terminate;
+  close;
+  //Application.Terminate;
 end;
 
 procedure TfrmLogin.btnLoginClick(Sender: TObject);
@@ -73,13 +70,15 @@ begin
     begin
       if DM.qryUsuario.FieldByName('senha').AsString = edtSenha.Text then
       begin
-
+        Application.ProcessMessages;
+        Hide;
         frmPrincipal := TfrmPrincipal.Create(Self);
         try
           GravarArquivoTXT;
           frmPrincipal.vUsuario := DM.qryUsuario.FieldByName('ID').AsInteger;
           frmPrincipal.vEmpresa := edtEmpresas.KeyValue;
           frmPrincipal.ShowModal;
+          frmPrincipal.Hide;
         finally
           frmPrincipal.Release;
         end;
@@ -111,7 +110,6 @@ begin
       finally
         frmPrincipal.Release;
       end;
-
     end
     else
     begin

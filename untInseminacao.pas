@@ -474,7 +474,7 @@ begin
   frmFuncoes.ExecutaSQL('Select * from MOVI_PRODUTO where ID is null', 'Abrir', qryMoviProduto);
   qryMoviProduto.Insert;
 
-  qryMoviProduto.FieldByName('ID').AsString :=  IntToStr(frmFuncoes.AutoIncre('MOVI_INSEMINACAO', 'Novo'));
+  qryMoviProduto.FieldByName('ID').AsString :=  IntToStr(frmFuncoes.AutoIncre('MOVI_PRODUTO', 'Novo'));
   qryMoviProduto.FieldByName('NUMERO').AsString := qryMoviProduto.FieldByName('ID').AsString;
   qryMoviProduto.FieldByName('ID_INSEMINACAO').AsString := vID;
   qryMoviProduto.FieldByName('DATA').AsDateTime := edtDtEmissao.Date;

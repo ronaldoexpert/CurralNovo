@@ -59,7 +59,7 @@ uses untCadastroCria,
   untCadastroUsuario, untDM, untFuncoes, untLogin,
   untPrincipal, untConfirmaInseminacao, untInseminacao, unstCadastroVeterinario,
   untCadastroAnimal, untMovimentaEstoque, untConfiguracao, untCadastroEmpresa,
-  untCancelaInseminacao;
+  untCancelaInseminacao, untMovimentaEstoqueProduto;
 
 { TfrmPesquisa }
 
@@ -166,7 +166,8 @@ end;
 
 procedure TfrmPesquisa.FormataGrid;      //Versao 1.6.0 - 09/11/2018 - RS
 begin
-  if (vTela = 'CAD_CRIA_PAI') or (vTela = 'CAD_CRIA_MAE') OR (vTela = 'CAD_ANIMAL') then
+  //if (vTela = 'CAD_CRIA_PAI') or (vTela = 'CAD_CRIA_MAE') OR (vTela = 'CAD_ANIMAL') then
+  if vTabela = 'ANIMAL' then
   BEGIN
     dbgPesquisa.Columns[1].Width := 100;
     dbgPesquisa.Columns[2].Width := 90;
@@ -394,6 +395,11 @@ begin
     BEGIN
       frmConfiguracao.edtCodProduto.Text := dbgPesquisa.Fields[0].Value;
       frmConfiguracao.PesquisaProduto(True);
+    END
+    else if vTela = 'MOVI_EST_PRODUTO' then   //Versao 1.6.1 - 20/11/2018
+    BEGIN
+      frmMovimentaEstoqueProduto.edtCodProduto.Text := dbgPesquisa.Fields[0].Value;     //Versao 1.6.1 - 20/11/2018
+      frmMovimentaEstoqueProduto.PesquisaProduto(True);         //Versao 1.6.1 - 20/11/2018
     END;
   end
   else if vTabela = 'EMPRESA' then    //VERSAO 1.3.0 - 14/08/2018

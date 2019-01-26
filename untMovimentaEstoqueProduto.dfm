@@ -1,9 +1,9 @@
-object frmCadastroVeterinario: TfrmCadastroVeterinario
+object frmMovimentaEstoqueProduto: TfrmMovimentaEstoqueProduto
   Left = 0
   Top = 0
-  Caption = 'Cadastro Veterin'#225'rio'
-  ClientHeight = 479
-  ClientWidth = 513
+  Caption = 'Movimenta Estoque - Entrada'
+  ClientHeight = 362
+  ClientWidth = 472
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,47 +17,164 @@ object frmCadastroVeterinario: TfrmCadastroVeterinario
   OnKeyPress = FormKeyPress
   PixelsPerInch = 96
   TextHeight = 13
-  object pnlCentro: TPanel
+  object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 513
-    Height = 431
+    Width = 472
+    Height = 314
     Align = alClient
-    Color = clBtnHighlight
+    Color = clHighlightText
     ParentBackground = False
     TabOrder = 0
-    ExplicitHeight = 385
-    object lblCodigo: TLabel
+    ExplicitHeight = 362
+    object lblData: TLabel
+      Left = 99
+      Top = 5
+      Width = 23
+      Height = 13
+      Caption = '&Data'
+    end
+    object lblNumero: TLabel
       Left = 8
-      Top = 16
-      Width = 33
+      Top = 5
+      Width = 37
       Height = 13
-      Caption = '&C'#243'digo'
+      Caption = 'N'#250'mero'
     end
-    object Label1: TLabel
-      Left = 98
-      Top = 16
-      Width = 27
+    object lblQuantidade: TLabel
+      Left = 376
+      Top = 61
+      Width = 56
       Height = 13
-      Caption = '&Nome'
+      Caption = 'Quantidade'
     end
-    object lblCPF: TLabel
-      Left = 368
-      Top = 16
-      Width = 19
+    object lblProduto: TLabel
+      Left = 8
+      Top = 61
+      Width = 61
       Height = 13
-      Caption = '&CPF'
+      Caption = 'Produto (F2)'
     end
-    object lblPropriedade: TLabel
-      Left = 98
-      Top = 59
-      Width = 58
+    object lblUnidade: TLabel
+      Left = 321
+      Top = 61
+      Width = 39
       Height = 13
-      Caption = 'Propriedade'
+      Caption = 'Unidade'
     end
-    object btnPesquisar: TBitBtn
-      Left = 67
-      Top = 30
+    object dbgDados: TDBGrid
+      Left = 1
+      Top = 155
+      Width = 470
+      Height = 158
+      Align = alBottom
+      DataSource = dtsGrid
+      Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+      TabOrder = 6
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+      OnDblClick = dbgDadosDblClick
+    end
+    object edtCodProduto: TEdit
+      Left = 8
+      Top = 80
+      Width = 52
+      Height = 21
+      TabOrder = 1
+      OnChange = edtCodProdutoChange
+      OnExit = edtCodProdutoExit
+      OnKeyDown = edtCodProdutoKeyDown
+      OnKeyPress = edtCodProdutoKeyPress
+    end
+    object edtDescrProduto: TEdit
+      Left = 97
+      Top = 80
+      Width = 218
+      Height = 21
+      TabStop = False
+      Color = clInfoBk
+      Enabled = False
+      TabOrder = 5
+    end
+    object btnAdd: TBitBtn
+      Left = 8
+      Top = 109
+      Width = 85
+      Height = 32
+      Caption = '&Confirmar'
+      Glyph.Data = {
+        36030000424D3603000000000000360000002800000010000000100000000100
+        18000000000000030000C40E0000C40E00000000000000000000FFFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE0EEE08FBF913A8C3E24
+        79282476283A843E8FB991E0EBE0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+        FFFFFFB5D9B6308E34419F5186CA999AD3AA9AD2AA82C7953C964B307B33B4D0
+        B6FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB5DBBA248E296CBD82A7DBB486CC9765
+        BB7C63B97B85CB97A4D9B365B67C237126B4D0B6FFFFFFFFFFFFFFFFFFE1F2E4
+        32A04371C186A7DBB15FBB765BB97258B76F58B46E57B46E5AB673A4D9B268B7
+        7E307F34E0ECE1FFFFFFFFFFFF8FD29F4BAF63A9DDB363C0785EBD7074C484D4
+        ECD989CD9855B56B57B46D5BB673A5DAB3409A4D8EBB90FFFFFFFFFFFF3EB45C
+        90D29E8CD49963C27378C986F2FAF4FFFFFFFDFEFD85CB9556B66C5AB87184CC
+        9686C7993A8A3EFFFFFFFFFFFF26AF48A5DCAE6FCA7E72CA7FF0F9F1FFFFFFEB
+        F7EDFFFFFFFBFDFC87CD955AB87066BD7C9FD7AE227E25FFFFFFFFFFFF2DB650
+        A6DDB071CC7F65C772AFE1B6D2EED662C06FB7E3BEFFFFFFFBFDFC8BD09868C0
+        7DA0D7AD228325FFFFFFFFFFFF4AC46B94D7A090D79A68C97563C56E60C36D60
+        C26E60C16EB8E4BFFFFFFFE3F4E68AD1988ACE9C3B983FFFFFFFFFFFFF9ADEAC
+        56BE6FAEE1B66CCC7967C87164C76F62C46D61C36D62C370B5E3BD6EC77DABDF
+        B447A85D8EC793FFFFFFFFFFFFE4F7E948C4657ECE8FADE1B46CCC7969CA7567
+        C87167C87367C8746AC978ABDFB375C38832A042E1F1E3FFFFFFFFFFFFFFFFFF
+        BFECCA3CC25B7ECE8FAEE1B691D89C76CE8276CE8291D89CADE1B477C88A26A0
+        3AB5DFBDFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC0EDCB49C76858C17395D7A2A4
+        DCADA4DCAD94D6A04FB86934B254B6E3C1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+        FFFFFFFFFFFFE5F8E99EE2B054CA713ABF5B36BD5948C26A97DBAAE1F5E7FFFF
+        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
+      TabOrder = 3
+      OnClick = btnAddClick
+    end
+    object btnDelete: TBitBtn
+      Left = 99
+      Top = 109
+      Width = 88
+      Height = 32
+      Caption = '&Excluir'
+      Glyph.Data = {
+        36030000424D3603000000000000360000002800000010000000100000000100
+        18000000000000030000C40E0000C40E00000000000000000000FFFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE5E7F79EA9E1536AC63E
+        58BF3953BE4B66C197A7DBE1E6F5FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+        FFFFFFC2C8ED5465CB3B51CC7479E88E91EE8E91EE7077E4324CC03F5BBDB9C4
+        E7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC5C9EF505FCD5B64E0A0A5F57D85EF5A
+        62E9585CE77C83EE9D9FF4505CD73351B9B9C4E7FFFFFFFFFFFFFFFFFFE8EAF9
+        6470D4606AE3A0ABF5535EEC4F5BEA4C58E94D58E64B55E64F55E69DA1F4535F
+        D63F5CBEE2E7F5FFFFFFFFFFFFACB0EA4A55DBA1AAF65563F05165EE4C58E94C
+        58E94C58E94C58E94B57E65159E69EA2F5334FC395A5DBFFFFFFFFFFFF7277DD
+        808BEE7D90F75C72F34C58E94C58E94C58E94C58E94C58E94C58E94E5AE97A82
+        F0747AE24B64C3FFFFFFFFFFFF6468DBA0AAF76F85F86781F6FFFFFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFFFF4C58E95B65EA959BF13855BDFFFFFFFFFFFF696DDC
+        AEB8F97E92FA6F84F0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF4C58E95D69
+        EE959CF13C54BFFFFFFFFFFFFF7C7EE3A4AEF59CAAFA768BF0535EEC535EEC53
+        5EEC535EEC535EEC535EEC6276F2808DF4777EE9556AC8FFFFFFFFFFFFB5B4F0
+        7C82EACDD4FC8A9CFA7D92F77489EE6B83F66B83F66B83F66B83F66278F3A3AE
+        F83D4ED09FAAE0FFFFFFFFFFFFEBEBFB7877E3A2A6F3D4DBFD8699FA7E90F079
+        8DF17E93F87D91F9758BF8A7B5F8626DE35767CDE6E8F7FFFFFFFFFFFFFFFFFF
+        CFCFF66F6FE1A9ACF2D8DCFDADB9FA90A2FA8A9CFA9BA8FBB9C7FC6F7AE95361
+        CEC3C8EEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFCFCFF67878E28D92EDBDC2F8CC
+        D3F9C3CBF9A9B3F4656FE2636DD6C6CAEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+        FFFFFFFFFFFFEBEBFBB6B5F07C7EE2696ADE676ADC7378DEAEB2EBE8E9F9FFFF
+        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
+      TabOrder = 4
+      TabStop = False
+      OnClick = btnDeleteClick
+    end
+    object btnPesqProduto: TBitBtn
+      Left = 66
+      Top = 78
       Width = 25
       Height = 25
       Glyph.Data = {
@@ -87,346 +204,60 @@ object frmCadastroVeterinario: TfrmCadastroVeterinario
         FFFFFFFFFFFFFFFFFFFFFFFFD5B4A4F4EECDFFFAE8FFF6CDFFEEBBFFF4C7F8D1
         A5BB928AFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD5
         B4A4D5B4A4CAA58EE1BBA3DAB39B8B8B8BFFFFFFFFFFFFFFFFFF}
-      TabOrder = 6
-      OnClick = btnPesquisarClick
-    end
-    object edtCodigo: TEdit
-      Left = 8
-      Top = 32
-      Width = 53
-      Height = 21
-      TabOrder = 0
-      OnExit = edtCodigoExit
-      OnKeyPress = edtCodigoKeyPress
-    end
-    object edtNome: TDBEdit
-      Left = 98
-      Top = 34
-      Width = 250
-      Height = 21
-      DataSource = DM.dtsCadastro
-      TabOrder = 1
-    end
-    object edtCPF: TDBEdit
-      Left = 368
-      Top = 32
-      Width = 133
-      Height = 21
-      DataSource = DM.dtsCadastro
-      TabOrder = 2
-    end
-    object grpEndereco: TGroupBox
-      Left = 1
-      Top = 265
-      Width = 511
-      Height = 165
-      Align = alBottom
-      TabOrder = 5
-      ExplicitTop = 219
-      object Label2: TLabel
-        Left = 16
-        Top = 16
-        Width = 19
-        Height = 13
-        Caption = 'C&EP'
-      end
-      object Label3: TLabel
-        Left = 88
-        Top = 16
-        Width = 55
-        Height = 13
-        Caption = 'Logra&douro'
-      end
-      object Label4: TLabel
-        Left = 310
-        Top = 16
-        Width = 37
-        Height = 13
-        Caption = 'N&'#250'mero'
-      end
-      object Label5: TLabel
-        Left = 382
-        Top = 16
-        Width = 65
-        Height = 13
-        Caption = 'Comple&mento'
-      end
-      object Label6: TLabel
-        Left = 16
-        Top = 64
-        Width = 13
-        Height = 13
-        Caption = 'U&F'
-      end
-      object Label7: TLabel
-        Left = 66
-        Top = 64
-        Width = 33
-        Height = 13
-        Caption = 'Cida&de'
-      end
-      object Label8: TLabel
-        Left = 310
-        Top = 64
-        Width = 28
-        Height = 13
-        Caption = 'Bairr&o'
-      end
-      object Label9: TLabel
-        Left = 16
-        Top = 112
-        Width = 21
-        Height = 13
-        Caption = 'Tel I'
-      end
-      object Label10: TLabel
-        Left = 110
-        Top = 112
-        Width = 25
-        Height = 13
-        Caption = 'Tel II'
-      end
-      object Label11: TLabel
-        Left = 204
-        Top = 112
-        Width = 29
-        Height = 13
-        Caption = 'Tel III'
-      end
-      object Label12: TLabel
-        Left = 298
-        Top = 109
-        Width = 24
-        Height = 13
-        Caption = 'Email'
-      end
-      object edtCEP: TDBEdit
-        Left = 16
-        Top = 32
-        Width = 66
-        Height = 21
-        DataSource = DM.dtsCadastro
-        TabOrder = 0
-      end
-      object edtLogradouro: TDBEdit
-        Left = 88
-        Top = 32
-        Width = 209
-        Height = 21
-        DataSource = DM.dtsCadastro
-        TabOrder = 1
-      end
-      object edtNumero: TDBEdit
-        Left = 310
-        Top = 32
-        Width = 66
-        Height = 21
-        DataSource = DM.dtsCadastro
-        TabOrder = 2
-      end
-      object edtComplemento: TDBEdit
-        Left = 382
-        Top = 32
-        Width = 123
-        Height = 21
-        DataSource = DM.dtsCadastro
-        TabOrder = 3
-      end
-      object edtUF: TDBEdit
-        Left = 16
-        Top = 80
-        Width = 44
-        Height = 21
-        DataSource = DM.dtsCadastro
-        TabOrder = 4
-      end
-      object edtCidade: TDBEdit
-        Left = 66
-        Top = 80
-        Width = 231
-        Height = 21
-        DataSource = DM.dtsCadastro
-        TabOrder = 5
-      end
-      object edtBairro: TDBEdit
-        Left = 310
-        Top = 80
-        Width = 195
-        Height = 21
-        DataSource = DM.dtsCadastro
-        TabOrder = 6
-      end
-      object edtTelI: TDBEdit
-        Left = 16
-        Top = 128
-        Width = 90
-        Height = 21
-        DataSource = DM.dtsCadastro
-        TabOrder = 7
-      end
-      object edtTelII: TDBEdit
-        Left = 110
-        Top = 128
-        Width = 90
-        Height = 21
-        DataSource = DM.dtsCadastro
-        TabOrder = 8
-      end
-      object edtTelIII: TDBEdit
-        Left = 204
-        Top = 128
-        Width = 90
-        Height = 21
-        DataSource = DM.dtsCadastro
-        TabOrder = 9
-      end
-      object edtEmail: TDBEdit
-        Left = 298
-        Top = 128
-        Width = 207
-        Height = 21
-        DataSource = DM.dtsCadastro
-        TabOrder = 10
-      end
-    end
-    object pnlDadosVet: TPanel
-      Left = 1
-      Top = 197
-      Width = 511
-      Height = 68
-      Align = alBottom
-      BevelInner = bvLowered
-      TabOrder = 4
-      ExplicitTop = 151
-      object lblCrmv: TLabel
-        Left = 16
-        Top = 12
-        Width = 28
-        Height = 13
-        Caption = 'CR&MV'
-      end
-      object lblUFCRMV: TLabel
-        Left = 139
-        Top = 12
-        Width = 13
-        Height = 13
-        Caption = '&UF'
-      end
-      object edtCrmv: TDBEdit
-        Left = 16
-        Top = 31
-        Width = 117
-        Height = 21
-        DataSource = DM.dtsCadastro
-        TabOrder = 0
-      end
-      object edtUFCRMV: TDBEdit
-        Left = 139
-        Top = 31
-        Width = 57
-        Height = 21
-        DataSource = DM.dtsCadastro
-        TabOrder = 1
-      end
-    end
-    object pnlDadosProdutor: TPanel
-      Left = 1
-      Top = 107
-      Width = 511
-      Height = 90
-      Align = alBottom
-      BevelInner = bvLowered
-      TabOrder = 3
-      ExplicitTop = 61
-      object lblCNPJ: TLabel
-        Left = 18
-        Top = 3
-        Width = 25
-        Height = 13
-        Caption = 'CNP&J'
-      end
-      object lblInscRural: TLabel
-        Left = 18
-        Top = 43
-        Width = 52
-        Height = 13
-        Caption = 'Insc. &Rural'
-      end
-      object lblInscEstadual: TLabel
-        Left = 169
-        Top = 3
-        Width = 68
-        Height = 13
-        Caption = 'Insc. Estad&ual'
-      end
-      object edtCNPJ: TDBEdit
-        Left = 16
-        Top = 18
-        Width = 133
-        Height = 21
-        DataSource = DM.dtsCadastro
-        TabOrder = 0
-      end
-      object edtInscRural: TDBEdit
-        Left = 16
-        Top = 58
-        Width = 133
-        Height = 21
-        DataSource = DM.dtsCadastro
-        TabOrder = 2
-      end
-      object edtInsEstadual: TDBEdit
-        Left = 169
-        Top = 18
-        Width = 133
-        Height = 21
-        DataSource = DM.dtsCadastro
-        TabOrder = 1
-      end
-      object rdTipoPessoa: TRadioGroup
-        Left = 373
-        Top = 9
-        Width = 80
-        Height = 66
-        Caption = 'Tipo'
-        ItemIndex = 0
-        Items.Strings = (
-          'F'#237'sica'
-          'Jur'#237'dica')
-        TabOrder = 3
-        OnClick = rdTipoPessoaClick
-      end
-    end
-    object chkSituacao: TDBCheckBox
-      Left = 297
-      Top = 11
-      Width = 51
-      Height = 17
-      Caption = 'Ativo'
-      Color = clWhite
-      DataSource = DM.dtsCadastro
-      ParentColor = False
-      TabOrder = 7
-      ValueChecked = 'Ativo'
-      ValueUnchecked = 'Inativo'
-    end
-    object edtPropriedade: TDBEdit
-      Left = 98
-      Top = 77
-      Width = 403
-      Height = 21
-      DataSource = DM.dtsCadastro
       TabOrder = 8
+      TabStop = False
+      OnClick = btnPesqProdutoClick
+    end
+    object edtData: TMaskEdit
+      Left = 99
+      Top = 24
+      Width = 73
+      Height = 21
+      EditMask = '!99/99/0000;1;_'
+      MaxLength = 10
+      TabOrder = 0
+      Text = '  /  /    '
+    end
+    object edtQtd: TEdit
+      Left = 376
+      Top = 80
+      Width = 81
+      Height = 21
+      TabOrder = 2
+      Text = '0'
+    end
+    object edtNumero: TEdit
+      Left = 8
+      Top = 24
+      Width = 81
+      Height = 21
+      TabOrder = 7
+    end
+    object Edit1: TEdit
+      Left = 240
+      Top = 16
+      Width = 121
+      Height = 21
+      TabOrder = 9
+      Text = 'Edit1'
+    end
+    object edtUnidade: TEdit
+      Left = 321
+      Top = 80
+      Width = 49
+      Height = 21
+      Enabled = False
+      TabOrder = 10
     end
   end
   object pnlRodape: TPanel
     Left = 0
-    Top = 431
-    Width = 513
+    Top = 314
+    Width = 472
     Height = 48
     Align = alBottom
     TabOrder = 1
-    ExplicitTop = 385
+    ExplicitTop = 362
     object btnNovo: TBitBtn
       Left = 8
       Top = 5
@@ -533,46 +364,11 @@ object frmCadastroVeterinario: TfrmCadastroVeterinario
         FAFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBEBF9ABABE58D
         8DDD8D8DDDAAAAE5E9E9F9FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
       TabOrder = 2
-    end
-    object btnExcluir: TBitBtn
-      Left = 251
-      Top = 6
-      Width = 75
-      Height = 37
-      Caption = '&Excluir'
-      Glyph.Data = {
-        36030000424D3603000000000000360000002800000010000000100000000100
-        18000000000000030000C40E0000C40E00000000000000000000FFFFFFFFFFFF
-        FFFFFFFFFFFFFCFCFCF5F5F5F0F0F0E9E9E9E8E8E8EDEDEDF3F3F3FAFAFAFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFAFAFAD5D5D5949595989B99A9ADABB0
-        B5B2A6ABA8979B99888B8A8C8D8DCFCFCFF5F5F5FFFFFFFFFFFFFFFFFFFFFFFF
-        E9E9E9939593B7BBB9B7BDB9D0D6D3C1C8C4C5CBC8A3A9A69DA3A0919794787B
-        79E1E1E1FCFCFCFFFFFFFFFFFFFFFFFFFBFBFBA3A6A5B1B5B3C5C9C7D8DCDAB3
-        B9B6C9CECC8C918E919693818683757A77F7F7F7FFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFA8ABAAB0B4B2C5C9C7D6DAD8B3B9B6C6CBC88B908D8E93907D82806C70
-        6EFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFA6A8A7AFB4B1C3C8C5D5D9D7B3
-        B9B6C2C7C48A8F8C8E93907D8280696D6BFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFA5A8A7AFB3B1C2C6C4D5D9D7B3B9B6C0C5C2898E8B8D92907D8280696D
-        6BFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFA6A9A7AEB2B0C0C5C2D5D9D7B3
-        B9B6BFC5C2888D8A8D928F7D8280696D6BFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFA5A8A7A7ABA9A7ABA89EA2A07F8481858A876B6F6D787D7A777B79686C
-        6AFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF8B8E8DA0A3A2BBBEBDDCDFDEDC
-        DFDECED1D0B9BCBA9B9F9D818583646766FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        E5E6E6B5B8B7CACECDE2E4E3EAECECE6E8E7DBDEDDCCD0CEBABEBDA2A7A58A8D
-        8CE0E1E1FFFFFFFFFFFFFFFFFFFFFFFFD3D5D4EBECEBF3F4F3EBECECE3E5E4D4
-        D7D5C7CCCABEC3C1B5BCB9B6BDBAAEB3B1CED0CFFFFFFFFFFFFFFFFFFFFFFFFF
-        F4F5F4CACACAEAECEBDCDFDED4D6D5909492858A88BDC1BFAEB4B2B8BEBB9BA0
-        9EF1F1F1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF9F9F9CFD0CFBCBEBDB9BCBBDC
-        DDDDCED1D0A2A7A5ACAFAEC3C5C4F7F7F7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFF3F3F3B5B8B6ADB0B0F0F1F1FFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
-      TabOrder = 3
-      OnClick = btnExcluirClick
+      OnClick = btnCancelarClick
     end
     object btnFechar: TBitBtn
-      Left = 426
-      Top = 5
+      Left = 382
+      Top = 6
       Width = 75
       Height = 37
       Caption = '&Fechar'
@@ -603,8 +399,30 @@ object frmCadastroVeterinario: TfrmCadastroVeterinario
         FFFFFFFFFFFFC1C2C0A6A7A49292908B8C8A8485847C7D7C7272716869676667
         659A9D9AFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
-      TabOrder = 4
+      TabOrder = 3
       OnClick = btnFecharClick
     end
+  end
+  object qryAuxiliar: TFDQuery
+    CachedUpdates = True
+    Connection = DM.FDConnection1
+    Left = 150
+    Top = 8
+  end
+  object dtsAuxiliar: TDataSource
+    DataSet = qryAuxiliar
+    Left = 190
+    Top = 8
+  end
+  object dtsGrid: TDataSource
+    DataSet = qryGrid
+    Left = 294
+    Top = 8
+  end
+  object qryGrid: TFDQuery
+    CachedUpdates = True
+    Connection = DM.FDConnection1
+    Left = 254
+    Top = 8
   end
 end

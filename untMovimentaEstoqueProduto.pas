@@ -1,4 +1,4 @@
-unit untMovimentaEstoque;
+unit untMovimentaEstoqueProduto;
 
 interface
 
@@ -11,7 +11,7 @@ uses
   FireDAC.Comp.DataSet, FireDAC.Comp.Client;
 
 type
-  TfrmMovimentaEstoque = class(TForm)
+  TfrmMovimentaEstoqueProduto = class(TForm)
     edtCodProduto: TEdit;
     lblProduto: TLabel;
     edtDescrProduto: TEdit;
@@ -35,22 +35,16 @@ type
     qryGrid: TFDQuery;
     edtNumero: TEdit;
     lblNumero: TLabel;
-    edtDescrAnimal: TEdit;
-    btnPesqAnimal: TBitBtn;
-    edtCodAnimal: TEdit;
-    lblAnimal: TLabel;
+    Edit1: TEdit;
+    edtUnidade: TEdit;
+    lblUnidade: TLabel;
     procedure btnNovoClick(Sender: TObject);
     procedure btnFecharClick(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure btnCancelarClick(Sender: TObject);
     procedure btnAddClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
-    procedure btnPesqAnimalClick(Sender: TObject);
-    procedure edtCodAnimalExit(Sender: TObject);
-    procedure edtCodAnimalKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
     procedure edtCodAnimalKeyPress(Sender: TObject; var Key: Char);
-    procedure edtCodAnimalChange(Sender: TObject);
     procedure btnPesqProdutoClick(Sender: TObject);
     procedure edtCodProdutoChange(Sender: TObject);
     procedure edtCodProdutoExit(Sender: TObject);
@@ -70,11 +64,10 @@ type
     procedure LimpaCampos;
     procedure CarregaGrid;
     procedure PesquisaProduto(vStatus : boolean);
-    procedure PesquisaAnimal(vStatus : boolean);
   end;
 
 var
-  frmMovimentaEstoque: TfrmMovimentaEstoque;
+  frmMovimentaEstoqueProduto: TfrmMovimentaEstoqueProduto;
 
 implementation
 
@@ -82,17 +75,12 @@ implementation
 
 uses untFuncoes, untPesquisa, untDM, untPrincipal;
 
-procedure TfrmMovimentaEstoque.btnPesqAnimalClick(Sender: TObject);
-begin
-  PesquisaAnimal(False);
-end;
-
-procedure TfrmMovimentaEstoque.btnPesqProdutoClick(Sender: TObject);
+procedure TfrmMovimentaEstoqueProduto.btnPesqProdutoClick(Sender: TObject);
 begin
   PesquisaProduto(False);
 end;
 
-procedure TfrmMovimentaEstoque.btnAddClick(Sender: TObject);
+procedure TfrmMovimentaEstoqueProduto.btnAddClick(Sender: TObject);
 begin
   if ValidaAnimal then
   begin
@@ -106,47 +94,41 @@ begin
       qryGrid.Edit;
     end;
     qryGrid.FieldByName('NUMERO').AsString := edtNumero.Text;
-    qryGrid.FieldByName('ID_ANIMAL').AsString := edtCodAnimal.Text;
-    qryGrid.FieldByName('NOME').AsString := edtDescrAnimal.Text;
+    qryGrid.FieldByName('ID_ANIMAL').AsString := '0';
     qryGrid.FieldByName('DATA').AsString := edtData.Text;
     qryGrid.FieldByName('ID_PRODUTO').AsString := edtCodProduto.Text;
     qryGrid.FieldByName('DESCRICAO').AsString := edtDescrProduto.Text;
     qryGrid.FieldByName('QUANTIDADE').AsString := edtQtd.Text;
     qryGrid.FieldByName('TIPO').AsString := 'E';
-    qryGrid.FieldByName('UNIDADE').AsString := edtCodProduto.Text;
-    qryGrid.FieldByName('ALTERACAO').AsDateTime := Date+Time;
-    qryGrid.FieldByName('USUARIO').AsInteger := frmPrincipal.vUsuario;
+    qryGrid.FieldByName('UNIDADE').AsString := edtUnidade.Text;
     qryGrid.Post;
 
     qryGrid.UpdateCursorPos;
-    edtCodAnimal.Clear;
-    edtDescrAnimal.Clear;
-    edtCodAnimal.SetFocus;
     edtQtd.Text := '0';
   end;
 end;
 
-procedure TfrmMovimentaEstoque.btnCancelarClick(Sender: TObject);
+procedure TfrmMovimentaEstoqueProduto.btnCancelarClick(Sender: TObject);
 begin
   LimpaCampos;
   Close;
 end;
 
-procedure TfrmMovimentaEstoque.btnDeleteClick(Sender: TObject);      //Versao 1.1.0 - 25/05/2018
+procedure TfrmMovimentaEstoqueProduto.btnDeleteClick(Sender: TObject);      //Versao 1.1.0 - 25/05/2018
 begin
   qryGrid.Delete;
-  edtCodAnimal.Clear;
-  edtDescrAnimal.Clear;
+  edtCodProduto.Clear;
+  edtDescrProduto.Clear;
   edtQtd.Text := '0';
   vEdita := False;
 end;
 
-procedure TfrmMovimentaEstoque.btnFecharClick(Sender: TObject);
+procedure TfrmMovimentaEstoqueProduto.btnFecharClick(Sender: TObject);
 begin
   Close;
 end;
 
-procedure TfrmMovimentaEstoque.btnGravarClick(Sender: TObject);
+procedure TfrmMovimentaEstoqueProduto.btnGravarClick(Sender: TObject);
 var
   vID : String;
 begin
@@ -163,10 +145,10 @@ begin
     qryAuxiliar.FieldByName('ID_PRODUTO').AsString := qryGrid.FieldByName('ID_PRODUTO').AsString;
     qryAuxiliar.FieldByName('ID_ANIMAL').AsString := qryGrid.FieldByName('ID_ANIMAL').AsString;
     qryAuxiliar.FieldByName('QUANTIDADE').AsString := qryGrid.FieldByName('QUANTIDADE').AsString;
-    qryAuxiliar.FieldByName('TIPO').AsString := qryGrid.FieldByName('TIPO').AsString;
+    qryAuxiliar.FieldByName('TIPO').AsString := vTipoMovimento;
     qryAuxiliar.FieldByName('UNIDADE').AsString := qryGrid.FieldByName('UNIDADE').AsString;
-    qryAuxiliar.FieldByName('ALTERACAO').AsDateTime := qryGrid.FieldByName('ALTERACAO').AsDateTime;
-    qryAuxiliar.FieldByName('USUARIO').AsInteger := qryGrid.FieldByName('USUARIO').AsInteger;
+    qryAuxiliar.FieldByName('ALTERACAO').AsDateTime := Date+Time;
+    qryAuxiliar.FieldByName('USUARIO').AsInteger := frmPrincipal.vUsuario;
     qryAuxiliar.FieldByName('CODEMPRESA').AsInteger := frmPrincipal.vEmpresa;        //Versao 1.4 - 14/10/2018
 
     qryAuxiliar.Post;
@@ -182,7 +164,7 @@ begin
   ShowMessage('Gravação efetuada com sucesso!');
 end;
 
-procedure TfrmMovimentaEstoque.btnNovoClick(Sender: TObject);
+procedure TfrmMovimentaEstoqueProduto.btnNovoClick(Sender: TObject);
 begin
   LimpaCampos;
   fNovo := True;
@@ -193,108 +175,84 @@ begin
   btnGravar.Enabled := True;
   edtData.SetFocus;
   edtNumero.Text := frmFuncoes.FormataNumero(IntToStr(frmFuncoes.AutoIncre('MOVI_PRODUTO', 'Novo')));
-  edtCodProduto.Text := dm.qryConfiguracao.FieldByName('produto_inseminacao').AsString;
-  if edtCodProduto.Text <> '' then
-    PesquisaProduto(True);
 end;
 
-procedure TfrmMovimentaEstoque.CarregaGrid;
+procedure TfrmMovimentaEstoqueProduto.CarregaGrid;
+Var
+  vComando : String;
 begin
-  frmFuncoes.ExecutaSQL('select MP.ID, MP.NUMERO, MP.DATA, MP.ID_ANIMAL, ' +
-  ' A.NOME, MP.ID_PRODUTO, P.DESCRICAO, MP.QUANTIDADE, ' +
-  ' MP.TIPO, MP.UNIDADE, MP.ALTERACAO, MP.USUARIO ' +
-  ' FROM ANIMAL A join MOVI_PRODUTO MP on (A.ID = MP.ID_ANIMAL) JOIN PRODUTO P ON (P.ID = MP.ID_PRODUTO) WHERE MP.ID IS NULL', 'Abrir', qryGrid);
+  vComando := frmFuncoes.LerArquivoIni('MOVIESTOQUE', 'PRODUTO');
+  frmFuncoes.ExecutaSQL(vComando, 'Abrir', qryGrid);
 
-  dbgDados.Columns.Items[0].Visible := True;  //ID
+  dbgDados.Columns.Items[0].Visible := False;  //ID
   dbgDados.Columns.Items[1].Visible := False;  //NUMERO
   dbgDados.Columns.Items[2].Visible := False;  //DATA
   dbgDados.Columns.Items[3].Visible := False;  //ID_ANIMAL
-  dbgDados.Columns.Items[4].Visible := True;  //ANIMAL
-  dbgDados.Columns.Items[4].Width := 150;
-  dbgDados.Columns.Items[5].Visible := False;  //ID_PRODUTO
-  dbgDados.Columns.Items[6].Visible := True;  //PRODUTO
-  dbgDados.Columns.Items[6].Width := 150;
-  dbgDados.Columns.Items[7].Visible := True;  //QUANTIDADE
-  dbgDados.Columns.Items[7].Width := 80;
-  dbgDados.Columns.Items[8].Visible := False;  //TIPO
-  dbgDados.Columns.Items[9].Visible := False;  //UNIDADE
-  dbgDados.Columns.Items[10].Visible := False;  //ALTERACAO
-  dbgDados.Columns.Items[11].Visible := False;  //USUARIO
-
+  dbgDados.Columns.Items[4].Visible := True;  //ID_produto
+  dbgDados.Columns.Items[5].Visible := True;  //descricao produto
+  dbgDados.Columns.Items[5].Width   := 120;  //descricao produto
+  dbgDados.Columns.Items[6].Visible := True;  //quantidade
+  dbgDados.Columns.Items[7].Visible := False;  //tipo
+  dbgDados.Columns.Items[8].Visible := False;  //unidade
 
   TFMTBCDField(qryGrid.FieldByName('QUANTIDADE')).DisplayFormat   := '###,####,###,##0.00';
-
-  qryGrid.Insert;
 end;
 
-procedure TfrmMovimentaEstoque.dbgDadosDblClick(Sender: TObject);      //Versao 1.1.0 - 25/05/2018
+procedure TfrmMovimentaEstoqueProduto.dbgDadosDblClick(Sender: TObject);      //Versao 1.1.0 - 25/05/2018
 begin
   vEdita := True;
-  edtCodAnimal.Text := qryGrid.FieldByName('id_Animal').AsString;
-  edtDescrAnimal.Text := qryGrid.FieldByName('nome').AsString;
+  edtCodProduto.Text := qryGrid.FieldByName('id_Produto').AsString;
+  edtDescrProduto.Text := qryGrid.FieldByName('DESCRICAO').AsString;
   edtQtd.Text := qryGrid.FieldByName('quantidade').AsString;
+  edtUnidade.Text := qryGrid.FieldByName('unidade').AsString;
 end;
 
-procedure TfrmMovimentaEstoque.edtCodAnimalChange(Sender: TObject);
-begin
-  if trim(edtCodAnimal.Text) = '' then
-    edtDescrAnimal.Clear;
-end;
-
-procedure TfrmMovimentaEstoque.edtCodAnimalExit(Sender: TObject);
-begin
-  if trim(edtCodAnimal.Text) <> '' then
-    PesquisaAnimal(True);
-end;
-
-procedure TfrmMovimentaEstoque.edtCodAnimalKeyDown(Sender: TObject;
-  var Key: Word; Shift: TShiftState);
-begin
-  if Key = VK_F2 then
-    btnPesqAnimalClick(Self);
-end;
-
-procedure TfrmMovimentaEstoque.edtCodAnimalKeyPress(Sender: TObject;
+procedure TfrmMovimentaEstoqueProduto.edtCodAnimalKeyPress(Sender: TObject;
   var Key: Char);
 begin
   If not( key in['0'..'9',#08] ) then
     key := #0;
 end;
 
-procedure TfrmMovimentaEstoque.edtCodProdutoChange(Sender: TObject);
+procedure TfrmMovimentaEstoqueProduto.edtCodProdutoChange(Sender: TObject);
 begin
   if trim(edtCodProduto.Text) = '' then
     edtDescrProduto.Clear;
 end;
 
-procedure TfrmMovimentaEstoque.edtCodProdutoExit(Sender: TObject);
+procedure TfrmMovimentaEstoqueProduto.edtCodProdutoExit(Sender: TObject);
 begin
   if trim(edtCodProduto.Text) <> '' then
     PesquisaProduto(True);
 end;
 
-procedure TfrmMovimentaEstoque.edtCodProdutoKeyDown(Sender: TObject;
+procedure TfrmMovimentaEstoqueProduto.edtCodProdutoKeyDown(Sender: TObject;
   var Key: Word; Shift: TShiftState);
 begin
   if Key = VK_F2 then
     btnPesqProdutoClick(Self);
 end;
 
-procedure TfrmMovimentaEstoque.edtCodProdutoKeyPress(Sender: TObject;
+procedure TfrmMovimentaEstoqueProduto.edtCodProdutoKeyPress(Sender: TObject;
   var Key: Char);
 begin
   If not( key in['0'..'9',#08] ) then
     key := #0;
 end;
 
-procedure TfrmMovimentaEstoque.FormActivate(Sender: TObject);
+procedure TfrmMovimentaEstoqueProduto.FormActivate(Sender: TObject);
 begin
   LimpaCampos;
   CarregaGrid;
   edtNumero.SetFocus;
+
+  if vTipoMovimento = 'S' then
+    Caption := 'Movimento Estoque Produto - Saída'
+  else
+    Caption := 'Movimento Estoque Produto - Entrada';
 end;
 
-procedure TfrmMovimentaEstoque.FormKeyPress(Sender: TObject; var Key: Char);
+procedure TfrmMovimentaEstoqueProduto.FormKeyPress(Sender: TObject; var Key: Char);
 begin
   If key = #13 then
   Begin
@@ -303,7 +261,7 @@ begin
   end;
 end;
 
-procedure TfrmMovimentaEstoque.LimpaCampos;
+procedure TfrmMovimentaEstoqueProduto.LimpaCampos;
 begin
   edtNumero.Clear;
   edtData.Text := DateToStr(Date);
@@ -312,7 +270,7 @@ begin
   edtQtd.Text := '0';
 end;
 
-procedure TfrmMovimentaEstoque.PesquisaProduto(vStatus: boolean);
+procedure TfrmMovimentaEstoqueProduto.PesquisaProduto(vStatus: boolean);
 begin
   if vStatus = True then
   begin
@@ -322,6 +280,7 @@ begin
       if dm.qryProduto.RecordCount > 0 then
       begin
         edtDescrProduto.Text :=  dm.qryProduto.FieldByName('DESCRICAO').AsString;
+        edtUnidade.Text := dm.qryProduto.FieldByName('UNIDADE').AsString;
       end
       else
       begin
@@ -335,8 +294,8 @@ begin
     frmPesquisa := TfrmPesquisa.Create(Self);
     try
       frmPesquisa.vTabela := 'PRODUTO';
-      frmPesquisa.vComando := 'Select ID, DESCRICAO, UNIDADE, VALOR, ESTOQUE from PRODUTO WHERE SEMEM = ' + QuotedStr('S') + ' ORDER BY DESCRICAO';
-      frmPesquisa.vTela := 'MOVI_PRODUTO';
+      frmPesquisa.vComando := 'Select ID, DESCRICAO, UNIDADE, VALOR, ESTOQUE from PRODUTO WHERE SEMEM = ' + QuotedStr('N') + ' ORDER BY DESCRICAO';
+      frmPesquisa.vTela := 'MOVI_EST_PRODUTO';
       frmPesquisa.ShowModal;
     finally
       frmPesquisa.Release;
@@ -344,7 +303,7 @@ begin
   end;
 end;
 
-function TfrmMovimentaEstoque.ValidaAnimal: Boolean;
+function TfrmMovimentaEstoqueProduto.ValidaAnimal: Boolean;
 var
   vRetorno : Boolean;
 begin
@@ -357,13 +316,6 @@ begin
     vRetorno := False;
   end;
 
-  if edtCodAnimal.Text = '' then
-  begin
-    ShowMessage('Insira o Animal!');
-    edtCodAnimal.SetFocus;
-    vRetorno := False;
-  end;
-
   if Trim(edtQtd.Text) = '0' then
   begin
     ShowMessage('Insira a Quantidade!');
@@ -372,40 +324,6 @@ begin
   end;
 
   Result := vRetorno;
-end;
-
-procedure TfrmMovimentaEstoque.PesquisaAnimal(vStatus: boolean);
-begin
-  if vStatus = True then
-  begin
-    if Trim(edtCodAnimal.Text) <> '' then
-    begin
-      frmFuncoes.ExecutaSQL('Select * from ANIMAL where SEXO = ' + QuotedStr('M') + ' and ID = ' + QuotedStr(edtCodAnimal.Text), 'Abrir', DM.qryAnimal);
-      if DM.qryAnimal.RecordCount > 0 then
-      begin
-        edtDescrAnimal.Text := DM.qryAnimal.FieldByName('NOME').AsString;
-      end
-      else
-      begin
-        Application.MessageBox('Registro não encontrado.', 'Curral Novo', MB_OK);
-        edtCodAnimal.SetFocus;
-        edtCodAnimal.Clear;
-        edtDescrAnimal.Clear;
-      end;
-    end;
-  end
-  else
-  begin
-    frmPesquisa := TfrmPesquisa.Create(Self);
-    try
-      frmPesquisa.vTabela := 'ANIMAL';
-      frmPesquisa.vTela := 'MOVI_PRODUTO';
-      frmPesquisa.vComando := 'Select ID, NOME, IDENTIFICACAO, ESTOQUE from ANIMAL where SEXO = ' + QuotedStr('M') + ' ORDER BY NOME';
-      frmPesquisa.ShowModal;
-    finally
-      frmPesquisa.Release;
-    end;
-  end;
 end;
 
 end.
