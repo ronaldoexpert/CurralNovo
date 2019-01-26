@@ -16,12 +16,11 @@ uses
   untInseminacao in 'untInseminacao.pas' {frmInseminacao},
   untConfirmaInseminacao in 'untConfirmaInseminacao.pas' {frmConfirmaInseminacao},
   untRelatorioGraficos in 'untRelatorioGraficos.pas' {frmRelGraficos},
-  untMovimentaEstoqueProduto in 'untMovimentaEstoqueProduto.pas' {frmMovimentaEstoqueProduto},
+  untMovimentaEstoque in 'untMovimentaEstoque.pas' {frmMovimentaEstoque},
   untPrincipal in 'untPrincipal.pas' {frmPrincipal},
   untConfiguracao in 'untConfiguracao.pas' {frmConfiguracao},
   untCadastroEmpresa in 'untCadastroEmpresa.pas' {frmCadastroEmpresa},
-  untCancelaInseminacao in 'untCancelaInseminacao.pas' {frmCancelaInseminacao},
-  untMovimentaEstoque in 'untMovimentaEstoque.pas' {frmMovimentaEstoque};
+  untCancelaInseminacao in 'untCancelaInseminacao.pas' {frmCancelaInseminacao};
 
 {$R *.res}
 
@@ -31,5 +30,7 @@ begin
   Application.CreateForm(TfrmLogin, frmLogin);
   Application.CreateForm(TDM, DM);
   Application.CreateForm(TfrmFuncoes, frmFuncoes);
+  Application.CreateForm(TfrmCadastroEmpresa, frmCadastroEmpresa);
+  Application.CreateForm(TfrmCancelaInseminacao, frmCancelaInseminacao);
   Application.Run;
 end.

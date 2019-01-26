@@ -10,10 +10,8 @@ object frmPrincipal: TfrmPrincipal
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  KeyPreview = True
   Menu = MainMenu1
   OldCreateOrder = False
-  Position = poScreenCenter
   WindowState = wsMaximized
   OnClose = FormClose
   OnShow = FormShow
@@ -1013,19 +1011,8 @@ object frmPrincipal: TfrmPrincipal
         OnClick = CncelaInseminaes1Click
       end
       object MovimentaEstoque: TMenuItem
-        Caption = '&Movimenta Estoque Semen'
+        Caption = '&Movimenta Estoque'
         OnClick = MovimentaEstoqueClick
-      end
-      object MovimentaEstoqueProduto1: TMenuItem
-        Caption = 'Movimenta Estoque &Produto'
-        object Entrada1: TMenuItem
-          Caption = '&Entrada'
-          OnClick = Entrada1Click
-        end
-        object Sada1: TMenuItem
-          Caption = '&Sa'#237'da'
-          OnClick = Sada1Click
-        end
       end
     end
     object Relatorios: TMenuItem

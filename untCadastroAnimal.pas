@@ -65,8 +65,6 @@ type
     btnImprimeCria: TBitBtn;
     lblIdadeCria: TLabel;
     Crpe1: TCrpe;
-    lblMae: TLabel;
-    lblPai: TLabel;
     procedure btnFecharClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure btnPesquisarClick(Sender: TObject);

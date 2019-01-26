@@ -2,7 +2,7 @@ object frmCadastroAnimal: TfrmCadastroAnimal
   Left = 0
   Top = 0
   Caption = 'Cadastro Animal'
-  ClientHeight = 472
+  ClientHeight = 433
   ClientWidth = 475
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -20,12 +20,11 @@ object frmCadastroAnimal: TfrmCadastroAnimal
   TextHeight = 13
   object pnlRodape: TPanel
     Left = 0
-    Top = 424
+    Top = 385
     Width = 475
     Height = 48
     Align = alBottom
     TabOrder = 0
-    ExplicitTop = 385
     object btnNovo: TBitBtn
       Left = 8
       Top = 6
@@ -210,12 +209,11 @@ object frmCadastroAnimal: TfrmCadastroAnimal
     Left = 0
     Top = 0
     Width = 475
-    Height = 424
+    Height = 385
     Align = alClient
     Color = clBtnHighlight
     ParentBackground = False
     TabOrder = 1
-    ExplicitHeight = 385
     object lblCodigo: TLabel
       Left = 8
       Top = 13
@@ -398,16 +396,14 @@ object frmCadastroAnimal: TfrmCadastroAnimal
     end
     object PageControl1: TPageControl
       Left = 1
-      Top = 190
+      Top = 165
       Width = 473
-      Height = 233
-      ActivePage = tbGenealogia
+      Height = 219
+      ActivePage = tbResenha
       Align = alBottom
       TabOrder = 6
-      ExplicitTop = 176
       object tbResenha: TTabSheet
         Caption = '&Resenha'
-        ExplicitHeight = 191
         object lblOutras: TLabel
           Left = 3
           Top = 7
@@ -1697,10 +1693,11 @@ object frmCadastroAnimal: TfrmCadastroAnimal
       object tbGenealogia: TTabSheet
         Caption = 'Genealogia'
         ImageIndex = 1
-        ExplicitHeight = 191
+        ExplicitLeft = 7
+        ExplicitTop = 23
         object imgFotoPai: TImage
           Left = 208
-          Top = 27
+          Top = 9
           Width = 143
           Height = 119
           Picture.Data = {
@@ -2849,7 +2846,7 @@ object frmCadastroAnimal: TfrmCadastroAnimal
         end
         object imgFotoMae: TImage
           Left = 11
-          Top = 27
+          Top = 9
           Width = 143
           Height = 119
           Picture.Data = {
@@ -3996,23 +3993,9 @@ object frmCadastroAnimal: TfrmCadastroAnimal
             6D616769636B2D495437305A4341679C9BCA9E0000000049454E44AE426082}
           Stretch = True
         end
-        object lblMae: TLabel
-          Left = 11
-          Top = 8
-          Width = 20
-          Height = 13
-          Caption = 'M'#227'e'
-        end
-        object lblPai: TLabel
-          Left = 208
-          Top = 8
-          Width = 14
-          Height = 13
-          Caption = 'Pai'
-        end
         object edtCodMae: TEdit
           Left = 11
-          Top = 152
+          Top = 134
           Width = 53
           Height = 21
           TabOrder = 0
@@ -4022,7 +4005,7 @@ object frmCadastroAnimal: TfrmCadastroAnimal
         end
         object btnPesquisaMae: TBitBtn
           Left = 70
-          Top = 150
+          Top = 132
           Width = 25
           Height = 25
           Glyph.Data = {
@@ -4057,7 +4040,7 @@ object frmCadastroAnimal: TfrmCadastroAnimal
         end
         object edtNomeMae: TEdit
           Left = 11
-          Top = 178
+          Top = 160
           Width = 143
           Height = 21
           Enabled = False
@@ -4065,7 +4048,7 @@ object frmCadastroAnimal: TfrmCadastroAnimal
         end
         object edtNomePai: TEdit
           Left = 208
-          Top = 178
+          Top = 160
           Width = 143
           Height = 21
           Enabled = False
@@ -4073,7 +4056,7 @@ object frmCadastroAnimal: TfrmCadastroAnimal
         end
         object edtCodPai: TEdit
           Left = 208
-          Top = 154
+          Top = 136
           Width = 53
           Height = 21
           TabOrder = 4
@@ -4083,7 +4066,7 @@ object frmCadastroAnimal: TfrmCadastroAnimal
         end
         object btnPesquisaPai: TBitBtn
           Left = 264
-          Top = 150
+          Top = 132
           Width = 25
           Height = 25
           Glyph.Data = {
@@ -4197,16 +4180,6 @@ object frmCadastroAnimal: TfrmCadastroAnimal
     Top = 168
   end
   object OpenPictureDialog1: TOpenPictureDialog
-    Filter = 
-      'All (*.gif;*.png;*.jpg;*.jpeg;*.bmp;*.jpg;*.jpeg;*.gif;*.png;*.t' +
-      'if;*.tiff;*.ico;*.emf;*.wmf)|*.gif;*.png;*.jpg;*.jpeg;*.bmp;*.jp' +
-      'g;*.jpeg;*.gif;*.png;*.tif;*.tiff;*.ico;*.emf;*.wmf|GIF Image (*' +
-      '.gif)|*.gif|Portable Network Graphics (*.png)|*.png|JPEG Image F' +
-      'ile (*.jpg)|*.jpg|JPEG Image File (*.jpeg)|*.jpeg|Bitmaps (*.bmp' +
-      ')|*.bmp|JPEG Images (*.jpg)|*.jpg|JPEG Images (*.jpeg)|*.jpeg|GI' +
-      'F Images (*.gif)|*.gif|PNG Images (*.png)|*.png|TIFF Images (*.t' +
-      'if)|*.tif|TIFF Images (*.tiff)|*.tiff|Icons (*.ico)|*.ico|Enhanc' +
-      'ed Metafiles (*.emf)|*.emf|Metafiles (*.wmf)|*.wmf'
     Left = 536
     Top = 72
   end

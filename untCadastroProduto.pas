@@ -31,7 +31,6 @@ type
     chkSituacao: TDBCheckBox;
     edtUnidade: TDBEdit;
     lblUnidade: TLabel;
-    chkSemen: TDBCheckBox;
     procedure btnFecharClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
@@ -164,7 +163,6 @@ begin
   edtUnidade.DataField := 'UNIDADE';
   edtEstoque.DataField := 'ESTOQUE';
   chkSituacao.DataField := 'SITUACAO';
-  chkSemen.DataField := 'SEMEM';
 
   TFMTBCDField(dm.qryProduto.FieldByName('valor')).DisplayFormat := '###,####,###,##0.00';
 end;

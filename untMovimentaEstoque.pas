@@ -62,11 +62,11 @@ type
     procedure btnDeleteClick(Sender: TObject);
   private
     { Private declarations }
-    vEdita, fNovo : Boolean;               //Versao 1.1.0 - 25/05/2018
+    vEdita : Boolean;               //Versao 1.1.0 - 25/05/2018
     function ValidaAnimal : Boolean;
   public
     { Public declarations }
-    vTipoMovimento : String;      //Versao 1.6.1 - 20/11/2018
+    fNovo : Boolean;
     procedure LimpaCampos;
     procedure CarregaGrid;
     procedure PesquisaProduto(vStatus : boolean);
@@ -335,7 +335,7 @@ begin
     frmPesquisa := TfrmPesquisa.Create(Self);
     try
       frmPesquisa.vTabela := 'PRODUTO';
-      frmPesquisa.vComando := 'Select ID, DESCRICAO, UNIDADE, VALOR, ESTOQUE from PRODUTO WHERE SEMEM = ' + QuotedStr('S') + ' ORDER BY DESCRICAO';
+      frmPesquisa.vComando := 'Select ID, DESCRICAO, UNIDADE, VALOR, ESTOQUE from PRODUTO ORDER BY DESCRICAO';
       frmPesquisa.vTela := 'MOVI_PRODUTO';
       frmPesquisa.ShowModal;
     finally

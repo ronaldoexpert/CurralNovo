@@ -45,10 +45,8 @@ type
     AjustanomesProprietarios: TMenuItem;
     Empresa1: TMenuItem;
     CncelaInseminaes1: TMenuItem;
-    MovimentaEstoqueProduto1: TMenuItem;
-    Entrada1: TMenuItem;
-    Sada1: TMenuItem;
     procedure btnSairClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure CadastrodeVeterinarioClick(Sender: TObject);
     procedure CadastrodeProdutorClick(Sender: TObject);
     procedure CadastrodeAnimalClick(Sender: TObject);
@@ -68,9 +66,6 @@ type
     procedure AjustanomesProprietariosClick(Sender: TObject);
     procedure Empresa1Click(Sender: TObject);
     procedure CncelaInseminaes1Click(Sender: TObject);
-    procedure Sada1Click(Sender: TObject);
-    procedure Entrada1Click(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
   public
@@ -90,7 +85,7 @@ uses unstCadastroVeterinario, untCadastroCria,
   untCadastroUsuario, untConfirmaInseminacao, untInseminacao,
   untMovimentaEstoque, untLogin, untFuncoes, untDM, untConfiguracao,
   untRelatorioGraficos, untCadastroAnimal, untCadastroEmpresa,
-  untCancelaInseminacao, untMovimentaEstoqueProduto;
+  untCancelaInseminacao;
 
 procedure TfrmPrincipal.AjustanomesProprietariosClick(Sender: TObject);
 var
@@ -162,7 +157,10 @@ end;
 
 procedure TfrmPrincipal.btnSairClick(Sender: TObject);
 begin
-  close;       //Versao 1.6.2 - 09/01/2019
+  if Application.MessageBox('Deseja realmente sair do sistema?', 'Curral Novo', MB_YESNO) = mrYes then
+  BEGIN
+    Application.Terminate;
+  END;
 end;
 
 procedure TfrmPrincipal.CadastrodeAnimalClick(Sender: TObject);
@@ -292,31 +290,14 @@ begin
   end;
 end;
 
-procedure TfrmPrincipal.Entrada1Click(Sender: TObject);
-begin
-  frmMovimentaEstoqueProduto := TfrmMovimentaEstoqueProduto.Create(Self);      //Versao 1.6.1 - 20/11/2018
-  try
-    frmMovimentaEstoqueProduto.vTipoMovimento := 'E';
-    frmMovimentaEstoqueProduto.ShowModal;   //Versao 1.6.1 - 20/11/2018
-  finally
-    frmMovimentaEstoqueProduto.Release;     //Versao 1.6.1 - 20/11/2018
-  end;
-end;
-
 procedure TfrmPrincipal.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  if Application.MessageBox('Deseja realmente sair do sistema?', 'Curral Novo', MB_YESNO) = mrYes then
-  BEGIN
-    Application.Terminate;
-    //close;
-  END
-  else
-    Action := caNone;       //Versao 1.6.2 - 09/01/2019
+  btnSairClick(Self);
 end;
 
 procedure TfrmPrincipal.FormShow(Sender: TObject);
 begin
-  Caption := Caption + ' - ' + frmLogin.edtUsuario.Text + ' - Versao: ' + frmFuncoes.VersaoExe;
+  Caption := Caption + ' - ' + frmLogin.edtUsuario.Text + ' - Versao: ' + frmFuncoes.VersaoExe + ' (Beta)';
 end;
 
 procedure TfrmPrincipal.InseminacaoClick(Sender: TObject);
@@ -342,17 +323,6 @@ end;
 procedure TfrmPrincipal.RelatoriosClick(Sender: TObject);
 begin
   ShellExecute(handle,'open',PChar('ManagerReport.exe'), '','',SW_SHOWNORMAL);
-end;
-
-procedure TfrmPrincipal.Sada1Click(Sender: TObject);
-begin
-  frmMovimentaEstoqueProduto := TfrmMovimentaEstoqueProduto.Create(Self);      //Versao 1.6.1 - 20/11/2018
-  try
-    frmMovimentaEstoqueProduto.vTipoMovimento := 'S';
-    frmMovimentaEstoqueProduto.ShowModal;   //Versao 1.6.1 - 20/11/2018
-  finally
-    frmMovimentaEstoqueProduto.Release;     //Versao 1.6.1 - 20/11/2018
-  end;
 end;
 
 end.

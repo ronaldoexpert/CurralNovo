@@ -2,7 +2,7 @@ object frmCadastroVeterinario: TfrmCadastroVeterinario
   Left = 0
   Top = 0
   Caption = 'Cadastro Veterin'#225'rio'
-  ClientHeight = 479
+  ClientHeight = 433
   ClientWidth = 513
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -21,12 +21,11 @@ object frmCadastroVeterinario: TfrmCadastroVeterinario
     Left = 0
     Top = 0
     Width = 513
-    Height = 431
+    Height = 385
     Align = alClient
     Color = clBtnHighlight
     ParentBackground = False
     TabOrder = 0
-    ExplicitHeight = 385
     object lblCodigo: TLabel
       Left = 8
       Top = 16
@@ -47,13 +46,6 @@ object frmCadastroVeterinario: TfrmCadastroVeterinario
       Width = 19
       Height = 13
       Caption = '&CPF'
-    end
-    object lblPropriedade: TLabel
-      Left = 98
-      Top = 59
-      Width = 58
-      Height = 13
-      Caption = 'Propriedade'
     end
     object btnPesquisar: TBitBtn
       Left = 67
@@ -117,12 +109,11 @@ object frmCadastroVeterinario: TfrmCadastroVeterinario
     end
     object grpEndereco: TGroupBox
       Left = 1
-      Top = 265
+      Top = 219
       Width = 511
       Height = 165
       Align = alBottom
       TabOrder = 5
-      ExplicitTop = 219
       object Label2: TLabel
         Left = 16
         Top = 16
@@ -291,13 +282,12 @@ object frmCadastroVeterinario: TfrmCadastroVeterinario
     end
     object pnlDadosVet: TPanel
       Left = 1
-      Top = 197
+      Top = 151
       Width = 511
       Height = 68
       Align = alBottom
       BevelInner = bvLowered
       TabOrder = 4
-      ExplicitTop = 151
       object lblCrmv: TLabel
         Left = 16
         Top = 12
@@ -331,13 +321,12 @@ object frmCadastroVeterinario: TfrmCadastroVeterinario
     end
     object pnlDadosProdutor: TPanel
       Left = 1
-      Top = 107
+      Top = 61
       Width = 511
       Height = 90
       Align = alBottom
       BevelInner = bvLowered
       TabOrder = 3
-      ExplicitTop = 61
       object lblCNPJ: TLabel
         Left = 18
         Top = 3
@@ -410,23 +399,14 @@ object frmCadastroVeterinario: TfrmCadastroVeterinario
       ValueChecked = 'Ativo'
       ValueUnchecked = 'Inativo'
     end
-    object edtPropriedade: TDBEdit
-      Left = 98
-      Top = 77
-      Width = 403
-      Height = 21
-      DataSource = DM.dtsCadastro
-      TabOrder = 8
-    end
   end
   object pnlRodape: TPanel
     Left = 0
-    Top = 431
+    Top = 385
     Width = 513
     Height = 48
     Align = alBottom
     TabOrder = 1
-    ExplicitTop = 385
     object btnNovo: TBitBtn
       Left = 8
       Top = 5
