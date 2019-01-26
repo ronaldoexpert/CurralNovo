@@ -1,0 +1,23 @@
+program CurralRel;
+
+uses
+  Forms,
+  untPrincipal in 'untPrincipal.pas' {frmPrincipal},
+  untDM in 'untDM.pas' {DM: TDataModule},
+  untRelProprietarios in 'untRelProprietarios.pas' {frmRelProprietario},
+  untRelInseminacao in 'untRelInseminacao.pas' {frmRelInseminacoes},
+  untPesquisa in 'untPesquisa.pas' {frmPesquisa},
+  untRelAnimais in 'untRelAnimais.pas' {frmRelAnimais};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.CreateForm(TfrmPrincipal, frmPrincipal);
+  Application.CreateForm(TDM, DM);
+  Application.CreateForm(TfrmRelProprietario, frmRelProprietario);
+  Application.CreateForm(TfrmRelInseminacoes, frmRelInseminacoes);
+  Application.CreateForm(TfrmPesquisa, frmPesquisa);
+  Application.CreateForm(TfrmRelAnimais, frmRelAnimais);
+  Application.Run;
+end.
