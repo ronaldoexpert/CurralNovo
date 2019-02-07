@@ -71,7 +71,7 @@ begin
       if DM.qryUsuario.FieldByName('senha').AsString = edtSenha.Text then
       begin
         Application.ProcessMessages;
-        Hide;
+        //Hide;
         frmPrincipal := TfrmPrincipal.Create(Self);
         try
           GravarArquivoTXT;
