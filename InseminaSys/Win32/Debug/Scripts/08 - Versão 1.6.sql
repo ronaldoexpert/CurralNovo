@@ -14,8 +14,11 @@
 ----- 1.6.2 -----
 - Corrigido problema da tela de login ficar aberta ao minimizar tela principal (09/01/2019 - RS)
 
------ 1.6.2 -----
+----- 1.6.3 -----
 - CadProprietario, Inserido edit para colocar qual a propriedade (16/01/2019 - RS)
+
+----- 1.6.4 -----
+- Opção para imprimir relatorio individual de cria como paisagem (19/03/2019 - RS)
 
 */
 

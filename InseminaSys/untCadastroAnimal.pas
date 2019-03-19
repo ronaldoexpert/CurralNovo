@@ -67,6 +67,7 @@ type
     Crpe1: TCrpe;
     lblMae: TLabel;
     lblPai: TLabel;
+    grpImpressao: TRadioGroup;
     procedure btnFecharClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure btnPesquisarClick(Sender: TObject);
@@ -197,7 +198,10 @@ begin
   begin
     Crpe1.DiscardSavedData;
 
-    Crpe1.ReportName := 'RelatorioS\Cria.rpt';
+    if grpImpressao.ItemIndex = 0 then  //Versao 1.6.4 - 19/03/2019 - RS
+      Crpe1.ReportName := 'RelatorioS\Cria.rpt'
+    else
+      Crpe1.ReportName := 'RelatorioS\CriaP.rpt';    //Versao 1.6.4 - 19/03/2019 - RS
     Crpe1.ParamByName('CODIGO', '').CurrentValue := edtCodigo.Text;
     Crpe1.ParamByName('ID_ANIMAL', '').CurrentValue := edtCodMae.Text;
 
@@ -464,6 +468,7 @@ begin
     lblDtNascimento.Visible := True;
     lblIdadeCria.Visible := True;
     btnImprimeCria.Visible := True;
+    grpImpressao.Visible := True;       //VErsao 1.6.4 - 19/03/2019 - RS
   end
   else
   begin    //Versao 1.6.0 - 09/11/2018 - RS
@@ -473,6 +478,7 @@ begin
     lblDtNascimento.Visible := False;
     lblIdadeCria.Visible := False;
     btnImprimeCria.Visible := False;
+    grpImpressao.Visible := False;      //VErsao 1.6.4 - 19/03/2019 - RS
   end;
 end;
 

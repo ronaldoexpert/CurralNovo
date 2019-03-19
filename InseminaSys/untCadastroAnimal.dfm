@@ -25,7 +25,6 @@ object frmCadastroAnimal: TfrmCadastroAnimal
     Height = 48
     Align = alBottom
     TabOrder = 0
-    ExplicitTop = 385
     object btnNovo: TBitBtn
       Left = 8
       Top = 6
@@ -215,7 +214,6 @@ object frmCadastroAnimal: TfrmCadastroAnimal
     Color = clBtnHighlight
     ParentBackground = False
     TabOrder = 1
-    ExplicitHeight = 385
     object lblCodigo: TLabel
       Left = 8
       Top = 13
@@ -401,13 +399,11 @@ object frmCadastroAnimal: TfrmCadastroAnimal
       Top = 190
       Width = 473
       Height = 233
-      ActivePage = tbGenealogia
+      ActivePage = tbResenha
       Align = alBottom
       TabOrder = 6
-      ExplicitTop = 176
       object tbResenha: TTabSheet
         Caption = '&Resenha'
-        ExplicitHeight = 191
         object lblOutras: TLabel
           Left = 3
           Top = 7
@@ -1659,7 +1655,7 @@ object frmCadastroAnimal: TfrmCadastroAnimal
         end
         object btnImprimeCria: TBitBtn
           Left = 3
-          Top = 159
+          Top = 175
           Width = 102
           Height = 27
           Caption = '&Imprimir'
@@ -1697,7 +1693,6 @@ object frmCadastroAnimal: TfrmCadastroAnimal
       object tbGenealogia: TTabSheet
         Caption = 'Genealogia'
         ImageIndex = 1
-        ExplicitHeight = 191
         object imgFotoPai: TImage
           Left = 208
           Top = 27
@@ -4169,6 +4164,23 @@ object frmCadastroAnimal: TfrmCadastroAnimal
       TabOrder = 13
       OnExit = edtNascimentoExit
     end
+  end
+  object grpImpressao: TRadioGroup
+    Left = 8
+    Top = 348
+    Width = 185
+    Height = 38
+    Caption = 'Horienta'#231#227'o'
+    Color = clBtnHighlight
+    Columns = 2
+    ItemIndex = 0
+    Items.Strings = (
+      'Retrato'
+      'Paisagem')
+    ParentBackground = False
+    ParentColor = False
+    TabOrder = 2
+    Visible = False
   end
   object qryAnimal: TFDQuery
     CachedUpdates = True
