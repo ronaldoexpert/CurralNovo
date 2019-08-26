@@ -1689,6 +1689,23 @@ object frmCadastroAnimal: TfrmCadastroAnimal
           TabOrder = 4
           OnClick = btnImprimeCriaClick
         end
+        object grpImpressao: TRadioGroup
+          Left = 3
+          Top = 131
+          Width = 185
+          Height = 38
+          Caption = 'Horienta'#231#227'o'
+          Color = clBtnHighlight
+          Columns = 2
+          ItemIndex = 0
+          Items.Strings = (
+            'Retrato'
+            'Paisagem')
+          ParentBackground = False
+          ParentColor = False
+          TabOrder = 5
+          Visible = False
+        end
       end
       object tbGenealogia: TTabSheet
         Caption = 'Genealogia'
@@ -4164,23 +4181,6 @@ object frmCadastroAnimal: TfrmCadastroAnimal
       TabOrder = 13
       OnExit = edtNascimentoExit
     end
-  end
-  object grpImpressao: TRadioGroup
-    Left = 8
-    Top = 348
-    Width = 185
-    Height = 38
-    Caption = 'Horienta'#231#227'o'
-    Color = clBtnHighlight
-    Columns = 2
-    ItemIndex = 0
-    Items.Strings = (
-      'Retrato'
-      'Paisagem')
-    ParentBackground = False
-    ParentColor = False
-    TabOrder = 2
-    Visible = False
   end
   object qryAnimal: TFDQuery
     CachedUpdates = True

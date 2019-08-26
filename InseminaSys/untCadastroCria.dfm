@@ -390,7 +390,7 @@ object frmCadastroCria: TfrmCadastroCria
       Top = 123
       Width = 488
       Height = 236
-      ActivePage = tbGenealogia
+      ActivePage = tbResenha
       Align = alBottom
       TabOrder = 9
       object tbResenha: TTabSheet
@@ -1736,8 +1736,6 @@ object frmCadastroCria: TfrmCadastroCria
       object tbGenealogia: TTabSheet
         Caption = '&Genealogia'
         ImageIndex = 1
-        ExplicitLeft = 7
-        ExplicitTop = 23
         object imgFotoMae: TImage
           Left = 21
           Top = 19
