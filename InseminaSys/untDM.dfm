@@ -201,4 +201,15 @@ object DM: TDM
     Left = 80
     Top = 280
   end
+  object qryLiberacao: TFDQuery
+    CachedUpdates = True
+    Connection = FDConnection1
+    Left = 32
+    Top = 336
+  end
+  object dsLiberacao: TDataSource
+    DataSet = qryLiberacao
+    Left = 80
+    Top = 336
+  end
 end

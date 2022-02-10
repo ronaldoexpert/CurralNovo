@@ -57,6 +57,8 @@ begin
 end;
 
 procedure TfrmLogin.btnLoginClick(Sender: TObject);
+var
+  vMensagem : String;
 begin
   CarregaConfiguracao;
   DM.qryUsuario.Close;
@@ -68,26 +70,39 @@ begin
   BEGIN
     if DM.qryUsuario.RecordCount <> 0 then
     begin
-      if DM.qryUsuario.FieldByName('senha').AsString = edtSenha.Text then
+      if frmFuncoes.LiberaSistema(vMensagem) then
       begin
-        Application.ProcessMessages;
-        //Hide;
-        frmPrincipal := TfrmPrincipal.Create(Self);
-        try
-          GravarArquivoTXT;
-          frmPrincipal.vUsuario := DM.qryUsuario.FieldByName('ID').AsInteger;
-          frmPrincipal.vEmpresa := edtEmpresas.KeyValue;
-          frmPrincipal.ShowModal;
-          frmPrincipal.Hide;
-        finally
-          frmPrincipal.Release;
+        if DM.qryUsuario.FieldByName('senha').AsString = edtSenha.Text then
+        begin
+          if vMensagem <> '' then
+            ShowMessage(vMensagem);
+
+          Application.ProcessMessages;
+          Hide;
+          frmPrincipal := TfrmPrincipal.Create(Self);
+          try
+            GravarArquivoTXT;
+            frmPrincipal.vUsuario := DM.qryUsuario.FieldByName('ID').AsInteger;
+            frmPrincipal.vEmpresa := edtEmpresas.KeyValue;
+            frmPrincipal.ShowModal;
+            frmPrincipal.Hide;
+          finally
+            frmPrincipal.Release;
+          end;
+        end
+        else
+        begin
+          ShowMessage('Senha Inválida.');
+          edtSenha.Clear;
+          edtSenha.SetFocus;
         end;
+
       end
       else
       begin
-        ShowMessage('Senha Inválida.');
-        edtSenha.Clear;
-        edtSenha.SetFocus;
+        if vMensagem <> '' then
+          ShowMessage(vMensagem);
+        Application.Terminate;
       end;
     end
     else

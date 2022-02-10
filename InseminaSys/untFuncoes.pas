@@ -31,6 +31,7 @@ type
     function LerArquivoUsuario : String; //Pega o valor do arquivo usuario.txt no temp
     procedure GravaLog (vLog, vUsuario : String);     //Versao 1.2.0 - 04/07/2018
     function LerArquivoIni(vSecao, vLinha : String) : string;     //Versao 1.5.0 - 25/10/2018 - RS
+    function LiberaSistema(out msg : string) : Boolean;
   end;
 
 var
@@ -206,6 +207,32 @@ begin
    end;
 
    Result := linha;
+end;
+
+function TfrmFuncoes.LiberaSistema(out msg : string): Boolean;
+var
+  vRetorno : Boolean;
+begin
+  vRetorno := True;
+  ExecutaSQL('SELECT * FROM CONFIGURACAO', 'Abrir', DM.qryLiberacao);
+
+  if DM.qryLiberacao.FieldByName('BASE').AsString = 'SB' then
+  BEGIN
+    if DM.qryLiberacao.FieldByName('DATA_BASE').AsDateTime < Date then
+    begin
+      vRetorno := False;
+      msg := 'Sistema Bloqueado! Entre em contato para fazer a liberação!';
+    end
+    else
+    begin
+      vRetorno := True;
+      msg := '****** Período de Testes ******' + #13 + 'O sistema será desativado em: ' + DM.qryLiberacao.FieldByName('DATA_BASE').AsString;
+    end;
+  END
+  ELSE
+    vRetorno := True;
+
+  Result := vRetorno;
 end;
 
 function TfrmFuncoes.PegaTempDir: String;
