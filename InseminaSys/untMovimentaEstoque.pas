@@ -39,6 +39,7 @@ type
     btnPesqAnimal: TBitBtn;
     edtCodAnimal: TEdit;
     lblAnimal: TLabel;
+    edtUnidade: TEdit;
     procedure btnNovoClick(Sender: TObject);
     procedure btnFecharClick(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
@@ -60,6 +61,7 @@ type
     procedure btnGravarClick(Sender: TObject);
     procedure dbgDadosDblClick(Sender: TObject);
     procedure btnDeleteClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
     vEdita, fNovo : Boolean;               //Versao 1.1.0 - 25/05/2018
@@ -112,8 +114,8 @@ begin
     qryGrid.FieldByName('ID_PRODUTO').AsString := edtCodProduto.Text;
     qryGrid.FieldByName('DESCRICAO').AsString := edtDescrProduto.Text;
     qryGrid.FieldByName('QUANTIDADE').AsString := edtQtd.Text;
-    qryGrid.FieldByName('TIPO').AsString := 'E';
-    qryGrid.FieldByName('UNIDADE').AsString := edtCodProduto.Text;
+    qryGrid.FieldByName('TIPO').AsString := vTipoMovimento;       //Versao 3.0.0 - 12/07/2022
+    qryGrid.FieldByName('UNIDADE').AsString := 'UN';
     qryGrid.FieldByName('ALTERACAO').AsDateTime := Date+Time;
     qryGrid.FieldByName('USUARIO').AsInteger := frmPrincipal.vUsuario;
     qryGrid.Post;
@@ -303,6 +305,14 @@ begin
   end;
 end;
 
+procedure TfrmMovimentaEstoque.FormShow(Sender: TObject);
+begin
+  if vTipoMovimento = 'E' then
+    Caption := Caption + 'Entrada'
+  else
+    Caption := Caption + 'Saída';
+end;
+
 procedure TfrmMovimentaEstoque.LimpaCampos;
 begin
   edtNumero.Clear;
@@ -322,6 +332,7 @@ begin
       if dm.qryProduto.RecordCount > 0 then
       begin
         edtDescrProduto.Text :=  dm.qryProduto.FieldByName('DESCRICAO').AsString;
+        edtUnidade.Text := dm.qryProduto.FieldByName('UNIDADE').AsString;
       end
       else
       begin
@@ -335,8 +346,8 @@ begin
     frmPesquisa := TfrmPesquisa.Create(Self);
     try
       frmPesquisa.vTabela := 'PRODUTO';
-      frmPesquisa.vComando := 'Select ID, DESCRICAO, UNIDADE, VALOR, ESTOQUE from PRODUTO WHERE SEMEM = ' + QuotedStr('S') + ' ORDER BY DESCRICAO';
       frmPesquisa.vTela := 'MOVI_PRODUTO';
+      frmPesquisa.vComando := frmFuncoes.LerArquivoIni('MOVIESTOQUE', 'PRODUTO_S');
       frmPesquisa.ShowModal;
     finally
       frmPesquisa.Release;
@@ -400,7 +411,7 @@ begin
     try
       frmPesquisa.vTabela := 'ANIMAL';
       frmPesquisa.vTela := 'MOVI_PRODUTO';
-      frmPesquisa.vComando := 'Select ID, NOME, IDENTIFICACAO, ESTOQUE from ANIMAL where SEXO = ' + QuotedStr('M') + ' ORDER BY NOME';
+      frmPesquisa.vComando := frmFuncoes.LerArquivoIni('MOVIESTOQUE', 'ANIMAL');
       frmPesquisa.ShowModal;
     finally
       frmPesquisa.Release;

@@ -1,7 +1,7 @@
 object frmMovimentaEstoque: TfrmMovimentaEstoque
   Left = 0
   Top = 0
-  Caption = 'Movimenta Estoque - Entrada'
+  Caption = 'Movimenta Estoque - '
   ClientHeight = 410
   ClientWidth = 472
   Color = clBtnFace
@@ -15,6 +15,7 @@ object frmMovimentaEstoque: TfrmMovimentaEstoque
   Position = poScreenCenter
   OnActivate = FormActivate
   OnKeyPress = FormKeyPress
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -288,6 +289,16 @@ object frmMovimentaEstoque: TfrmMovimentaEstoque
       OnExit = edtCodAnimalExit
       OnKeyDown = edtCodAnimalKeyDown
       OnKeyPress = edtCodAnimalKeyPress
+    end
+    object edtUnidade: TEdit
+      Left = 304
+      Top = 80
+      Width = 50
+      Height = 21
+      TabStop = False
+      Color = clInfoBk
+      Enabled = False
+      TabOrder = 12
     end
   end
   object pnlRodape: TPanel

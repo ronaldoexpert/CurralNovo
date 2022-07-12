@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, Vcl.StdCtrls, Vcl.Buttons,
   Vcl.ToolWin, Vcl.ComCtrls, Vcl.ExtCtrls, shellapi, Vcl.Grids, Data.DB,
-  Data.Win.ADODB, Vcl.DBGrids;
+  Data.Win.ADODB, Vcl.DBGrids, DateUtils, UCrpeClasses, UCrpe32;
 
 type
   TfrmPrincipal = class(TForm)
@@ -48,6 +48,10 @@ type
     MovimentaEstoqueProduto1: TMenuItem;
     Entrada1: TMenuItem;
     Sada1: TMenuItem;
+    Entrada2: TMenuItem;
+    Sada2: TMenuItem;
+    lblInsemPendentes: TLabel;
+    Crpe1: TCrpe;
     procedure btnSairClick(Sender: TObject);
     procedure CadastrodeVeterinarioClick(Sender: TObject);
     procedure CadastrodeProdutorClick(Sender: TObject);
@@ -58,7 +62,6 @@ type
     procedure CadastrodeUsuarioClick(Sender: TObject);
     procedure InseminacaoClick(Sender: TObject);
     procedure ConfirmaInseminacoesClick(Sender: TObject);
-    procedure MovimentaEstoqueClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure RelatoriosClick(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
@@ -71,7 +74,11 @@ type
     procedure Sada1Click(Sender: TObject);
     procedure Entrada1Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure Entrada2Click(Sender: TObject);
+    procedure Sada2Click(Sender: TObject);
+    procedure lblInsemPendentesClick(Sender: TObject);
   private
+    function VerificaInseminacoes: Boolean;
     { Private declarations }
   public
     { Public declarations }
@@ -303,6 +310,17 @@ begin
   end;
 end;
 
+procedure TfrmPrincipal.Entrada2Click(Sender: TObject);
+begin
+  frmMovimentaEstoque := TfrmMovimentaEstoque.Create(Self);
+  try
+    frmMovimentaEstoque.vTipoMovimento := 'E';
+    frmMovimentaEstoque.ShowModal;
+  finally
+    frmMovimentaEstoque.Release;
+  end;
+end;
+
 procedure TfrmPrincipal.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   if Application.MessageBox('Deseja realmente sair do sistema?', 'Curral Novo', MB_YESNO) = mrYes then
@@ -317,6 +335,29 @@ end;
 procedure TfrmPrincipal.FormShow(Sender: TObject);
 begin
   Caption := Caption + ' - ' + frmLogin.edtUsuario.Text + ' - Versao: ' + frmFuncoes.VersaoExe;
+
+  if VerificaInseminacoes then              //Versao 3.0.0 - 12/07/2022
+    lblInsemPendentes.Visible := True;
+end;
+
+function TfrmPrincipal.VerificaInseminacoes : Boolean;    //Versao 3.0.0 - 12/07/2022
+var
+  vComando, vData : String;
+  vDias : Integer;
+begin
+  vDias := (dm.qryConfiguracao.FieldByName('DIAS_VERIFICACAO').AsInteger * -1);
+  vData := frmFuncoes.DataSQL(DateToStr(IncDay(Date, vDias)), 'mm/dd/aaaa');
+
+  dm.qryAuxiliar.SQL.Clear;
+  dm.qryAuxiliar.Close;
+  dm.qryAuxiliar.SQL.Add('SELECT * FROM INSEMINACAO I JOIN MOVI_INSEMINACAO MV ON (I.ID = MV.ID_INSEMINACAO)');
+  dm.qryAuxiliar.SQL.Add('WHERE MV.CONFIRMADA = ' + QuotedStr('A') + ' AND I.DATA < ' + QuotedStr(vData) + ' ORDER BY DATA');
+  dm.qryAuxiliar.Open;
+
+  if dm.qryAuxiliar.RecordCount > 0 then
+    Result := True
+  else
+    Result := False;
 end;
 
 procedure TfrmPrincipal.InseminacaoClick(Sender: TObject);
@@ -329,14 +370,30 @@ begin
   end;
 end;
 
-procedure TfrmPrincipal.MovimentaEstoqueClick(Sender: TObject);
+procedure TfrmPrincipal.lblInsemPendentesClick(Sender: TObject);     //Versao 3.0.0 - 12/07/2022
+var
+  vNomeUsuario : string;
+  num : integer;
 begin
-  frmMovimentaEstoque := TfrmMovimentaEstoque.Create(Self);
-  try
-    frmMovimentaEstoque.ShowModal;
-  finally
-    frmMovimentaEstoque.Release;
-  end;
+  Crpe1.Destroy;
+  Crpe1 := TCrpe.Create(Self);
+  Crpe1.WindowState := wsMaximized;
+  Crpe1.SetFocus;
+  Crpe1.ReportName := 'relatorios\InseminacoesPendentes.rpt';
+  Crpe1.DiscardSavedData;
+  Crpe1.WindowStyle.Title := 'Inseminações Pendentes';
+
+  vNomeUsuario := frmfuncoes.UsuarioWindows;
+  if not DirectoryExists('C:\Users\Public\' + vNomeUsuario) then
+    ForceDirectories('C:\Users\Public\' + vNomeUsuario);
+
+  num := Random(100000);
+  postmessage(findwindow(nil,'Insemina.pdf - Adobe Reader'),WM_CLOSE,0,0);
+  Crpe1.ExportOptions.FileType := AdobeAcrobatPDF;
+  Crpe1.ExportOptions.FileName := 'C:\Users\Public\' + vNomeUsuario + '\' + IntToStr(num) + 'Insemina.pdf';
+  Crpe1.Export;
+  ShellExecute(handle,'open',PChar('C:\Users\Public\' + vNomeUsuario + '\' + IntToStr(num) + 'Insemina.pdf'), '','',SW_SHOWMAXIMIZED);
+  Crpe1.Destroy;
 end;
 
 procedure TfrmPrincipal.RelatoriosClick(Sender: TObject);
@@ -352,6 +409,17 @@ begin
     frmMovimentaEstoqueProduto.ShowModal;   //Versao 1.6.1 - 20/11/2018
   finally
     frmMovimentaEstoqueProduto.Release;     //Versao 1.6.1 - 20/11/2018
+  end;
+end;
+
+procedure TfrmPrincipal.Sada2Click(Sender: TObject);
+begin
+  frmMovimentaEstoque := TfrmMovimentaEstoque.Create(Self);
+  try
+    frmMovimentaEstoque.vTipoMovimento := 'S';
+    frmMovimentaEstoque.ShowModal;
+  finally
+    frmMovimentaEstoque.Release;
   end;
 end;
 

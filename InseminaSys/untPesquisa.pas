@@ -94,6 +94,15 @@ begin
     dbgPesquisa.Canvas.Font.Color := clWhite;
   end;
 
+  if (vTabela = 'ANIMAL') AND (vTela = 'INSEMINACAO') then
+  begin
+    if qryPesquisa.FieldByName('QTD_INSEMINACAO').AsFloat > 1 then
+    begin
+      dbgPesquisa.Canvas.Font.Color:= clRed; // coloque aqui a cor desejada
+      dbgPesquisa.DefaultDrawDataCell(Rect, dbgPesquisa.columns[datacol].field, State);
+    end;
+  end;
+
   dbgPesquisa.DefaultDrawDataCell(Rect, Column.Field, State);
 end;
 
@@ -102,11 +111,13 @@ begin
   if key = #13 then
   begin
     // pressionado enter
+    Key := #0;
     Selecionar;
   end
   else if key = #27 then
   begin
     // pressionado ESC
+    Key := #0;
     close;
   end;
 end;
@@ -171,7 +182,7 @@ begin
   BEGIN
     dbgPesquisa.Columns[1].Width := 100;
     dbgPesquisa.Columns[2].Width := 90;
-    dbgPesquisa.Columns[4].Visible := False;
+    dbgPesquisa.Columns[4].Visible := False; //Tipo
   END;
 end;
 
@@ -206,7 +217,10 @@ begin
   END
   ELSE if (vTabela = 'ANIMAL') then
   BEGIN
-    lblCampoPesquisa.Caption := 'ANIMAL';
+    if (vTela = 'INSEMINACAO_T') or (vTela = 'INSEMINACAO') or (vTela = 'MOVI_PRODUTO') then
+      lblCampoPesquisa.Caption := 'NOME'
+    else
+      lblCampoPesquisa.Caption := 'ANIMAL';
   END;
 
   if (((vTela = 'CAD_ANIMAL') OR (vTela = 'CAD_ANIMAL_CRIA')) and (vTabela = 'ANIMAL')) then  //Versao 1.6.0 - 09/11/2018 - RS  //Versao 1.1.2 - 02/07/2018  //Versao 1.1.0 - 25/05/2018

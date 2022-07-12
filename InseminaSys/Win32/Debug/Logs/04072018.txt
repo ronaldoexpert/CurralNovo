@@ -1,6 +1,0 @@
-19:47:01, Alteração de cadastro de Produtor. Nome: ADELSON MEDEIROS DE AZEVEDO, 1
-19:47:25, Alteração de cadastro de Veterinário. Nome: RONALDO SILVEIRA, 1
-19:47:58, Adição de cadastro de Veterinário. Nome: TESTE, 1
-19:48:15, Alteração de cadastro de Veterinário. Nome: ALLAN, 1
-19:50:19, Alteração de cadastro de Produto. Codigo: 1, 1
-19:50:37, Alteração de cadastro de Produto. Codigo: 3, 1

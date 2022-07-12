@@ -67,6 +67,8 @@ type
     lblProprietario: TLabel;
     btnPesqProprietario: TBitBtn;
     edtDescrProprietario: TEdit;
+    rgTipoSemen: TRadioGroup;
+    rgTipoInseminacao: TRadioGroup;
     procedure FormActivate(Sender: TObject);
     procedure btnPesqTouroClick(Sender: TObject);
     procedure btnPesqAnimalClick(Sender: TObject);
@@ -283,6 +285,10 @@ begin
     dm.qryCadInseminacao.FieldByName('alteracao').AsDateTime := Date+Time;
     dm.qryCadInseminacao.FieldByName('usuario').AsString := inttostr(frmPrincipal.vUsuario);
     dm.qryCadInseminacao.FieldByName('CODEMPRESA').AsInteger := frmPrincipal.vEmpresa;        //Versao 1.4 - 14/10/2018
+
+    dm.qryCadInseminacao.FieldByName('TIPO_INSEMINACAO').AsInteger := rgTipoInseminacao.ItemIndex;      //Versao 3.0.0 - 12/07/2022
+    dm.qryCadInseminacao.FieldByName('TIPO_SEMEN').AsInteger := rgTipoSemen.ItemIndex;                //Versao 3.0.0 - 12/07/2022
+
 
     dm.qryCadInseminacao.Post;
     if dm.qryCadInseminacao.ApplyUpdates(-1) = 0 then
@@ -540,8 +546,7 @@ begin
       try
         frmPesquisa.vTabela := 'ANIMAL';
         frmPesquisa.vTela := 'INSEMINACAO';
-        //frmPesquisa.vComando := 'Select ID, NOME, IDENTIFICACAO, PROPRIETARIO from ANIMAL where SEXO = ' + QuotedStr('F') + ' AND PROPRIETARIO = ' + QuotedStr(edtCodProprietario.Text) + ' AND ID NOT IN (SELECT ID_ANIMAL FROM MOVI_INSEMINACAO WHERE CONFIRMADA IN (' + QuotedStr('A') + ', ' + QuotedStr('S') + ')) ORDER BY NOME';
-        frmPesquisa.vComando := frmFuncoes.LerArquivoIni('INSEMINACAO', 'ANIMALF') + ' AND PROPRIETARIO = ' + QuotedStr(edtCodProprietario.Text) + ' order by NOME';
+        frmPesquisa.vComando := frmFuncoes.LerArquivoIni('INSEMINACAO', 'ANIMALF') + ' AND A.PROPRIETARIO = ' + QuotedStr(edtCodProprietario.Text) + ' GROUP BY A.ID, A.NOME, A.IDENTIFICACAO, A.PROPRIETARIO, A.ESTOQUE ORDER BY A.NOME';
         frmPesquisa.ShowModal;
       finally
         frmPesquisa.Release;
@@ -576,6 +581,9 @@ begin
         PesquisaServico(True);
         edtDtEmissao.Date := DM.qryCadInseminacao.FieldByName('data').AsDateTime;
         CarregaGrid;
+
+        rgTipoSemen.ItemIndex := DM.qryCadInseminacao.FieldByName('TIPO_SEMEN').AsInteger;
+        rgTipoInseminacao.ItemIndex := DM.qryCadInseminacao.FieldByName('TIPO_INSEMINACAO').AsInteger;
 
         if DM.qryCadInseminacao.FieldByName('FINALIZADA').AsString = 'S' then
         BEGIN
@@ -765,8 +773,8 @@ begin
     vVlrTotal := vVlrTotal + DM.qryMoviInseminacao.FieldByName('vlr_unit').AsFloat;
     DM.qryMoviInseminacao.Next;
   end;
-  edtTotal.Text := FloatToStr(vVlrTotal);
-  TFMTBCDField(edtTotal).DisplayFormat   := '###,####,###,##0.00';
+  edtTotal.Text := FormatFloat('#,##0.00', vVlrTotal);
+  //TFMTBCDField(edtTotal).DisplayFormat   := '###,####,###,##0.00';
 end;
 
 function TfrmInseminacao.ValidaAnimal: Boolean;

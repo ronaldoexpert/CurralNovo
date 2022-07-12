@@ -3,7 +3,7 @@ unit untFuncoes;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, FireDAC.Stan.Intf,
   FireDAC.Stan.Option, FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf,
   FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys,
@@ -12,7 +12,7 @@ uses
   FireDAC.Comp.Client, Vcl.Grids, Vcl.DBGrids, IniFiles, Registry, Vcl.Buttons,
   Vcl.ComCtrls, Vcl.ToolWin, Vcl.ExtCtrls, System.ImageList, Vcl.ImgList,
   Vcl.StdCtrls, FireDAC.Phys.IBWrapper, FireDAC.Phys.IBBase,
-  DateUtils, Vcl.Imaging.pngimage, Vcl.Mask, Vcl.DBCtrls;
+  DateUtils, Vcl.Imaging.pngimage, Vcl.Mask, Vcl.DBCtrls, Windows;
 
 type
   TfrmFuncoes = class(TForm)
@@ -32,6 +32,8 @@ type
     procedure GravaLog (vLog, vUsuario : String);     //Versao 1.2.0 - 04/07/2018
     function LerArquivoIni(vSecao, vLinha : String) : string;     //Versao 1.5.0 - 25/10/2018 - RS
     function LiberaSistema(out msg : string) : Boolean;
+    function DataSQL(data, formato: string): string;    //Versao 3.0.0 - 12/07/2022
+    function UsuarioWindows: string;                  //Versao 3.0.0 - 12/07/2022
   end;
 
 var
@@ -44,6 +46,30 @@ implementation
 uses untDM, untLogin;
 
 { TfrmFuncoes }
+
+function TfrmFuncoes.UsuarioWindows: string;     //Versao 14.0.5 - 17/02/2021 - RS
+var
+  I: DWord;
+  user: string;
+begin
+  I := 255;
+  SetLength(user, I);
+  Windows.GetUserName(PChar(user), I);
+  user := string(PChar(user));
+  result := user;
+end;
+
+function TfrmFuncoes.DataSQL(data,formato: string): string;  //Versao 3.0.0 - 12/07/2022
+begin
+  if formato = 'aaaa,mm,dd' then
+    Result := data[7]+data[8]+data[9]+data[10]+','+ data[4]+data[5]+','+data[1]+data[2];
+  if formato = 'mm,dd,aaaa' then
+    Result := data[4]+data[5]+','+data[1]+ data[2]+','+data[7]+data[8]+data[9]+data[10];
+  if formato = 'mm/dd/aaaa' then    // quando vai para sql
+    Result := data[4]+data[5]+'/'+data[1]+ data[2]+'/'+data[7]+data[8]+data[9]+data[10];
+  if formato = 'aaaa-mm-dd' then    // quando vai para sql
+    Result := data[7]+data[8]+data[9]+data[10]+'-'+ data[4]+data[5]+'-'+data[1]+data[2];
+end;
 
 function TfrmFuncoes.AutoIncre(vTabela, vStatus: string): Integer;
 var

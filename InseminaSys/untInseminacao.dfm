@@ -189,8 +189,8 @@ object frmInseminacao: TfrmInseminacao
         Top = 32
         Width = 78
         Height = 21
-        Date = 43039.814233217590000000
-        Time = 43039.814233217590000000
+        Date = 43039.000000000000000000
+        Time = 0.814233217592118300
         TabOrder = 1
       end
       object edtCodVet: TEdit
@@ -248,6 +248,19 @@ object frmInseminacao: TfrmInseminacao
         Color = clInfoBk
         Enabled = False
         TabOrder = 5
+      end
+      object rgTipoSemen: TRadioGroup
+        Left = 307
+        Top = 59
+        Width = 218
+        Height = 41
+        Caption = 'Tipo S'#234'men'
+        Columns = 2
+        ItemIndex = 0
+        Items.Strings = (
+          'Convencional'
+          'Sexado')
+        TabOrder = 10
       end
     end
     object pnlDados: TPanel
@@ -324,7 +337,7 @@ object frmInseminacao: TfrmInseminacao
       object edtDescrAnimal: TEdit
         Left = 97
         Top = 71
-        Width = 304
+        Width = 212
         Height = 21
         Color = clInfoBk
         Enabled = False
@@ -530,11 +543,24 @@ object frmInseminacao: TfrmInseminacao
       object edtDescrProprietario: TEdit
         Left = 99
         Top = 23
-        Width = 302
+        Width = 342
         Height = 21
         Color = clInfoBk
         Enabled = False
         TabOrder = 11
+      end
+      object rgTipoInseminacao: TRadioGroup
+        Left = 315
+        Top = 50
+        Width = 126
+        Height = 79
+        Caption = 'Tipo Insemina'#231#227'o'
+        ItemIndex = 0
+        Items.Strings = (
+          'IA'
+          'FIV'
+          'IATV')
+        TabOrder = 12
       end
     end
     object pgctrlDados: TPageControl
