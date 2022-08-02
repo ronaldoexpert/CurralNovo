@@ -52,6 +52,7 @@ type
     Sada2: TMenuItem;
     lblInsemPendentes: TLabel;
     Crpe1: TCrpe;
+    Timer1: TTimer;
     procedure btnSairClick(Sender: TObject);
     procedure CadastrodeVeterinarioClick(Sender: TObject);
     procedure CadastrodeProdutorClick(Sender: TObject);
@@ -77,6 +78,7 @@ type
     procedure Entrada2Click(Sender: TObject);
     procedure Sada2Click(Sender: TObject);
     procedure lblInsemPendentesClick(Sender: TObject);
+    procedure Timer1Timer(Sender: TObject);
   private
     function VerificaInseminacoes: Boolean;
     { Private declarations }
@@ -336,8 +338,8 @@ procedure TfrmPrincipal.FormShow(Sender: TObject);
 begin
   Caption := Caption + ' - ' + frmLogin.edtUsuario.Text + ' - Versao: ' + frmFuncoes.VersaoExe;
 
-  if VerificaInseminacoes then              //Versao 3.0.0 - 12/07/2022
-    lblInsemPendentes.Visible := True;
+  Timer1.Interval := 300000;  //5 minutos
+  Timer1Timer(Self);
 end;
 
 function TfrmPrincipal.VerificaInseminacoes : Boolean;    //Versao 3.0.0 - 12/07/2022
@@ -375,7 +377,6 @@ var
   vNomeUsuario : string;
   num : integer;
 begin
-  Crpe1.Destroy;
   Crpe1 := TCrpe.Create(Self);
   Crpe1.WindowState := wsMaximized;
   Crpe1.SetFocus;
@@ -421,6 +422,17 @@ begin
   finally
     frmMovimentaEstoque.Release;
   end;
+end;
+
+procedure TfrmPrincipal.Timer1Timer(Sender: TObject);
+begin
+  Timer1.Enabled := False;
+  lblInsemPendentes.Visible := False;
+
+  if VerificaInseminacoes then              //Versao 3.0.0 - 12/07/2022
+    lblInsemPendentes.Visible := True;
+
+  Timer1.Enabled := True;
 end;
 
 end.

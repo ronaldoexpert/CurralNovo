@@ -1663,4 +1663,9 @@ object frmPrincipal: TfrmPrincipal
     Left = 464
     Top = 156
   end
+  object Timer1: TTimer
+    OnTimer = Timer1Timer
+    Left = 488
+    Top = 276
+  end
 end
