@@ -559,7 +559,7 @@ object frmInseminacao: TfrmInseminacao
         Items.Strings = (
           'IA'
           'FIV'
-          'IATV')
+          'IATF')
         TabOrder = 12
       end
     end
