@@ -526,7 +526,10 @@ begin
     begin
       if Trim(edtCodAnimal.Text) <> '' then
       BEGIN
-        frmFuncoes.ExecutaSQL('Select * from ANIMAL where SEXO = ' + QuotedStr('F') + ' AND TIPO = ' + QuotedStr('Animal') + ' and ID = ' + QuotedStr(edtCodAnimal.Text) + ' AND PROPRIETARIO = ' + QuotedStr(edtCodProprietario.Text) + ' and ID NOT IN (SELECT ID_ANIMAL FROM MOVI_INSEMINACAO WHERE CONFIRMADA IN (' + QuotedStr('A') + ', ' + QuotedStr('S') + '))', 'Abrir', DM.qryAnimal);
+        //frmFuncoes.ExecutaSQL('Select * from ANIMAL where SEXO = ' + QuotedStr('F') + ' AND TIPO = ' + QuotedStr('Animal') + ' and ID = ' + QuotedStr(edtCodAnimal.Text) + ' AND PROPRIETARIO = ' + QuotedStr(edtCodProprietario.Text) + ' and ID NOT IN (SELECT ID_ANIMAL FROM MOVI_INSEMINACAO WHERE CONFIRMADA IN (' + QuotedStr('A') + ', ' + QuotedStr('S') + '))', 'Abrir', DM.qryAnimal);
+        frmFuncoes.ExecutaSQL(frmFuncoes.LerArquivoIni('INSEMINACAO', 'ANIMALF') + ' AND A.PROPRIETARIO = ' + QuotedStr(edtCodProprietario.Text) +
+                             ' and A.ID = ' + QuotedStr(edtCodAnimal.Text) + ' GROUP BY A.ID, A.NOME, A.IDENTIFICACAO, A.PROPRIETARIO, A.ESTOQUE', 'Abrir', DM.qryAnimal);
+
         if DM.qryAnimal.RecordCount > 0 then
         begin
           edtDescrAnimal.Text := DM.qryAnimal.FieldByName('NOME').AsString;

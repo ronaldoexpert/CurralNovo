@@ -8,7 +8,7 @@ uses
   Vcl.Buttons, Vcl.ExtCtrls, Data.DB, Vcl.Grids, Vcl.DBGrids, FireDAC.Stan.Intf,
   FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
-  FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.ComCtrls, Vcl.Menus;
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.ComCtrls, Vcl.Menus, DateUtils;
 
 type
   TfrmConfirmaInseminacao = class(TForm)
@@ -48,6 +48,12 @@ type
     Excluir1: TMenuItem;
     popmnConfirmadas: TPopupMenu;
     MenuItem1: TMenuItem;
+    pnlBotoes: TPanel;
+    spl1: TSplitter;
+    dtpInicio: TDateTimePicker;
+    dtpFim: TDateTimePicker;
+    Label2: TLabel;
+    Label3: TLabel;
     procedure btnFecharClick(Sender: TObject);
     procedure btnPesquProprietarioClick(Sender: TObject);
     procedure edtCodProprietarioExit(Sender: TObject);
@@ -63,6 +69,10 @@ type
     procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure Excluir1Click(Sender: TObject);
     procedure MenuItem1Click(Sender: TObject);
+    procedure edtCodProprietarioKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure edtCodVeterinarioKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     { Private declarations }
     vID : String;
@@ -115,7 +125,13 @@ end;
 procedure TfrmConfirmaInseminacao.btnGravarClick(Sender: TObject);
 var
   vData : string;
+  vTexto : PWideChar;
 begin
+  vTexto := PWideChar('Deseja realmente gravar a confirmação na data ' + DatetoStr(edtDtConfirmacao.Date) + ' ?');
+  if Application.MessageBox(vTexto, 'Curral Novo', MB_YESNO) = mrNo then
+    Exit;
+
+
   if dm.qryConfirmados.IsEmpty = False then
   begin
     dm.qryConfirmados.First;
@@ -180,16 +196,18 @@ begin
   if ValidaCampos then
   begin
     vComandoInseminacoes := 'Select * from INSEMINACAO where FINALIZADA = ' + QuotedStr('N');   //Versao 1.1.1 - 15/06/2018
-    vComando := 'select I.numero, P.NOME AS PROPRIETARIO, I.DATA, A.NOME AS ANIMAL, V.NOME AS VETERINARIO, MI.CONFIRMADA, MI.DATA_CONFIRMACAO, I.ID_PRODUTOR, I.ID_VETERINARIO, MI.ID as idMovi, I.ID as idInsem from MOVI_INSEMINACAO MI ' +
+    vComando := 'select I.numero, P.NOME AS PROPRIETARIO, I.DATA, (CURRENT_DATE - I.DATA) AS DIAS, A.NOME AS ANIMAL, V.NOME AS VETERINARIO, MI.CONFIRMADA, MI.DATA_CONFIRMACAO, I.ID_PRODUTOR, I.ID_VETERINARIO, MI.ID as idMovi, I.ID as idInsem from MOVI_INSEMINACAO MI ' +
       ' JOIN INSEMINACAO I ON (I.ID = MI.ID_INSEMINACAO) ' +
       ' JOIN ANIMAL A ON (A.ID = MI.ID_ANIMAL) ' +
       ' JOIN PRODUTOR P ON (P.ID = I.ID_PRODUTOR) ' +
       ' JOIN VETERINARIO V ON (V.ID = I.ID_VETERINARIO) ' +
-      ' Where ';
+      ' Where I.DATA BETWEEN ' +
+                QuotedStr(frmFuncoes.DataSQL(DateToStr(dtpInicio.Date), 'mm/dd/aaaa')) +
+      ' and ' + QuotedStr(frmFuncoes.DataSQL(DateToStr(dtpFim.Date), 'mm/dd/aaaa'));
 
     vComandoConfirmados := vComando;
 
-    vComando := vComando + ' MI.confirmada = ' + QuotedStr('A');
+    vComando := vComando + ' AND MI.confirmada = ' + QuotedStr('A');
 
 
     if edtCodProprietario.Text <> '' then
@@ -205,7 +223,7 @@ begin
     end;
 
     frmFuncoes.ExecutaSQL(vComando + ' order by PROPRIETARIO', 'Abrir', DM.qryAConfirmar);
-    frmFuncoes.ExecutaSQL(vComandoConfirmados + ' MI.ID IS NULL ORDER BY PROPRIETARIO', 'Abrir', DM.qryConfirmados);
+    frmFuncoes.ExecutaSQL(vComandoConfirmados + ' AND MI.ID IS NULL ORDER BY PROPRIETARIO', 'Abrir', DM.qryConfirmados);
     frmFuncoes.ExecutaSQL(vComandoInseminacoes, 'Abrir', qryInseminacoes);
   end;
 
@@ -261,6 +279,13 @@ begin
     PesquisaProdutor(True);
 end;
 
+procedure TfrmConfirmaInseminacao.edtCodProprietarioKeyDown(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+begin
+  if Key = VK_F2 then
+    btnPesquProprietarioClick(Self);
+end;
+
 procedure TfrmConfirmaInseminacao.edtCodVeterinarioChange(Sender: TObject);
 begin
   if edtCodVeterinario.text = '' then
@@ -271,6 +296,13 @@ procedure TfrmConfirmaInseminacao.edtCodVeterinarioExit(Sender: TObject);
 begin
   if Trim(edtVeterinario.Text) <> '' then
     PesquisaVeterinario(True);
+end;
+
+procedure TfrmConfirmaInseminacao.edtCodVeterinarioKeyDown(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+begin
+  if Key = VK_F2 then
+    btnPesqVeterinarioClick(Self);
 end;
 
 procedure TfrmConfirmaInseminacao.Excluir1Click(Sender: TObject);
@@ -287,22 +319,25 @@ begin
   DM.qryAConfirmar.Close;
   DM.qryConfirmados.Close;
   edtCodProprietario.SetFocus;    //Versao 1.5.0 - 25/10/2018 - RS
+
+  dtpInicio.Date := StartOfTheMonth(Date);
+  dtpFim.Date := EndOfTheMonth(Date);
 end;
 
 procedure TfrmConfirmaInseminacao.FormataGrid(vGRD: TDBGrid);
 begin
   vGRD.Columns.Items[0].Width := 70;
   vGRD.Columns.Items[1].Width := 220;
-  vGRD.Columns.Items[2].Width := 70;
-  vGRD.Columns.Items[3].Width := 150;
-  vGRD.Columns.Items[4].Width := 180;
+  vGRD.Columns.Items[3].Width := 70;
+  vGRD.Columns.Items[4].Width := 150;
+  vGRD.Columns.Items[5].Width := 180;
 
-  vGRD.Columns.Items[5].Visible := False;
   vGRD.Columns.Items[6].Visible := False;
   vGRD.Columns.Items[7].Visible := False;
   vGRD.Columns.Items[8].Visible := False;
   vGRD.Columns.Items[9].Visible := False;
   vGRD.Columns.Items[10].Visible := False;
+  vGRD.Columns.Items[11].Visible := False;
 end;
 
 procedure TfrmConfirmaInseminacao.FormKeyPress(Sender: TObject; var Key: Char);
