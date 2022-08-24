@@ -92,6 +92,9 @@ object DM: TDM
   object qryAConfirmar: TFDQuery
     CachedUpdates = True
     Connection = FDConnection1
+    FetchOptions.AssignedValues = [evRowsetSize, evRecordCountMode]
+    FetchOptions.RowsetSize = 9999999
+    FetchOptions.RecordCountMode = cmTotal
     Left = 280
     Top = 160
   end

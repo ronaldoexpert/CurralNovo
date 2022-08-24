@@ -27,8 +27,6 @@ object frmConfirmaInseminacao: TfrmConfirmaInseminacao
     Color = clBtnHighlight
     ParentBackground = False
     TabOrder = 1
-    ExplicitTop = 107
-    ExplicitHeight = 389
     object spl1: TSplitter
       Left = 0
       Top = 154
@@ -81,9 +79,6 @@ object frmConfirmaInseminacao: TfrmConfirmaInseminacao
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 2
-      ExplicitLeft = 2
-      ExplicitTop = 145
-      ExplicitWidth = 720
       object btnAdd: TBitBtn
         Left = 324
         Top = 9
@@ -596,15 +591,19 @@ object frmConfirmaInseminacao: TfrmConfirmaInseminacao
     Left = 648
     Top = 200
     object Excluir1: TMenuItem
-      Caption = 'Excluir'
+      Caption = 'Remover'
       OnClick = Excluir1Click
+    end
+    object ExcluirTodos1: TMenuItem
+      Caption = 'Remover Todos'
+      OnClick = ExcluirTodos1Click
     end
   end
   object popmnConfirmadas: TPopupMenu
     Left = 640
     Top = 264
     object MenuItem1: TMenuItem
-      Caption = 'Excluir'
+      Caption = 'Remover'
       OnClick = MenuItem1Click
     end
   end

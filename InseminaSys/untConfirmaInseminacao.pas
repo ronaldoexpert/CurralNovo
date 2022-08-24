@@ -54,6 +54,7 @@ type
     dtpFim: TDateTimePicker;
     Label2: TLabel;
     Label3: TLabel;
+    ExcluirTodos1: TMenuItem;
     procedure btnFecharClick(Sender: TObject);
     procedure btnPesquProprietarioClick(Sender: TObject);
     procedure edtCodProprietarioExit(Sender: TObject);
@@ -73,6 +74,7 @@ type
       Shift: TShiftState);
     procedure edtCodVeterinarioKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure ExcluirTodos1Click(Sender: TObject);
   private
     { Private declarations }
     vID : String;
@@ -310,6 +312,12 @@ begin
   dm.qryAConfirmar.Delete;                        //Versao 1.3.1 - 23/08/2018
   lblQtdNaoConfirmadas.Caption := IntToStr(dm.qryAConfirmar.RecordCount);
   lblQtdConfirmadas.Caption := IntToStr(dm.qryConfirmados.RecordCount);
+end;
+
+procedure TfrmConfirmaInseminacao.ExcluirTodos1Click(Sender: TObject);
+begin
+  dm.qryAConfirmar.EmptyDataSet;
+  lblQtdNaoConfirmadas.Caption := '0';
 end;
 
 procedure TfrmConfirmaInseminacao.FormActivate(Sender: TObject);
