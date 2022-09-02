@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  IniFiles, Registry, Dialogs, SUIButton, StdCtrls, ExtCtrls, DBCtrls, SUIDBCtrls,
+  IniFiles, Registry, Dialogs, StdCtrls, ExtCtrls, DBCtrls,
   UCrpeClasses, UCrpe32, Buttons;
 
 type

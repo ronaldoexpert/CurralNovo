@@ -858,14 +858,20 @@ begin
     ShowMessage('Insira o Proprietário!');
     edtCodProprietario.SetFocus;
     vRetorno := False;
-  end;
-
-  if Trim(edtCodAnimal.Text) = '' then
+  end
+  else if Trim(edtCodAnimal.Text) = '' then
   begin
     ShowMessage('Insira o Animal!');
     edtCodAnimal.SetFocus;
     vRetorno := False;
+  end
+  else if DM.qryMoviInseminacao.Locate('ID', edtCodAnimal.Text, [loCaseInsensitive, loPartialKey]) then
+  begin
+    ShowMessage('Animal já inserido!');
+    edtCodAnimal.SetFocus;
+    vRetorno := False;
   end;
+
 
   Result := vRetorno;
 end;

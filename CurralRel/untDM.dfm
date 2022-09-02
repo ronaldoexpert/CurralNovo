@@ -1,15 +1,11 @@
 object DM: TDM
   OldCreateOrder = False
-  Left = 300
-  Top = 181
   Height = 337
   Width = 574
   object sqlConnection: TSQLConnection
     ConnectionName = 'IBConnection'
     DriverName = 'Interbase'
-    GetDriverFunc = 'getSQLDriverINTERBASE'
     KeepConnection = False
-    LibraryName = 'dbexpint.dll'
     LoginPrompt = False
     Params.Strings = (
       'DriverName=Interbase'
@@ -26,7 +22,6 @@ object DM: TDM
       'WaitOnLocks=True'
       'Interbase TransIsolation=ReadCommited'
       'Trim Char=False')
-    VendorLib = 'fbclient.dll'
     Left = 24
     Top = 16
   end

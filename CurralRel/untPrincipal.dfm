@@ -1,10 +1,10 @@
 object frmPrincipal: TfrmPrincipal
   Left = 398
   Top = 241
-  Width = 386
-  Height = 277
   BorderIcons = [biSystemMenu]
   Caption = 'Relat'#243'rios - InseminaSys'
+  ClientHeight = 238
+  ClientWidth = 370
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object frmPrincipal: TfrmPrincipal
     Left = 0
     Top = 0
     Width = 370
-    Height = 191
+    Height = 190
     Align = alClient
     Color = clBtnHighlight
     TabOrder = 0
@@ -63,7 +63,7 @@ object frmPrincipal: TfrmPrincipal
   end
   object pnlRodape: TPanel
     Left = 0
-    Top = 191
+    Top = 190
     Width = 370
     Height = 48
     Align = alBottom
@@ -75,8 +75,6 @@ object frmPrincipal: TfrmPrincipal
       Width = 84
       Height = 37
       Caption = 'Fechar'
-      TabOrder = 0
-      OnClick = btnFecharClick
       Glyph.Data = {
         36080000424D3608000000000000360400002800000020000000200000000100
         08000000000000040000C40E0000C40E00000001000000000000000000000000
@@ -144,6 +142,8 @@ object frmPrincipal: TfrmPrincipal
         FFFFA40000000000000000000000000000A4FFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFF0707070707070707070707070707FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
+      TabOrder = 0
+      OnClick = btnFecharClick
     end
   end
 end

@@ -49,3 +49,21 @@ InseminaSys/Win32/Debug/Scripts/Versao 3.0/01 - Versão 3.0.sql
 InseminaSys_1.0.exe
 Instalação InseminaSys.iss
 InseminaSys/Win32/Debug/COMANDOS.INI
+CurralRel/untRelProprietarios.dcu
+CurralRel/untRelInseminacao.dcu
+CurralRel/untRelAnimais.dcu
+CurralRel/untPrincipal.pas
+CurralRel/untPrincipal.dfm
+CurralRel/untPrincipal.dcu
+CurralRel/untPesquisa.dcu
+CurralRel/untGraficos.dcu
+CurralRel/__history/untPrincipal.pas.~1~
+CurralRel/__history/untPrincipal.dfm.~1~
+CurralRel/__history/untDM.pas.~1~
+CurralRel/__history/untDM.dfm.~1~
+BD/CURRAL.FDB
+CurralRel/untGraficos.dcu
+CurralRel/untPesquisa.dcu
+CurralRel/untPrincipal.dcu
+*.dcu
+*.FDB

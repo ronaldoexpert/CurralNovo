@@ -3,7 +3,7 @@ unit untDM;
 interface
 
 uses
-  SysUtils, Classes, DBXpress, DB, SqlExpr, FMTBcd, DBClient, Provider;
+  SysUtils, Classes, DB, SqlExpr, FMTBcd, DBClient, Provider, Data.DBXInterBase;
 
 type
   TDM = class(TDataModule)
