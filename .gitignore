@@ -67,3 +67,5 @@ CurralRel/untPesquisa.dcu
 CurralRel/untPrincipal.dcu
 *.dcu
 *.FDB
+*.FDB
+InseminaSys/Win32/Debug/CFG.INI
